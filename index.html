@@ -96,6 +96,8 @@ select,input[type=text]{background:var(--carte2);border:1px solid var(--ligne);c
 .tag.MODERE{background:rgba(214,196,110,.14);border-color:rgba(214,196,110,.42);color:#E1D398}
 .tag.FAIBLE{background:rgba(76,174,133,.14);border-color:rgba(76,174,133,.42);color:#8FCDAF}
 .tag.zone{background:rgba(195,111,69,.14);border-color:rgba(195,111,69,.45);color:#DDA987}
+.tag.conf{background:rgba(76,174,133,.14);border-color:rgba(76,174,133,.5);color:#8FCDAF;font-weight:700}
+.tag.nonconf{background:rgba(150,167,157,.08);border-color:rgba(150,167,157,.35);color:var(--faible)}
 .art p{font-size:12.5px;color:var(--sourd);margin-top:7px}
 .art .liens{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
 .art .liens a{font-size:11px;border-bottom:1px dotted var(--kola)}
@@ -304,6 +306,8 @@ label.sw small{display:block;color:var(--faible);font-size:11px}
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Méthode et limites</h3>
     <p style="font-size:12px;color:var(--sourd)">POINT SÛRETÉ agrège des flux RSS publics : agences et médias nationaux des six pays, presse régionale, et requêtes d'actualité ciblées sur chaque zone administrative. Le rattachement géographique se fait par détection de localité dans le texte, avec correspondance de mots entiers et normalisation des accents ; un fait dont aucune localité du périmètre n'est reconnue est classé hors périmètre plutôt que rattaché par défaut au pays du média.</p>
+    <p style="font-size:12px;color:var(--sourd);margin-top:8px">Deux médias qui rapportent le même fait ne comptent pas comme deux faits : un recoupement lexical par zone et fenêtre de temps regroupe les articles proches et distingue les faits confirmés par au moins deux sources indépendantes (✓) de ceux qui restent à recouper (?). Un fait confirmé pèse davantage dans le score de zone ; un fait isolé pèse moins — pour éviter qu'une source unique et non recoupée fasse basculer un niveau d'alerte.</p>
+    <p style="font-size:12px;color:var(--sourd);margin-top:8px">Le Point de situation détecte aussi les corrélations régionales : un thème apparaissant le même jour dans au moins trois pays du périmètre est signalé, pour faire ressortir une dynamique transfrontalière qu'une lecture zone par zone ne révèle pas.</p>
     <p style="font-size:12px;color:var(--sourd);margin-top:8px">Le score de zone est une mesure de pression informationnelle, pas une mesure de risque absolue. Il dépend de la densité de couverture médiatique locale, qui est faible dans certaines régions. Recoupez toute décision opérationnelle avec vos propres canaux de terrain.</p>
     <p style="font-size:12px;color:var(--faible);margin-top:8px">Aucune donnée ne quitte cet appareil. Tout est conservé dans le stockage local du navigateur.</p>
   </div>
@@ -891,16 +895,61 @@ async function collecter(){
 }
 
 /* ==================================================================
+   4ter. Corroboration multi-sources
+   Deux médias qui rapportent le même fait, indépendamment, ne pèsent
+   pas comme deux faits distincts — et un fait rapporté par une seule
+   source n'a pas la valeur d'un fait recoupé. On regroupe les articles
+   proches par zone, fenêtre de temps et recouvrement lexical, pour
+   distinguer ce qui est confirmé de ce qui reste à vérifier.
+   ================================================================== */
+const STOP = new Set(["dans","pour","avec","apres","une","les","des","cette","cet","ces","que","qui","son","ses",
+ "leur","leurs","plus","tres","fait","faits","selon","depuis","vers","entre","sans","sont","comme","tout","tous",
+ "toute","toutes","alors","ainsi","aussi","mais","donc","meme","memes","the","and","for","with","from","that","this",
+ "has","have","been","were","after","before","during","says","said","official","officials"]);
+const motsSignificatifs = t => new Set(norm(t).split(/[^a-z0-9]+/).filter(w=>w.length>4 && !STOP.has(w)));
+
+function grouperCorroboration(liste){
+  const groupes = [];
+  liste.forEach(a=>{
+    const mots = motsSignificatifs(a.t);
+    let cible=null, meilleur=0;
+    for(const g of groupes){
+      if(g.cle !== (a.z || a.p || "?")) continue;
+      if(Math.abs(g.ts - a.ts) > 8*3600000) continue;
+      const inter = [...mots].filter(w=>g.mots.has(w)).length;
+      const union = new Set([...mots, ...g.mots]).size || 1;
+      const sim = inter/union;
+      if(sim > meilleur && sim >= 0.42){ meilleur = sim; cible = g; }
+    }
+    if(cible){ cible.membres.push(a); mots.forEach(w=>cible.mots.add(w)); }
+    else groupes.push({cle:a.z||a.p||"?", ts:a.ts, mots, membres:[a]});
+  });
+  const info = new Map();
+  groupes.forEach(g=>{
+    const srcs = [...new Set(g.membres.map(m=>m.src))];
+    g.membres.forEach(m=>info.set(m.h, {n:srcs.length, srcs, verifie:srcs.length>=2}));
+  });
+  return info;
+}
+let CORRO = new Map();
+function rafraichirCorroboration(){ CORRO = grouperCorroboration(fenetre(48)); }
+
+/* ==================================================================
    5. Scores
    ================================================================== */
 const POIDS = {CRITIQUE:4, ELEVE:2, MODERE:1, FAIBLE:0};
 function scoreZone(zn){
   const f = fenetre(24).filter(a=>a.z===zn);
   let p = 0;
-  f.forEach(a=>{ p += POIDS[a.c]; a.ag.forEach(x=>p+=x.v*0.5); });
+  f.forEach(a=>{
+    const g = CORRO.get(a.h);
+    const mult = g ? (g.verifie ? 1.15 : 0.7) : 1;   // recoupé pèse plus, isolé pèse moins
+    p += POIDS[a.c]*mult; a.ag.forEach(x=>p+=x.v*0.5);
+  });
   const s = Math.round(100*(1-Math.exp(-p/12)));
   return {score:s, niveau:niveau(s), n:f.length,
           crit:f.filter(a=>a.c==="CRITIQUE").length, elev:f.filter(a=>a.c==="ELEVE").length,
+          corrobores:f.filter(a=>CORRO.get(a.h)?.verifie).length,
           ag:[...new Set(f.flatMap(a=>a.ag.map(x=>x.l)))]};
 }
 function niveau(s){ return s>=75?"ROUGE" : s>=60?"MARRON" : s>=40?"ORANGE" : s>=20?"JAUNE" : "VERT"; }
@@ -919,9 +968,34 @@ function scorePays(p){
 }
 
 /* ==================================================================
+   5bis. Corrélations régionales
+   Un thème qui apparaît le même jour dans plusieurs pays du périmètre
+   révèle une dynamique qu'une lecture zone par zone ne montre jamais —
+   une inflation régionale, une épidémie transfrontalière, une vague
+   de mobilisation. Détecté par recoupement lexical, pas déclaré à l'avance.
+   ================================================================== */
+const MOTS_PAYS = new Set(Object.values(PAYS).flatMap(p=>[...norm(p.n).split(/[^a-z0-9]+/)]));
+function correlationsRegionales(){
+  const f = fenetre(24);
+  const freq = {};
+  f.forEach(a=>{
+    motsSignificatifs(a.t).forEach(w=>{
+      if(MOTS_PAYS.has(w) || w==="afrique") return;
+      if(!freq[w]) freq[w] = {pays:new Set(), arts:[]};
+      freq[w].pays.add(a.p||"?"); freq[w].arts.push(a);
+    });
+  });
+  return Object.entries(freq)
+    .filter(([w,d])=>d.pays.size>=3)
+    .map(([mot,d])=>({mot, pays:[...d.pays], n:d.arts.length}))
+    .sort((a,b)=>b.pays.length-a.pays.length || b.n-a.n)
+    .slice(0,6);
+}
+
+/* ==================================================================
    6. Rendu
    ================================================================== */
-function rendre(){ rCorridor(); rFiltres(); rFlux(); rZones(); rCorrs(); rSynth(); rAgenda(); rAlertes(); rBord(); }
+function rendre(){ rafraichirCorroboration(); rCorridor(); rFiltres(); rFlux(); rZones(); rCorrs(); rSynth(); rAgenda(); rAlertes(); rBord(); }
 
 function rCorridor(){
   const c = CORRIDORS[0];
@@ -967,10 +1041,15 @@ function rFlux(){
   }
   $("#flux").innerHTML = l.slice(0,180).map(a=>{
     const z = ZONES.find(x=>x.z===a.z);
+    const g = CORRO.get(a.h);
+    const badge = g ? (g.verifie
+      ? `<span class="tag conf" title="${g.srcs.map(esc).join(', ')}">✓ ${g.n} src</span>`
+      : `<span class="tag nonconf">? 1 src</span>`) : "";
     return `<article class="art ${a.c}">
       <h3>${esc(a.t)}</h3>
       <div class="meta">
         <span class="tag ${a.c}">${a.c==="ELEVE"?"ÉLEVÉ":a.c==="MODERE"?"MODÉRÉ":a.c}</span>
+        ${badge}
         ${a.z?`<span class="tag zone">${PAYS[a.p].f} ${esc(a.z)}${a.loc&&a.loc!==a.z?" · "+esc(a.loc):""}</span>`:`<span class="tag">Hors périmètre</span>`}
         <span class="tag">${esc(a.cat)}</span>
         ${a.ag.map(x=>`<span class="tag" style="border-color:rgba(217,173,84,.5);color:var(--or)">${esc(x.l)}</span>`).join("")}
@@ -1040,6 +1119,8 @@ function rSynth(){
       ${x.a.filter(a=>["CRITIQUE","ELEVE"].includes(a.c)).slice(0,2).map(a=>`<div style="font-size:12px;color:var(--sourd);margin-top:4px">— ${esc(a.t)} <span style="color:var(--faible)">(${esc(a.src)})</span></div>`).join("")}
     </div>`).join("")+`</div>` : "";
   const cats = ["securite","humanitaire","politique","economique"].map(c=>({c, n:f.filter(a=>a.cat===c).length}));
+  const corr = correlationsRegionales();
+  const verif = f.filter(a=>CORRO.get(a.h)?.verifie).length;
   $("#synth").innerHTML =
    `<div class="grille g4" style="margin-bottom:10px">
       <div class="kpi"><b>${f.length}</b><span>Faits / 24h</span></div>
@@ -1047,6 +1128,14 @@ function rSynth(){
       <div class="kpi"><b>${Object.keys(parZone).length}</b><span>Zones actives</span></div>
       <div class="kpi"><b>${new Set(f.map(a=>a.src)).size}</b><span>Sources</span></div>
     </div>
+    <div class="grille g2" style="margin-bottom:10px">
+      <div class="kpi"><b class="n-VERT">${verif}</b><span>✓ Faits recoupés (≥2 sources)</span></div>
+      <div class="kpi"><b>${f.length-verif}</b><span>? Faits à recouper (1 source)</span></div>
+    </div>
+    ${corr.length ? `<div class="carte"><h3 class="cond" style="font-size:17px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Corrélations régionales</h3>
+      <p class="hint" style="margin-bottom:9px">Thèmes détectés simultanément dans au moins trois pays du périmètre, sur les dernières 24 heures.</p>
+      <div class="rang" style="margin-bottom:0">${corr.map(x=>`<span class="puce" style="cursor:default"><b style="color:var(--texte)">#${esc(x.mot)}</b> — ${x.pays.length} pays · ${x.n} art.</span>`).join("")}</div>
+    </div>` : ""}
     <div class="carte"><h3 class="cond" style="font-size:17px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Répartition thématique</h3>
       ${cats.map(x=>`<div style="display:flex;align-items:center;gap:8px;padding:4px 0"><span style="width:96px;font-size:12px;text-transform:capitalize">${x.c}</span><div class="jauge" style="flex:1"><i class="b-ORANGE" style="width:${f.length?Math.round(x.n/f.length*100):0}%"></i></div><span class="mono" style="font-size:12px;width:28px;text-align:right">${x.n}</span></div>`).join("")}
     </div>`
@@ -1123,6 +1212,8 @@ function rBord(){
     [ZONES.length,"Zones couvertes"],
     [f.filter(a=>a.c==="CRITIQUE").length,"Critiques"],
     [f.filter(a=>a.c==="ELEVE").length,"Élevés"],
+    [f.filter(a=>CORRO.get(a.h)?.verifie).length,"✓ Recoupés"],
+    [f.filter(a=>!CORRO.get(a.h)?.verifie).length,"? À recouper"],
     [new Set(f.map(a=>a.src)).size,"Sources actives"],
     [zs.filter(z=>["ROUGE","MARRON"].includes(z.s.niveau)).length,"Zones en tension"],
     [zs.filter(z=>z.s.n===0).length,"Zones sans signal"],
@@ -1177,9 +1268,13 @@ function exportWord(){
 }
 function exportCSV(){
   const f = fenetre(24);
-  const ent = ["Date","Pays","Zone","Localite","Criticite","Categorie","Titre","Source","Fiabilite","Aggravants","Lien"];
+  const ent = ["Date","Pays","Zone","Localite","Criticite","Categorie","Titre","Source","Fiabilite","Recoupe","Sources_corroborantes","Aggravants","Lien"];
   const q = v => '"'+String(v??"").replace(/"/g,'""')+'"';
-  const csv = "\uFEFF"+[ent.join(";"), ...f.map(a=>[new Date(a.ts).toLocaleString("fr-FR"), a.p?PAYS[a.p].n:"", a.z||"", a.loc||"", a.c, a.cat, a.t, a.src, a.f, a.ag.map(x=>x.l).join(" | "), a.l].map(q).join(";"))].join("\n");
+  const csv = "\uFEFF"+[ent.join(";"), ...f.map(a=>{
+    const g = CORRO.get(a.h);
+    return [new Date(a.ts).toLocaleString("fr-FR"), a.p?PAYS[a.p].n:"", a.z||"", a.loc||"", a.c, a.cat, a.t, a.src, a.f,
+      g?.verifie ? "Oui" : "Non", g ? g.n : 1, a.ag.map(x=>x.l).join(" | "), a.l].map(q).join(";");
+  })].join("\n");
   tele("POINT_SURETE_"+new Date().toISOString().slice(0,10)+".csv", csv, "text/csv;charset=utf-8");
 }
 function exportJSON(){
