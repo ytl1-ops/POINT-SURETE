@@ -10,11 +10,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --fond:#0D1512; --carte:#152420; --carte2:#101C18; --ligne:#25352E;
-  --texte:#EAEFEA; --sourd:#96A79D; --faible:#66786D;
-  --laterite:#C36F45; --kola:#4CAE85; --or:#D9AD54;
-  --rouge:#C2635C; --marron:#A16E4C; --orange:#D99259; --jaune:#D6C46E; --vert:#4CAE85;
-  --r:4px;
+  --fond:#F5F7F4; --carte:#FFFFFF; --carte2:#EEF1EC; --ligne:#DCE3DD;
+  --texte:#16211C; --sourd:#55655B; --faible:#8B978F;
+  --laterite:#AB5D37; --kola:#2B835F; --or:#8F702A;
+  --rouge:#B5453F; --marron:#8C5A3C; --orange:#C97A3F; --jaune:#A6842E; --vert:#2B835F;
+  --r:6px;
+  --ombre:0 1px 2px rgba(22,33,28,.05), 0 1px 1px rgba(22,33,28,.04);
+  --ombre-lev:0 4px 16px rgba(22,33,28,.08), 0 1px 2px rgba(22,33,28,.05);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--fond);color:var(--texte);font-family:'Inter',system-ui,sans-serif;font-size:14px;line-height:1.5;-webkit-text-size-adjust:100%}
@@ -27,22 +29,28 @@ button{cursor:pointer}
 :focus-visible{outline:2px solid var(--or);outline-offset:2px}
 
 /* ---------- En-tête ---------- */
-header{position:sticky;top:0;z-index:40;background:rgba(10,16,20,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--ligne)}
-.bar{display:flex;align-items:center;gap:10px;padding:10px 12px}
-.logo{display:flex;align-items:baseline;gap:7px;min-width:0}
+header{position:sticky;top:0;z-index:40;background:rgba(245,247,244,.90);backdrop-filter:blur(10px);border-bottom:1px solid var(--ligne)}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:10px 12px}
+.logo{display:flex;align-items:baseline;gap:7px;flex-shrink:0}
 .logo b{font-family:'Barlow Condensed';font-size:22px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
 .logo span{color:var(--laterite)}
-.logo em{font-style:normal;font-size:10px;color:var(--faible);text-transform:uppercase;letter-spacing:.14em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.spacer{flex:1}
-.btn{background:var(--carte);border:1px solid var(--ligne);color:var(--texte);padding:7px 11px;border-radius:var(--r);font-size:12px;font-weight:500;white-space:nowrap}
+.logo em{font-style:normal;font-size:10px;color:var(--faible);text-transform:uppercase;letter-spacing:.14em;white-space:nowrap}
+.spacer{flex:1 1 12px;min-width:0}
+.actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.btn{background:var(--carte);border:1px solid var(--ligne);color:var(--texte);padding:7px 11px;border-radius:var(--r);font-size:12px;font-weight:500;white-space:nowrap;box-shadow:var(--ombre);transition:border-color .15s,box-shadow .15s;flex-shrink:0}
 .btn:hover{border-color:var(--faible)}
 .btn.p{background:var(--laterite);border-color:var(--laterite);color:#fff;font-weight:600}
 .btn.p:hover{filter:brightness(1.1)}
-.btn.s{background:transparent}
+.btn.s{background:transparent;box-shadow:none}
 .btn:disabled{opacity:.45;cursor:not-allowed}
-.pastille{display:inline-flex;align-items:center;gap:5px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--sourd)}
-.pt{width:7px;height:7px;border-radius:50%;background:var(--vert);box-shadow:0 0 0 0 rgba(76,174,133,.55);animation:pulse 2.4s infinite}
+.pastille{display:inline-flex;align-items:center;gap:5px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--sourd);white-space:nowrap;flex-shrink:0}
+.pt{width:7px;height:7px;border-radius:50%;background:var(--vert);box-shadow:0 0 0 0 rgba(76,174,133,.55);animation:pulse 2.4s infinite;flex-shrink:0}
 @keyframes pulse{70%{box-shadow:0 0 0 7px rgba(76,174,133,0)}100%{box-shadow:0 0 0 0 rgba(76,174,133,0)}}
+@media (max-width:480px){
+  .bar{padding:9px 12px 10px}
+  .logo em{display:none}
+  .btn{padding:6px 10px;font-size:11.5px}
+}
 
 /* ---------- Signature : ruban corridor ---------- */
 .corridor{border-bottom:1px solid var(--ligne);background:var(--carte2);padding:9px 12px 11px;overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -55,7 +63,7 @@ header{position:sticky;top:0;z-index:40;background:rgba(10,16,20,.94);backdrop-f
 .noeud u{display:block;text-decoration:none;font-size:9px;color:var(--faible);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
 
 /* ---------- Onglets ---------- */
-nav{position:fixed;bottom:0;left:0;right:0;z-index:45;display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(10,16,20,.97);backdrop-filter:blur(10px);border-top:1px solid var(--ligne);padding-bottom:env(safe-area-inset-bottom);scrollbar-width:none}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:45;display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-top:1px solid var(--ligne);padding-bottom:env(safe-area-inset-bottom);scrollbar-width:none;box-shadow:0 -2px 12px rgba(22,33,28,.05)}
 nav::-webkit-scrollbar{display:none}
 nav button{flex:1 0 auto;min-width:64px;background:none;border:0;color:var(--faible);padding:9px 6px 8px;font-family:'Barlow Condensed';font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;border-top:2px solid transparent;margin-top:-1px;white-space:nowrap}
 nav button.on{color:var(--texte);border-top-color:var(--laterite)}
@@ -72,11 +80,11 @@ main{padding:12px}
 .titre h2{font-size:19px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
 .titre small{color:var(--faible);font-size:11px}
 .aide{color:var(--sourd);font-size:12px;border-left:2px solid var(--ligne);padding-left:9px;margin-bottom:12px}
-.carte{background:var(--carte);border:1px solid var(--ligne);border-radius:var(--r);padding:12px;margin-bottom:10px}
+.carte{background:var(--carte);border:1px solid var(--ligne);border-radius:8px;padding:12px;margin-bottom:10px;box-shadow:var(--ombre)}
 .grille{display:grid;gap:8px}
 .g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
 @media(max-width:520px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
-.kpi{background:var(--carte);border:1px solid var(--ligne);border-radius:var(--r);padding:10px}
+.kpi{background:var(--carte);border:1px solid var(--ligne);border-radius:8px;padding:10px;box-shadow:var(--ombre)}
 .kpi b{display:block;font-family:'Roboto Mono';font-size:22px;font-weight:500;line-height:1.1}
 .kpi span{font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--faible)}
 .rang{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
@@ -85,25 +93,25 @@ main{padding:12px}
 select,input[type=text]{background:var(--carte2);border:1px solid var(--ligne);color:var(--texte);padding:8px 9px;border-radius:var(--r);width:100%}
 
 /* ---------- Article ---------- */
-.art{background:var(--carte);border:1px solid var(--ligne);border-left:3px solid var(--faible);border-radius:var(--r);padding:11px;margin-bottom:8px}
+.art{background:var(--carte);border:1px solid var(--ligne);border-left:3px solid var(--faible);border-radius:8px;padding:11px;margin-bottom:8px;box-shadow:var(--ombre)}
 .art.CRITIQUE{border-left-color:var(--rouge)}.art.ELEVE{border-left-color:var(--orange)}
 .art.MODERE{border-left-color:var(--jaune)}.art.FAIBLE{border-left-color:var(--vert)}
 .art h3{font-size:15.5px;font-weight:600;line-height:1.3;margin-bottom:6px}
 .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:10.5px;color:var(--faible)}
 .tag{font-family:'Barlow Condensed';font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;padding:2px 6px;border-radius:2px;background:var(--carte2);border:1px solid var(--ligne);color:var(--sourd)}
-.tag.CRITIQUE{background:rgba(194,99,92,.16);border-color:rgba(194,99,92,.5);color:#E3A8A2}
-.tag.ELEVE{background:rgba(217,146,89,.16);border-color:rgba(217,146,89,.5);color:#EBBD93}
-.tag.MODERE{background:rgba(214,196,110,.14);border-color:rgba(214,196,110,.42);color:#E1D398}
-.tag.FAIBLE{background:rgba(76,174,133,.14);border-color:rgba(76,174,133,.42);color:#8FCDAF}
-.tag.zone{background:rgba(195,111,69,.14);border-color:rgba(195,111,69,.45);color:#DDA987}
-.tag.conf{background:rgba(76,174,133,.14);border-color:rgba(76,174,133,.5);color:#8FCDAF;font-weight:700}
-.tag.nonconf{background:rgba(150,167,157,.08);border-color:rgba(150,167,157,.35);color:var(--faible)}
+.tag.CRITIQUE{background:rgba(181,69,63,.10);border-color:rgba(181,69,63,.35);color:var(--rouge)}
+.tag.ELEVE{background:rgba(201,122,63,.10);border-color:rgba(201,122,63,.35);color:var(--orange)}
+.tag.MODERE{background:rgba(166,132,46,.10);border-color:rgba(166,132,46,.35);color:var(--jaune)}
+.tag.FAIBLE{background:rgba(43,131,95,.10);border-color:rgba(43,131,95,.35);color:var(--vert)}
+.tag.zone{background:rgba(171,93,55,.10);border-color:rgba(171,93,55,.35);color:var(--laterite)}
+.tag.conf{background:rgba(43,131,95,.12);border-color:rgba(43,131,95,.4);color:var(--vert);font-weight:700}
+.tag.nonconf{background:rgba(139,151,143,.10);border-color:rgba(139,151,143,.35);color:var(--faible)}
 .art p{font-size:12.5px;color:var(--sourd);margin-top:7px}
 .art .liens{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
 .art .liens a{font-size:11px;border-bottom:1px dotted var(--kola)}
 
 /* ---------- Zones ---------- */
-.zone-l{display:flex;align-items:center;gap:9px;padding:8px 9px;border:1px solid var(--ligne);border-radius:var(--r);background:var(--carte);margin-bottom:5px}
+.zone-l{display:flex;align-items:center;gap:9px;padding:8px 9px;border:1px solid var(--ligne);border-radius:8px;background:var(--carte);margin-bottom:5px;box-shadow:var(--ombre)}
 .zone-l .sc{font-family:'Roboto Mono';font-size:14px;font-weight:500;width:32px;text-align:right}
 .zone-l .nm{flex:1;min-width:0}
 .zone-l .nm b{display:block;font-family:'Barlow Condensed';font-size:15px;font-weight:600;letter-spacing:.02em}
@@ -126,6 +134,34 @@ label.sw{display:flex;justify-content:space-between;align-items:center;gap:10px;
 label.sw span{font-size:13px}
 label.sw small{display:block;color:var(--faible);font-size:11px}
 @media print{nav,header,.corridor,.rang,.btn{display:none!important}body{background:#fff;color:#000}.carte,.art{border-color:#ccc;background:#fff}}
+
+/* ==================================================================
+   Affichage web (≥900px) — la barre d'onglets du bas devient une
+   barre latérale fixe, et le contenu se centre dans une colonne
+   confortable. Le téléphone garde son modèle d'onglets natif ;
+   c'est la seule chose qui change entre les deux formats.
+   ================================================================== */
+@media (min-width:900px){
+  body{padding-bottom:0;padding-left:236px}
+  header .bar,header .corridor{padding-left:max(20px, calc((100% - 900px)/2));padding-right:max(20px, calc((100% - 900px)/2))}
+  main{padding:22px max(20px, calc((100% - 900px)/2)) 48px}
+  nav{
+    top:0;bottom:0;left:0;right:auto;width:236px;height:100vh;
+    flex-direction:column;align-items:stretch;justify-content:flex-start;
+    padding:18px 0;overflow-y:auto;overflow-x:hidden;
+    border-top:none;border-right:1px solid var(--ligne);
+    box-shadow:2px 0 14px rgba(22,33,28,.04)
+  }
+  nav button{
+    flex:0 0 auto;flex-direction:row;justify-content:flex-start;align-items:center;gap:11px;
+    padding:11px 20px;margin-top:0;font-size:13px;letter-spacing:.03em;
+    border-top:none;border-left:3px solid transparent;min-width:0
+  }
+  nav button.on{border-left-color:var(--laterite);background:rgba(171,93,55,.07)}
+  nav button i{margin-bottom:0;font-size:17px;width:19px;text-align:center;flex-shrink:0}
+  .grille.g4{grid-template-columns:repeat(4,1fr)}
+  .grille.g3{grid-template-columns:repeat(3,1fr)}
+}
 </style>
 </head>
 <body>
@@ -134,9 +170,11 @@ label.sw small{display:block;color:var(--faible);font-size:11px}
   <div class="bar">
     <div class="logo"><b>POINT <span>SÛRETÉ</span></b><em>CI + 5 limitrophes</em></div>
     <div class="spacer"></div>
-    <span class="pastille"><i class="pt"></i><span id="etat">Prêt</span></span>
-    <button class="btn s" id="btnManuel">+ Ajouter</button>
-    <button class="btn p" id="btnMaj">Collecter</button>
+    <div class="actions">
+      <span class="pastille"><i class="pt"></i><span id="etat">Prêt</span></span>
+      <button class="btn s" id="btnManuel">+ Ajouter</button>
+      <button class="btn p" id="btnMaj">Collecter</button>
+    </div>
   </div>
   <div class="progress"><i id="prog"></i></div>
   <!-- Signature : ruban du corridor Abidjan–Ouangolodougou–Ouagadougou -->
@@ -147,7 +185,7 @@ label.sw small{display:block;color:var(--faible);font-size:11px}
 </header>
 
 <!-- ============ SAISIE MANUELLE ============ -->
-<div id="voileManuel" style="display:none;position:fixed;inset:0;z-index:60;background:rgba(10,16,20,.72);backdrop-filter:blur(2px);padding:14px;overflow-y:auto" onclick="if(event.target===this)fermerManuel()">
+<div id="voileManuel" style="display:none;position:fixed;inset:0;z-index:60;background:rgba(22,33,28,.45);backdrop-filter:blur(3px);padding:14px;overflow-y:auto" onclick="if(event.target===this)fermerManuel()">
   <div style="max-width:520px;margin:20px auto 40px;background:var(--carte);border:1px solid var(--ligne);border-radius:8px;padding:16px">
     <div style="display:flex;align-items:baseline;margin-bottom:4px"><h2 style="font-size:18px;text-transform:uppercase;letter-spacing:.05em;flex:1">Ajouter un renseignement</h2><button class="btn s" onclick="fermerManuel()">Fermer</button></div>
     <p class="aide" style="margin-bottom:12px">Pour tout ce que la collecte automatisée ne peut pas atteindre légitimement : une radio locale entendue en direct, une publication Facebook, un groupe WhatsApp des forces de sécurité, un canal WhatsApp, une remontée de terrain. Vous restez responsable de l'exactitude de ce que vous saisissez ici.</p>
@@ -314,11 +352,11 @@ label.sw small{display:block;color:var(--faible);font-size:11px}
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Profondeur de collecte</h3>
     <select id="prof">
-      <option value="rapide">Rapide — sources nationales des 6 pays (≈ 30 flux)</option>
-      <option value="standard" selected>Standard — nationales + 33 zones de Côte d'Ivoire (≈ 70 flux)</option>
-      <option value="profond">Profond — tout le maillage, CI et limitrophes (≈ 110 flux)</option>
+      <option value="rapide">Rapide — sources nationales des 6 pays (≈ 65 flux)</option>
+      <option value="standard" selected>Standard — nationales + 33 zones de Côte d'Ivoire (≈ 98 flux)</option>
+      <option value="profond">Profond — tout le maillage, CI et limitrophes (≈ 138 flux)</option>
     </select>
-    <p class="hint">Ne concerne que la collecte depuis l&rsquo;appareil. Quand le serveur alimente l&rsquo;application, il travaille toujours en mode Profond &mdash; 127 flux, sans coût pour votre forfait mobile.</p>
+    <p class="hint">Ne concerne que la collecte depuis l&rsquo;appareil. Quand le serveur alimente l&rsquo;application, il travaille toujours en mode Profond &mdash; 138 flux, sans coût pour votre forfait mobile.</p>
   </div>
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Précision de la collecte</h3>
@@ -367,7 +405,7 @@ label.sw small{display:block;color:var(--faible);font-size:11px}
   </div>
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Méthode et limites</h3>
-    <p style="font-size:12px;color:var(--sourd)">POINT SÛRETÉ agrège des flux RSS publics : agences et médias nationaux des six pays, presse régionale, radios locales, et requêtes d'actualité ciblées sur chaque zone administrative. Le rattachement géographique se fait par détection de localité dans le texte, avec correspondance de mots entiers et normalisation des accents ; un fait dont aucune localité du périmètre n'est reconnue est classé hors périmètre plutôt que rattaché par défaut au pays du média.</p>
+    <p style="font-size:12px;color:var(--sourd)">POINT SÛRETÉ agrège des flux RSS publics : agences et médias nationaux des six pays (35 sources fixes), presse régionale, radios locales, une couche panafricaine et analytique (Africanews, International Crisis Group, ReliefWeb) qui recoupe les six pays à la fois, et des requêtes d'actualité ciblées sur chaque zone administrative. Le rattachement géographique se fait par détection de localité dans le texte, avec correspondance de mots entiers et normalisation des accents ; un fait dont aucune localité du périmètre n'est reconnue est classé hors périmètre plutôt que rattaché par défaut au pays du média.</p>
     <p style="font-size:12px;color:var(--sourd);margin-top:8px">Facebook et WhatsApp ne sont volontairement pas collectés automatiquement : ni l'un ni l'autre n'exposent de flux public exploitable depuis une application statique, et une collecte automatisée d'un groupe WhatsApp reviendrait à aspirer des communications privées sans autorisation. Ce type de renseignement passe par la <b style="color:var(--sourd)">saisie manuelle</b> (bouton « + Ajouter » en en-tête) : un analyste légitimement présent dans ces canaux y saisit lui-même ce qu'il juge pertinent, avec la source tracée.</p>
     <p style="font-size:12px;color:var(--sourd);margin-top:8px">Deux médias qui rapportent le même fait ne comptent pas comme deux faits : un recoupement lexical par zone et fenêtre de temps regroupe les articles proches et distingue les faits confirmés par au moins deux sources indépendantes (✓) de ceux qui restent à recouper (?). Un fait confirmé pèse davantage dans le score de zone ; un fait isolé pèse moins — pour éviter qu'une source unique et non recoupée fasse basculer un niveau d'alerte.</p>
     <p style="font-size:12px;color:var(--sourd);margin-top:8px">Le Point de situation détecte aussi les corrélations régionales : un thème apparaissant le même jour dans au moins trois pays du périmètre est signalé, pour faire ressortir une dynamique transfrontalière qu'une lecture zone par zone ne révèle pas.</p>
@@ -584,6 +622,7 @@ const CORRIDORS = [
 
 /* ---------- Sources nationales directes ---------- */
 const NAT = [
+ // --- Côte d'Ivoire ---
  {u:"https://www.aip.ci/feed/",p:"CI",n:"AIP — Agence ivoirienne de presse",f:88},
  {u:"https://www.fratmat.info/feed",p:"CI",n:"Fraternité Matin",f:82},
  {u:"https://www.linfodrome.com/feed",p:"CI",n:"L'Infodrome",f:70},
@@ -591,23 +630,40 @@ const NAT = [
  {u:"https://www.sikafinance.com/rss",p:"CI",n:"Sika Finance",f:76},
  {u:"https://www.connectionivoirienne.net/feed",p:"CI",n:"Connection Ivoirienne",f:60},
  {u:"https://apanews.net/feed/",p:"CI",n:"APA News",f:78},
+ // --- Burkina Faso ---
  {u:"https://lefaso.net/spip.php?page=backend",p:"BF",n:"Lefaso.net",f:80},
  {u:"https://www.wakatsera.com/feed/",p:"BF",n:"Wakat Séra",f:76},
  {u:"https://www.sidwaya.info/feed/",p:"BF",n:"Sidwaya",f:78},
  {u:"https://www.aib.media/feed/",p:"BF",n:"AIB — Agence d'information du Burkina",f:80},
+ {u:"https://burkina24.com/feed",p:"BF",n:"Burkina 24",f:66},
+ {u:"https://lepays.bf/feed",p:"BF",n:"Le Pays",f:68},
+ // --- Mali ---
  {u:"https://www.maliweb.net/feed",p:"ML",n:"Maliweb",f:70},
  {u:"https://malijet.com/rss",p:"ML",n:"Malijet",f:70},
  {u:"https://www.studiotamani.org/index.php?format=feed&type=rss",p:"ML",n:"Studio Tamani",f:80},
+ {u:"https://bamada.net/feed",p:"ML",n:"Bamada.net",f:60},
+ {u:"https://www.journaldumali.com/feed",p:"ML",n:"Journal du Mali",f:72},
+ {u:"https://www.info-matin.ml/feed",p:"ML",n:"Info-Matin",f:64},
+ // --- Guinée ---
  {u:"https://www.guineenews.org/feed/",p:"GN",n:"Guinéenews",f:74},
  {u:"https://www.africaguinee.com/feed/",p:"GN",n:"Africaguinée",f:72},
  {u:"https://mosaiqueguinee.com/feed/",p:"GN",n:"Mosaïque Guinée",f:66},
+ {u:"https://mediaguinee.com/feed",p:"GN",n:"Mediaguinee",f:62},
+ {u:"https://www.guinee7.com/feed",p:"GN",n:"Guinée7",f:62},
+ {u:"https://guineelive.com/feed",p:"GN",n:"Guinéelive",f:58},
+ // --- Libéria ---
  {u:"https://frontpageafricaonline.com/feed/",p:"LR",n:"FrontPage Africa",f:76},
  {u:"https://www.liberianobserver.com/feed",p:"LR",n:"Liberian Observer",f:74},
+ {u:"https://www.thenewdawnliberia.com/feed",p:"LR",n:"The New Dawn Liberia",f:66},
+ // --- Ghana ---
  {u:"https://www.myjoyonline.com/feed/",p:"GH",n:"MyJoyOnline",f:78},
  {u:"https://citinewsroom.com/feed/",p:"GH",n:"Citi Newsroom",f:76},
  {u:"https://www.graphic.com.gh/feed",p:"GH",n:"Graphic Online",f:80},
  {u:"https://www.ghanaweb.com/GhanaHomePage/rss/news.xml",p:"GH",n:"GhanaWeb",f:66},
- {u:"https://reliefweb.int/updates/rss.xml?view=headlines&advanced-search=%28PC33_PC57_PC157_PC93_PC142_PC124%29",p:"CI",n:"ReliefWeb — Afrique de l'Ouest",f:90}
+ // --- Couche panafricaine et humanitaire : couvre les six pays à la fois ---
+ {u:"https://reliefweb.int/updates/rss.xml?view=headlines&advanced-search=%28PC33_PC57_PC157_PC93_PC142_PC124%29",p:"CI",n:"ReliefWeb — Afrique de l'Ouest",f:90},
+ {u:"https://www.africanews.com/feed/rss",p:"CI",n:"Africanews — panafricain",f:80},
+ {u:"https://www.crisisgroup.org/rss",p:"CI",n:"International Crisis Group — alerte précoce",f:92}
 ];
 
 /* ---------- Requêtes thématiques par pays ---------- */
@@ -630,8 +686,8 @@ const LEX = {
  FAIBLE:["reunion","seminaire","atelier","ceremonie","inauguration","visite","cooperation","signature","don","formation","sensibilisation","recensement","nomination","election","campagne","sommet","conference","festival","match","tournoi","meeting","workshop","ceremony","inauguration","visit","cooperation","training","summit"]
 };
 const CAT = {
- securite:["attaque","attentat","braquage","vol","arme","police","gendarmerie","militaire","armee","terroriste","djihadiste","jihadiste","embuscade","fusillade","enlevement","otage","criminalite","bandit","coupeurs de route","milice","groupe arme","securite","surete","incursion","patrouille","couvre-feu","police","army","military","security","gunmen","armed","robbery","curfew","attack"],
- humanitaire:["refugies","deplaces","humanitaire","famine","malnutrition","epidemie","cholera","meningite","inondation","secheresse","sinistres","aide","ocha","hcr","unicef","croix-rouge","assistance","vivres","sante","hopital","victimes","humanitarian","refugees","displaced","flood","epidemic","health","hospital","aid","victims"],
+ securite:["attaque","attentat","braquage","vol","arme","police","gendarmerie","militaire","armee","terroriste","djihadiste","jihadiste","embuscade","fusillade","enlevement","otage","criminalite","bandit","coupeurs de route","milice","groupe arme","securite","surete","incursion","patrouille","couvre-feu","police","army","military","security","gunmen","armed","robbery","curfew","attack","tue","tuee","tues","tuees","abattu","abattus","balle","assassine","killed","shot"],
+ humanitaire:["refugies","deplaces","humanitaire","famine","malnutrition","epidemie","cholera","meningite","inondation","secheresse","sinistres","aide","ocha","hcr","unicef","croix-rouge","assistance","vivres","sante","hopital","victimes","humanitarian","refugees","displaced","flood","epidemic","health","hospital","aid","victims","accident","noyade","noye","noyes","chavire","naufrage","accidents","incendie","incendies","feu","embrase","embrasee"],
  politique:["gouvernement","president","ministre","assemblee","election","parti","opposition","scrutin","coup d etat","putsch","constitution","diplomatie","ambassade","cedeao","aes","union africaine","manifestation","greve","syndicat","justice","proces","government","president","minister","parliament","election","opposition","protest","strike","court"],
  economique:["economie","marche","prix","inflation","cacao","cafe","hevea","anacarde","coton","or","mine","petrole","port","fret","commerce","douane","exportation","importation","banque","investissement","carburant","transport","corridor","economy","market","prices","inflation","cocoa","gold","mining","port","trade","customs","fuel"]
 };
@@ -826,7 +882,7 @@ function dater(d){
      2. Fichier publié latest.json produit par GitHub Actions toutes les 30 min
      3. RSS direct     collecte depuis l'appareil via relais CORS (repli)
    L'origine 2 est la plus économe en usage mobile : un seul appel réseau,
-   les 127 flux ayant déjà été interrogés côté serveur.
+   les 138 flux ayant déjà été interrogés côté serveur.
    ================================================================== */
 const CFG = Object.assign(
   { sbUrl:"", sbKey:"", dataUrl:"data/latest.json", origine:"auto",
@@ -904,7 +960,7 @@ async function collecter(){
   $("#btnMaj").disabled = true;
   $("#etat").textContent = "Mise a jour…";
 
-  // 1. Le serveur a deja interroge les 127 flux : un seul appel suffit.
+  // 1. Le serveur a deja interroge les 138 flux : un seul appel suffit.
   const src = await chargerCloud();
   if(src){
     $("#etat").textContent = "À jour · " + src;
@@ -1112,7 +1168,7 @@ function rFlux(){
     const z = ZONES.find(x=>x.z===a.z);
     const g = CORRO.get(a.h);
     const badge = a.manuel
-      ? `<span class="tag" style="border-color:rgba(217,173,84,.5);color:var(--or)">✎ Saisie manuelle</span>`
+      ? `<span class="tag" style="background:rgba(143,112,42,.10);border-color:rgba(143,112,42,.35);color:var(--or)">✎ Saisie manuelle</span>`
       : g ? (g.verifie
         ? `<span class="tag conf" title="${g.srcs.map(esc).join(', ')}">✓ ${g.n} src</span>`
         : `<span class="tag nonconf">? 1 src</span>`) : "";
@@ -1123,7 +1179,7 @@ function rFlux(){
         ${badge}
         ${a.z?`<span class="tag zone">${PAYS[a.p].f} ${esc(a.z)}${a.loc&&a.loc!==a.z?" · "+esc(a.loc):""}</span>`:`<span class="tag">Hors périmètre</span>`}
         <span class="tag">${esc(a.cat)}</span>
-        ${a.ag.map(x=>`<span class="tag" style="border-color:rgba(217,173,84,.5);color:var(--or)">${esc(x.l)}</span>`).join("")}
+        ${a.ag.map(x=>`<span class="tag" style="background:rgba(143,112,42,.10);border-color:rgba(143,112,42,.35);color:var(--or)">${esc(x.l)}</span>`).join("")}
         <span>${esc(a.src)}${CFG.afficherFiab?" · fiabilité "+a.f+"%":""}</span><span>·</span><span>${hDep(a.ts)}</span>
       </div>
       ${a.r?`<p>${esc(a.r)}</p>`:""}
@@ -1292,8 +1348,8 @@ function rBord(){
   ].map(([v,l])=>`<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join("");
   $("#chaleur").innerHTML = zs.sort((a,b)=>b.s.score-a.s.score).map(z=>`
     <div title="${esc(z.z)} — ${z.s.score} — ${LIB[z.s.niveau]}" class="b-${z.s.niveau}" style="border-radius:3px;padding:5px 3px;text-align:center;cursor:pointer" onclick="voirZone('${esc(z.z)}')">
-      <div style="font-family:'Roboto Mono';font-size:11px;font-weight:600;color:rgba(10,16,20,.85)">${z.s.score}</div>
-      <div style="font-size:8px;color:rgba(10,16,20,.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(z.z)}</div>
+      <div style="font-family:'Roboto Mono';font-size:11px;font-weight:600;color:#fff">${z.s.score}</div>
+      <div style="font-size:8px;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(z.z)}</div>
     </div>`).join("");
 }
 
