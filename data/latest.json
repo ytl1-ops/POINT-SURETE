@@ -1,0 +1,1186 @@
+{
+ "genere_le": "2026-07-15T18:51:27.179Z",
+ "profondeur": "demonstration_manuelle",
+ "note": "Snapshot généré à la demande via recherche web par Claude, hors du cycle GitHub Actions habituel — 11 faits réels vérifiés sur les six pays du périmètre, 15 juillet 2026.",
+ "flux_interroges": 11,
+ "flux_joignables": 11,
+ "faits": [
+  {
+   "h": "ghana : le ministre muntaka signale une breche de securite apres la decouverte de passepor",
+   "titre": "Ghana : le ministre Muntaka signale une brèche de sécurité après la découverte de passeports ghanéens chez des Nigérians expulsés",
+   "lien": "https://www.ghanaweb.com/",
+   "survenu_le": "2026-07-15T11:00:00Z",
+   "pays": "GH",
+   "zone": null,
+   "localite": null,
+   "criticite": "MODERE",
+   "categorie": "securite",
+   "source": "GhanaWeb",
+   "fiabilite": 66,
+   "aggravants": [],
+   "resume": "Le ministre de l'Intérieur Muntaka Mubarak a signalé une brèche de sécurité après la découverte de passeports ghanéens authentiques en possession de ressortissants nigérians expulsés."
+  },
+  {
+   "h": "ghana : quinze morts et vingt-cinq blesses dans un accident sur la route peki-tsame",
+   "titre": "Ghana : quinze morts et vingt-cinq blessés dans un accident sur la route Peki-Tsamé",
+   "lien": "https://www.ghanaweb.com/",
+   "survenu_le": "2026-07-15T09:00:00Z",
+   "pays": "GH",
+   "zone": null,
+   "localite": null,
+   "criticite": "CRITIQUE",
+   "categorie": "humanitaire",
+   "source": "GhanaWeb",
+   "fiabilite": 66,
+   "aggravants": [],
+   "resume": "Un accident de la circulation survenu sur la route reliant Peki à Tsamé, dans la région de la Volta, a fait quinze morts et vingt-cinq blessés selon les autorités locales."
+  },
+  {
+   "h": "benin et burkina faso coordonnent leurs forces a koualou face a la menace transfrontaliere",
+   "titre": "Bénin et Burkina Faso coordonnent leurs forces à Koualou face à la menace transfrontalière",
+   "lien": "https://www.baatonu.info/",
+   "survenu_le": "2026-07-15T09:00:00Z",
+   "pays": "BF",
+   "zone": null,
+   "localite": null,
+   "criticite": "ELEVE",
+   "categorie": "securite",
+   "source": "Baatonu Infos",
+   "fiabilite": 55,
+   "aggravants": [],
+   "resume": "Une patrouille conjointe des armées béninoise et burkinabè a été lancée à Koualou, zone frontalière stratégique jouxtant le parc de la Pendjari, face à la mobilité des groupes armés."
+  },
+  {
+   "h": "conakry sous la pluie : l'anasur liste les routes et ponts impraticables a eviter",
+   "titre": "Conakry sous la pluie : l'ANASUR liste les routes et ponts impraticables à éviter",
+   "lien": "https://www.guinee7.com/",
+   "survenu_le": "2026-07-15T08:00:00Z",
+   "pays": "GN",
+   "zone": "Conakry",
+   "localite": "Matoto",
+   "criticite": "ELEVE",
+   "categorie": "politique",
+   "source": "Guinee7",
+   "fiabilite": 65,
+   "aggravants": [],
+   "resume": "Face aux pluies diluviennes, l'Agence nationale de surveillance des routes a publié un bulletin d'alerte d'urgence signalant plusieurs axes de Conakry totalement impraticables, notamment à Kobaya, Yattaya, Sonfonia et Matoto-Tannerie."
+  },
+  {
+   "h": "ghana : trois boutiques detruites dans un incendie a atonsu gyinyase, quartier de kumasi",
+   "titre": "Ghana : trois boutiques détruites dans un incendie à Atonsu Gyinyase, quartier de Kumasi",
+   "lien": "https://www.ghanaweb.com/",
+   "survenu_le": "2026-07-15T07:00:00Z",
+   "pays": "GH",
+   "zone": "Ashanti",
+   "localite": "Kumasi",
+   "criticite": "MODERE",
+   "categorie": "humanitaire",
+   "source": "GhanaWeb",
+   "fiabilite": 64,
+   "aggravants": [],
+   "resume": "Un incendie a détruit trois boutiques dans le quartier d'Atonsu Gyinyase, à Kumasi, dans la région Ashanti. Aucune victime n'a été signalée."
+  },
+  {
+   "h": "matoto : aliou camara, 17 ans, tue par balle quelques heures apres son arrivee a conakry p",
+   "titre": "Matoto : Aliou Camara, 17 ans, tué par balle quelques heures après son arrivée à Conakry pour les vacances",
+   "lien": "https://mediaguinee.com/",
+   "survenu_le": "2026-07-14T18:00:00Z",
+   "pays": "GN",
+   "zone": "Conakry",
+   "localite": "Matoto",
+   "criticite": "CRITIQUE",
+   "categorie": "securite",
+   "source": "Mediaguinee",
+   "fiabilite": 60,
+   "aggravants": [],
+   "resume": "Un adolescent de 17 ans a été tué par balle à Matoto, dans la commune de Conakry, quelques heures après son arrivée pour les vacances."
+  },
+  {
+   "h": "cote d'ivoire/touba : le bilan de l'accident du car tombe dans le fleuve bafing s'alourdit",
+   "titre": "Côte d'Ivoire/Touba : le bilan de l'accident du car tombé dans le fleuve Bafing s'alourdit à 24 morts",
+   "lien": "https://www.abidjan.net/",
+   "survenu_le": "2026-07-14T16:00:00Z",
+   "pays": "CI",
+   "zone": "Bafing",
+   "localite": "Touba",
+   "criticite": "CRITIQUE",
+   "categorie": "humanitaire",
+   "source": "Abidjan.net",
+   "fiabilite": 70,
+   "aggravants": [],
+   "resume": "Le bilan de l'accident survenu à Touba, où un car de transport en commun a chuté dans le fleuve Bafing, s'est alourdi à 24 morts selon les autorités locales."
+  },
+  {
+   "h": "liberia : l'equipe conjointe d'enquete de securite nationale poursuit ses investigations s",
+   "titre": "Liberia : l'équipe conjointe d'enquête de sécurité nationale poursuit ses investigations sur la saisie de cocaïne à 19 millions de dollars",
+   "lien": "https://www.thenewdawnliberia.com/",
+   "survenu_le": "2026-07-13T15:00:00Z",
+   "pays": "LR",
+   "zone": null,
+   "localite": null,
+   "criticite": "MODERE",
+   "categorie": "securite",
+   "source": "The New Dawn Liberia",
+   "fiabilite": 62,
+   "aggravants": [
+    {
+     "l": "Infrastructure critique",
+     "v": 3
+    }
+   ],
+   "resume": "Le Joint National Security Investigation Team, sous l'autorité du ministère de la Justice, poursuit son enquête sur la saisie de près de 237,6 kilogrammes de cocaïne à l'aéroport international Roberts, un dossier qui alimente une controverse politique croissante."
+  },
+  {
+   "h": "guinee : vingt-deux morts en dix jours dans deux accidents sur la rn1 entre kindia et mamo",
+   "titre": "Guinée : vingt-deux morts en dix jours dans deux accidents sur la RN1 entre Kindia et Mamou",
+   "lien": "https://guineelive.com/",
+   "survenu_le": "2026-07-13T12:00:00Z",
+   "pays": "GN",
+   "zone": "Labé / Mamou",
+   "localite": "Mamou",
+   "criticite": "CRITIQUE",
+   "categorie": "humanitaire",
+   "source": "Guineelive",
+   "fiabilite": 58,
+   "aggravants": [],
+   "resume": "En l'espace de dix jours, vingt-deux personnes ont perdu la vie dans deux accidents de la circulation survenus sur la Route nationale N°1, entre Kindia et Mamou, relançant le débat sur la sécurité routière."
+  },
+  {
+   "h": "guinee : nouvel accident meurtrier a l'entree de mamou, seize morts",
+   "titre": "Guinée : nouvel accident meurtrier à l'entrée de Mamou, seize morts",
+   "lien": "https://guineelive.com/",
+   "survenu_le": "2026-07-12T14:00:00Z",
+   "pays": "GN",
+   "zone": "Labé / Mamou",
+   "localite": "Mamou",
+   "criticite": "CRITIQUE",
+   "categorie": "securite",
+   "source": "Guineelive",
+   "fiabilite": 58,
+   "aggravants": [],
+   "resume": "Une catastrophe routière survenue à l'entrée de la ville de Mamou a coûté la vie à seize citoyens guinéens, relançant le débat sur la sécurité routière dans le pays."
+  },
+  {
+   "h": "la cote d'ivoire renforce son dispositif de securisation des frontieres nord",
+   "titre": "La Côte d'Ivoire renforce son dispositif de sécurisation des frontières nord",
+   "lien": "https://rti.info/",
+   "survenu_le": "2026-07-06T10:00:00Z",
+   "pays": "CI",
+   "zone": null,
+   "localite": null,
+   "criticite": "FAIBLE",
+   "categorie": "securite",
+   "source": "RTI Infos",
+   "fiabilite": 82,
+   "aggravants": [],
+   "resume": "Le ministre de l'Intérieur et de la Sécurité, Vagondo Diomandé, a présidé une réunion consacrée au renforcement du dispositif sécuritaire aux frontières nord du pays."
+  }
+ ],
+ "zones": [
+  {
+   "zone": "Labé / Mamou",
+   "pays": "GN",
+   "district": "Fouta-Djalon",
+   "score": 49,
+   "niveau": "ORANGE",
+   "faits": 2,
+   "critiques": 2,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Conakry",
+   "pays": "GN",
+   "district": "Capitale",
+   "score": 39,
+   "niveau": "JAUNE",
+   "faits": 2,
+   "critiques": 1,
+   "eleves": 1,
+   "aggravants": []
+  },
+  {
+   "zone": "Bafing",
+   "pays": "CI",
+   "district": "Woroba",
+   "score": 28,
+   "niveau": "JAUNE",
+   "faits": 1,
+   "critiques": 1,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Ashanti",
+   "pays": "GH",
+   "district": "Centre",
+   "score": 8,
+   "niveau": "VERT",
+   "faits": 1,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Abidjan",
+   "pays": "CI",
+   "district": "District autonome",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Yamoussoukro",
+   "pays": "CI",
+   "district": "District autonome",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Gbôklé",
+   "pays": "CI",
+   "district": "Bas-Sassandra",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Nawa",
+   "pays": "CI",
+   "district": "Bas-Sassandra",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "San-Pédro",
+   "pays": "CI",
+   "district": "Bas-Sassandra",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Indénié-Djuablin",
+   "pays": "CI",
+   "district": "Comoé",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Sud-Comoé",
+   "pays": "CI",
+   "district": "Comoé",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Folon",
+   "pays": "CI",
+   "district": "Denguélé",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Kabadougou",
+   "pays": "CI",
+   "district": "Denguélé",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Gôh",
+   "pays": "CI",
+   "district": "Gôh-Djiboua",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Lôh-Djiboua",
+   "pays": "CI",
+   "district": "Gôh-Djiboua",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Bélier",
+   "pays": "CI",
+   "district": "Lacs",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Iffou",
+   "pays": "CI",
+   "district": "Lacs",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Moronou",
+   "pays": "CI",
+   "district": "Lacs",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "N'Zi",
+   "pays": "CI",
+   "district": "Lacs",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Agnéby-Tiassa",
+   "pays": "CI",
+   "district": "Lagunes",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Grands-Ponts",
+   "pays": "CI",
+   "district": "Lagunes",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "La Mé",
+   "pays": "CI",
+   "district": "Lagunes",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Cavally",
+   "pays": "CI",
+   "district": "Montagnes",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Guémon",
+   "pays": "CI",
+   "district": "Montagnes",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Tonkpi",
+   "pays": "CI",
+   "district": "Montagnes",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Haut-Sassandra",
+   "pays": "CI",
+   "district": "Sassandra-Marahoué",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Marahoué",
+   "pays": "CI",
+   "district": "Sassandra-Marahoué",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Bagoué",
+   "pays": "CI",
+   "district": "Savanes",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Poro",
+   "pays": "CI",
+   "district": "Savanes",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Tchologo",
+   "pays": "CI",
+   "district": "Savanes",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Gbêkê",
+   "pays": "CI",
+   "district": "Vallée du Bandama",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Hambol",
+   "pays": "CI",
+   "district": "Vallée du Bandama",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Béré",
+   "pays": "CI",
+   "district": "Woroba",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Worodougou",
+   "pays": "CI",
+   "district": "Woroba",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Bounkani",
+   "pays": "CI",
+   "district": "Zanzan",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Gontougo",
+   "pays": "CI",
+   "district": "Zanzan",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Cascades",
+   "pays": "BF",
+   "district": "Frontière CI nord-est",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Hauts-Bassins",
+   "pays": "BF",
+   "district": "Frontière CI",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Sud-Ouest",
+   "pays": "BF",
+   "district": "Frontière CI est",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Centre / Ouagadougou",
+   "pays": "BF",
+   "district": "Capitale",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Boucle du Mouhoun",
+   "pays": "BF",
+   "district": "Ouest",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Centre-Ouest",
+   "pays": "BF",
+   "district": "Centre",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Sahel",
+   "pays": "BF",
+   "district": "Nord — menace armée",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Nord",
+   "pays": "BF",
+   "district": "Nord",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Est",
+   "pays": "BF",
+   "district": "Est — menace armée",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Centre-Est",
+   "pays": "BF",
+   "district": "Sud-est",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Sikasso",
+   "pays": "ML",
+   "district": "Frontière CI nord",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Bougouni",
+   "pays": "ML",
+   "district": "Frontière CI nord-ouest",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Bamako",
+   "pays": "ML",
+   "district": "Capitale",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Ségou",
+   "pays": "ML",
+   "district": "Centre",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Mopti",
+   "pays": "ML",
+   "district": "Centre — menace armée",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Kayes",
+   "pays": "ML",
+   "district": "Ouest",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Koulikoro",
+   "pays": "ML",
+   "district": "Centre-ouest",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Nord",
+   "pays": "ML",
+   "district": "Gao · Tombouctou · Kidal",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Nzérékoré",
+   "pays": "GN",
+   "district": "Frontière CI ouest",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Kankan",
+   "pays": "GN",
+   "district": "Frontière CI nord-ouest",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Faranah",
+   "pays": "GN",
+   "district": "Centre",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Kindia",
+   "pays": "GN",
+   "district": "Ouest",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Boké",
+   "pays": "GN",
+   "district": "Nord-ouest",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Nimba",
+   "pays": "LR",
+   "district": "Frontière CI ouest",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Grand Gedeh",
+   "pays": "LR",
+   "district": "Frontière CI",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Maryland / River Gee",
+   "pays": "LR",
+   "district": "Frontière CI sud",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Montserrado",
+   "pays": "LR",
+   "district": "Capitale",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Bong / Lofa",
+   "pays": "LR",
+   "district": "Nord",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Grand Bassa / Sinoe",
+   "pays": "LR",
+   "district": "Côte",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Western North",
+   "pays": "GH",
+   "district": "Frontière CI",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Western",
+   "pays": "GH",
+   "district": "Frontière CI sud",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Bono / Bono East",
+   "pays": "GH",
+   "district": "Frontière CI nord",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Savannah",
+   "pays": "GH",
+   "district": "Nord-ouest",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Upper West",
+   "pays": "GH",
+   "district": "Nord",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Upper East",
+   "pays": "GH",
+   "district": "Nord-est",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Northern",
+   "pays": "GH",
+   "district": "Nord",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  },
+  {
+   "zone": "Greater Accra",
+   "pays": "GH",
+   "district": "Capitale",
+   "score": 0,
+   "niveau": "VERT",
+   "faits": 0,
+   "critiques": 0,
+   "eleves": 0,
+   "aggravants": []
+  }
+ ],
+ "corridors": [
+  {
+   "nom": "Abidjan — Ouangolodougou — Ouagadougou",
+   "sous_titre": "Rail SITARAIL + RN1 · fret et voyageurs",
+   "score": 0,
+   "niveau": "VERT",
+   "zones": [
+    {
+     "zone": "Abidjan",
+     "score": 0
+    },
+    {
+     "zone": "Agnéby-Tiassa",
+     "score": 0
+    },
+    {
+     "zone": "Bélier",
+     "score": 0
+    },
+    {
+     "zone": "Yamoussoukro",
+     "score": 0
+    },
+    {
+     "zone": "N'Zi",
+     "score": 0
+    },
+    {
+     "zone": "Gbêkê",
+     "score": 0
+    },
+    {
+     "zone": "Hambol",
+     "score": 0
+    },
+    {
+     "zone": "Poro",
+     "score": 0
+    },
+    {
+     "zone": "Tchologo",
+     "score": 0
+    },
+    {
+     "zone": "Cascades",
+     "score": 0
+    },
+    {
+     "zone": "Hauts-Bassins",
+     "score": 0
+    },
+    {
+     "zone": "Centre / Ouagadougou",
+     "score": 0
+    }
+   ]
+  },
+  {
+   "nom": "Abidjan — Noé — Accra",
+   "sous_titre": "Corridor côtier ouest-africain",
+   "score": 0,
+   "niveau": "VERT",
+   "zones": [
+    {
+     "zone": "Abidjan",
+     "score": 0
+    },
+    {
+     "zone": "Sud-Comoé",
+     "score": 0
+    },
+    {
+     "zone": "Western",
+     "score": 0
+    },
+    {
+     "zone": "Greater Accra",
+     "score": 0
+    }
+   ]
+  },
+  {
+   "nom": "San-Pédro — Toulépleu — Nzérékoré",
+   "sous_titre": "Débouché portuaire de la Guinée forestière",
+   "score": 0,
+   "niveau": "VERT",
+   "zones": [
+    {
+     "zone": "San-Pédro",
+     "score": 0
+    },
+    {
+     "zone": "Nawa",
+     "score": 0
+    },
+    {
+     "zone": "Cavally",
+     "score": 0
+    },
+    {
+     "zone": "Guémon",
+     "score": 0
+    },
+    {
+     "zone": "Tonkpi",
+     "score": 0
+    },
+    {
+     "zone": "Nzérékoré",
+     "score": 0
+    }
+   ]
+  },
+  {
+   "nom": "Odienné — Zégoua — Bamako",
+   "sous_titre": "Axe nord-ouest vers le Mali",
+   "score": 0,
+   "niveau": "VERT",
+   "zones": [
+    {
+     "zone": "Kabadougou",
+     "score": 0
+    },
+    {
+     "zone": "Folon",
+     "score": 0
+    },
+    {
+     "zone": "Bagoué",
+     "score": 0
+    },
+    {
+     "zone": "Tchologo",
+     "score": 0
+    },
+    {
+     "zone": "Sikasso",
+     "score": 0
+    },
+    {
+     "zone": "Bougouni",
+     "score": 0
+    },
+    {
+     "zone": "Bamako",
+     "score": 0
+    }
+   ]
+  },
+  {
+   "nom": "Man — Danané — Ganta",
+   "sous_titre": "Axe libérien de l'Ouest",
+   "score": 0,
+   "niveau": "VERT",
+   "zones": [
+    {
+     "zone": "Tonkpi",
+     "score": 0
+    },
+    {
+     "zone": "Cavally",
+     "score": 0
+    },
+    {
+     "zone": "Nimba",
+     "score": 0
+    },
+    {
+     "zone": "Montserrado",
+     "score": 0
+    }
+   ]
+  },
+  {
+   "nom": "Bouna — Doropo — Gaoua",
+   "sous_titre": "Frange nord-est · parc de la Comoé",
+   "score": 0,
+   "niveau": "VERT",
+   "zones": [
+    {
+     "zone": "Bounkani",
+     "score": 0
+    },
+    {
+     "zone": "Gontougo",
+     "score": 0
+    },
+    {
+     "zone": "Tchologo",
+     "score": 0
+    },
+    {
+     "zone": "Sud-Ouest",
+     "score": 0
+    },
+    {
+     "zone": "Cascades",
+     "score": 0
+    }
+   ]
+  }
+ ]
+}
