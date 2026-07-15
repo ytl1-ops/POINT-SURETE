@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>POINT SÛRETÉ — Renseignement de proximité · Côte d'Ivoire et pays limitrophes</title>
+<meta name="description" content="Collecte et analyse du renseignement de sûreté en profondeur sur la Côte d'Ivoire (33 zones administratives) et ses cinq pays limitrophes. Outil d'aide à la décision pour responsables sûreté, ambassades, institutions et ONG.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --fond:#0D1512; --carte:#152420; --carte2:#101C18; --ligne:#25352E;
+  --texte:#EAEFEA; --sourd:#96A79D; --faible:#66786D;
+  --laterite:#C36F45; --kola:#4CAE85; --or:#D9AD54;
+  --rouge:#C2635C; --marron:#A16E4C; --orange:#D99259; --jaune:#D6C46E; --vert:#4CAE85;
+  --r:4px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--fond);color:var(--texte);font-family:'Inter',system-ui,sans-serif;font-size:14px;line-height:1.5;-webkit-text-size-adjust:100%}
+body{padding-bottom:76px}
+h1,h2,h3,h4,.cond{font-family:'Barlow Condensed','Inter',sans-serif;letter-spacing:.02em}
+.mono{font-family:'Roboto Mono',monospace}
+a{color:var(--kola);text-decoration:none}
+button,select,input,textarea{font-family:inherit;font-size:14px}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--or);outline-offset:2px}
+
+/* ---------- En-tête ---------- */
+header{position:sticky;top:0;z-index:40;background:rgba(10,16,20,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--ligne)}
+.bar{display:flex;align-items:center;gap:10px;padding:10px 12px}
+.logo{display:flex;align-items:baseline;gap:7px;min-width:0}
+.logo b{font-family:'Barlow Condensed';font-size:22px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.logo span{color:var(--laterite)}
+.logo em{font-style:normal;font-size:10px;color:var(--faible);text-transform:uppercase;letter-spacing:.14em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spacer{flex:1}
+.btn{background:var(--carte);border:1px solid var(--ligne);color:var(--texte);padding:7px 11px;border-radius:var(--r);font-size:12px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--faible)}
+.btn.p{background:var(--laterite);border-color:var(--laterite);color:#fff;font-weight:600}
+.btn.p:hover{filter:brightness(1.1)}
+.btn.s{background:transparent}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.pastille{display:inline-flex;align-items:center;gap:5px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--sourd)}
+.pt{width:7px;height:7px;border-radius:50%;background:var(--vert);box-shadow:0 0 0 0 rgba(76,174,133,.55);animation:pulse 2.4s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 7px rgba(76,174,133,0)}100%{box-shadow:0 0 0 0 rgba(76,174,133,0)}}
+
+/* ---------- Signature : ruban corridor ---------- */
+.corridor{border-bottom:1px solid var(--ligne);background:var(--carte2);padding:9px 12px 11px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.corridor-t{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--faible);margin-bottom:7px}
+.corridor-l{display:flex;align-items:flex-start;min-width:640px;position:relative}
+.corridor-l:before{content:'';position:absolute;top:5px;left:0;right:0;height:2px;background:var(--ligne)}
+.noeud{flex:1;position:relative;text-align:left;padding-right:6px}
+.noeud i{display:block;width:12px;height:12px;border-radius:50%;border:2px solid var(--fond);position:relative;z-index:1;background:var(--faible)}
+.noeud b{display:block;font-family:'Barlow Condensed';font-size:12px;font-weight:600;margin-top:5px;letter-spacing:.03em;white-space:nowrap}
+.noeud u{display:block;text-decoration:none;font-size:9px;color:var(--faible);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+
+/* ---------- Onglets ---------- */
+nav{position:fixed;bottom:0;left:0;right:0;z-index:45;display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(10,16,20,.97);backdrop-filter:blur(10px);border-top:1px solid var(--ligne);padding-bottom:env(safe-area-inset-bottom);scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{flex:1 0 auto;min-width:64px;background:none;border:0;color:var(--faible);padding:9px 6px 8px;font-family:'Barlow Condensed';font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;border-top:2px solid transparent;margin-top:-1px;white-space:nowrap}
+nav button.on{color:var(--texte);border-top-color:var(--laterite)}
+nav button i{display:block;font-style:normal;font-size:16px;margin-bottom:2px}
+.compteur{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;border-radius:99px;background:var(--rouge);color:#fff;font-size:9.5px;font-weight:700;margin-left:4px;vertical-align:2px}
+
+main{padding:12px}
+.panneau{display:none}.panneau.on{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- Blocs ---------- */
+.titre{display:flex;align-items:baseline;gap:8px;margin:2px 0 10px}
+.titre h2{font-size:19px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.titre small{color:var(--faible);font-size:11px}
+.aide{color:var(--sourd);font-size:12px;border-left:2px solid var(--ligne);padding-left:9px;margin-bottom:12px}
+.carte{background:var(--carte);border:1px solid var(--ligne);border-radius:var(--r);padding:12px;margin-bottom:10px}
+.grille{display:grid;gap:8px}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:520px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--carte);border:1px solid var(--ligne);border-radius:var(--r);padding:10px}
+.kpi b{display:block;font-family:'Roboto Mono';font-size:22px;font-weight:500;line-height:1.1}
+.kpi span{font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--faible)}
+.rang{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.puce{background:var(--carte2);border:1px solid var(--ligne);color:var(--sourd);padding:5px 9px;border-radius:99px;font-size:11.5px;white-space:nowrap}
+.puce.on{background:var(--texte);color:var(--fond);border-color:var(--texte);font-weight:600}
+select,input[type=text]{background:var(--carte2);border:1px solid var(--ligne);color:var(--texte);padding:8px 9px;border-radius:var(--r);width:100%}
+
+/* ---------- Article ---------- */
+.art{background:var(--carte);border:1px solid var(--ligne);border-left:3px solid var(--faible);border-radius:var(--r);padding:11px;margin-bottom:8px}
+.art.CRITIQUE{border-left-color:var(--rouge)}.art.ELEVE{border-left-color:var(--orange)}
+.art.MODERE{border-left-color:var(--jaune)}.art.FAIBLE{border-left-color:var(--vert)}
+.art h3{font-size:15.5px;font-weight:600;line-height:1.3;margin-bottom:6px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:10.5px;color:var(--faible)}
+.tag{font-family:'Barlow Condensed';font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;padding:2px 6px;border-radius:2px;background:var(--carte2);border:1px solid var(--ligne);color:var(--sourd)}
+.tag.CRITIQUE{background:rgba(194,99,92,.16);border-color:rgba(194,99,92,.5);color:#E3A8A2}
+.tag.ELEVE{background:rgba(217,146,89,.16);border-color:rgba(217,146,89,.5);color:#EBBD93}
+.tag.MODERE{background:rgba(214,196,110,.14);border-color:rgba(214,196,110,.42);color:#E1D398}
+.tag.FAIBLE{background:rgba(76,174,133,.14);border-color:rgba(76,174,133,.42);color:#8FCDAF}
+.tag.zone{background:rgba(195,111,69,.14);border-color:rgba(195,111,69,.45);color:#DDA987}
+.art p{font-size:12.5px;color:var(--sourd);margin-top:7px}
+.art .liens{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
+.art .liens a{font-size:11px;border-bottom:1px dotted var(--kola)}
+
+/* ---------- Zones ---------- */
+.zone-l{display:flex;align-items:center;gap:9px;padding:8px 9px;border:1px solid var(--ligne);border-radius:var(--r);background:var(--carte);margin-bottom:5px}
+.zone-l .sc{font-family:'Roboto Mono';font-size:14px;font-weight:500;width:32px;text-align:right}
+.zone-l .nm{flex:1;min-width:0}
+.zone-l .nm b{display:block;font-family:'Barlow Condensed';font-size:15px;font-weight:600;letter-spacing:.02em}
+.zone-l .nm span{font-size:10px;color:var(--faible)}
+.jauge{height:4px;background:var(--ligne);border-radius:2px;overflow:hidden;margin-top:4px}
+.jauge i{display:block;height:100%}
+.n-ROUGE{color:var(--rouge)}.n-MARRON{color:#C97A55}.n-ORANGE{color:var(--orange)}.n-JAUNE{color:var(--jaune)}.n-VERT{color:var(--vert)}
+.b-ROUGE{background:var(--rouge)}.b-MARRON{background:var(--marron)}.b-ORANGE{background:var(--orange)}.b-JAUNE{background:var(--jaune)}.b-VERT{background:var(--vert)}
+
+.vide{text-align:center;color:var(--faible);padding:34px 14px;border:1px dashed var(--ligne);border-radius:var(--r)}
+.vide b{display:block;font-family:'Barlow Condensed';font-size:17px;color:var(--sourd);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+.log{font-family:'Roboto Mono';font-size:10.5px;color:var(--faible);background:var(--carte2);border:1px solid var(--ligne);border-radius:var(--r);padding:8px;max-height:120px;overflow:auto;white-space:pre-wrap}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:6px 5px;border-bottom:1px solid var(--ligne)}
+th{font-family:'Barlow Condensed';font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--faible);font-weight:600}
+.progress{height:3px;background:var(--ligne);position:relative;overflow:hidden}
+.progress i{position:absolute;left:0;top:0;bottom:0;background:var(--laterite);width:0;transition:width .3s}
+.hint{font-size:11px;color:var(--faible);margin-top:6px}
+label.sw{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--ligne)}
+label.sw span{font-size:13px}
+label.sw small{display:block;color:var(--faible);font-size:11px}
+@media print{nav,header,.corridor,.rang,.btn{display:none!important}body{background:#fff;color:#000}.carte,.art{border-color:#ccc;background:#fff}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <div class="logo"><b>POINT <span>SÛRETÉ</span></b><em>CI + 5 limitrophes</em></div>
+    <div class="spacer"></div>
+    <span class="pastille"><i class="pt"></i><span id="etat">Prêt</span></span>
+    <button class="btn p" id="btnMaj">Collecter</button>
+  </div>
+  <div class="progress"><i id="prog"></i></div>
+  <!-- Signature : ruban du corridor Abidjan–Ouangolodougou–Ouagadougou -->
+  <div class="corridor">
+    <div class="corridor-t">Corridor de référence · Abidjan → Ouangolodougou → Ouagadougou</div>
+    <div class="corridor-l" id="corridor"></div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ FLUX ============ -->
+<section class="panneau on" id="p-flux">
+  <div class="titre"><h2>Flux de proximité</h2><small id="fluxCount">—</small></div>
+  <div class="aide" id="fluxAide">Faits collectés sur la fenêtre choisie, rattachés à la zone administrative où ils se produisent — pas au siège du média qui les publie.</div>
+  <div class="rang" id="fPays"></div>
+  <div class="rang" id="fCat"></div>
+  <div style="margin-bottom:10px"><input type="text" id="fRech" placeholder="Rechercher une localité, un thème, une source…"></div>
+  <div id="flux"></div>
+</section>
+
+<!-- ============ ZONES ============ -->
+<section class="panneau" id="p-zones">
+  <div class="titre"><h2>Zones</h2><small>33 zones CI · 40 zones limitrophes</small></div>
+  <div class="aide">Chaque zone reçoit un score de 0 à 100 recalculé à chaque collecte à partir des faits qui lui sont rattachés. Une zone sans signal est une zone sans source disponible, pas une zone sûre.</div>
+  <div class="rang" id="zPays"></div>
+  <div id="zones"></div>
+</section>
+
+<!-- ============ CORRIDORS ============ -->
+<section class="panneau" id="p-corr">
+  <div class="titre"><h2>Corridors</h2><small>Axes transfrontaliers</small></div>
+  <div class="aide">Les corridors agrègent les signaux de toutes les zones qu'ils traversent, des deux côtés de la frontière. Un axe se dégrade souvent avant les capitales.</div>
+  <div id="corrs"></div>
+</section>
+
+<!-- ============ SYNTHÈSE ============ -->
+<section class="panneau" id="p-synth">
+  <div class="titre"><h2>Point de situation</h2><small id="synthDate">—</small></div>
+  <div class="aide">Note de situation générée à partir des seuls faits collectés. Aucun contenu n'est inventé : ce qui n'a pas été collecté n'apparaît pas.</div>
+  <div class="rang">
+    <button class="puce" onclick="exportWord()">Exporter Word</button>
+    <button class="puce" onclick="window.print()">Imprimer / PDF</button>
+    <button class="puce" onclick="exportCSV()">Exporter CSV</button>
+    <button class="puce" onclick="exportJSON()">Sauvegarde JSON</button>
+  </div>
+  <div id="synth"></div>
+</section>
+
+<!-- ============ ADMINISTRATION ============ -->
+<section class="panneau" id="p-admin">
+  <div class="titre"><h2>Administration</h2><small>Accès, rôles et droits — local à cet appareil</small></div>
+  <div class="aide">POINT SÛRETÉ est une application 100&nbsp;% statique, sans serveur d'authentification : ce module organise le partage d'un même appareil entre plusieurs personnes d'une équipe, il ne remplace pas un contrôle d'accès réseau. Pour un accès distinct par personne et par appareil, adossez l'application à Supabase Auth.</div>
+
+  <div class="carte">
+    <h3 style="font-size:15px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Votre profil administrateur</h3>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:38px;height:38px;border-radius:50%;background:var(--laterite);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed';font-weight:700;font-size:16px;color:#fff">A</div>
+      <div style="flex:1"><b class="cond" style="font-size:15px;display:block">Administrateur POINT SÛRETÉ</b><span style="font-size:11px;color:var(--faible)">Code d'accès personnel — à ne communiquer qu'à vous-même</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:9px">
+      <code class="mono" id="codeAcces" style="background:var(--carte2);border:1px solid var(--ligne);border-radius:var(--r);padding:7px 10px;font-size:14px;letter-spacing:.1em;flex:1"></code>
+      <button class="btn s" onclick="copierCode()">Copier</button>
+      <button class="btn s" onclick="regenererCode()">Régénérer</button>
+    </div>
+  </div>
+
+  <div class="carte">
+    <h3 style="font-size:15px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Rôle actif sur cet appareil</h3>
+    <select id="roleActif" style="margin-bottom:6px">
+      <option value="admin">Administrateur — accès complet</option>
+      <option value="utilisateur">Utilisateur — sans Administration ni Réglages</option>
+      <option value="lecteur">Lecteur — consultation seule</option>
+    </select>
+    <p class="hint">Détermine les onglets visibles ci-dessous, pour remettre l'appareil à une personne sans lui laisser tous les droits. Le passage en Administrateur n'exige pas le code : sur un appareil partagé, gardez-le physiquement.</p>
+  </div>
+
+  <div class="carte">
+    <h3 style="font-size:15px;margin-bottom:2px;text-transform:uppercase;letter-spacing:.06em">Utilisateurs enregistrés</h3>
+    <p class="hint" style="margin-bottom:8px">Registre local des personnes autorisées à utiliser cet appareil — pour mémoire d'équipe, pas pour une vérification d'identité.</p>
+    <div class="grille g3" style="margin-bottom:8px">
+      <input type="text" id="uNom" placeholder="Nom complet">
+      <input type="text" id="uOrg" placeholder="Organisation / fonction">
+      <select id="uRole"><option value="lecteur">Lecteur</option><option value="utilisateur" selected>Utilisateur</option><option value="admin">Administrateur</option></select>
+    </div>
+    <button class="btn p" onclick="ajouterUtilisateur()">Ajouter</button>
+    <div id="utilisateurs" style="margin-top:10px"></div>
+  </div>
+
+  <div class="carte">
+    <h3 style="font-size:15px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Droits d'accès par rôle</h3>
+    <p class="hint" style="margin-bottom:8px">Ce que chaque rôle peut consulter. Un module décoché disparaît de la navigation pour ce rôle.</p>
+    <div id="droits"></div>
+    <button class="btn s" onclick="droitsDefaut()" style="margin-top:8px">Rétablir les droits par défaut</button>
+  </div>
+</section>
+
+<!-- ============ PARAMÈTRES ============ -->
+<section class="panneau" id="p-par">
+  <div class="titre"><h2>Paramètres</h2><small>Local à cet appareil</small></div>
+  <div class="carte">
+    <h3 style="font-size:15px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Origine des données</h3>
+    <select id="orig" style="margin-bottom:8px">
+      <option value="auto">Automatique — serveur, puis appareil en secours</option>
+      <option value="supabase">Supabase seul — historique 90 jours et recherche</option>
+      <option value="github">Fichier publié seul — le plus économe en données</option>
+      <option value="rss">Appareil seul — collecte directe, sans serveur</option>
+    </select>
+    <input type="text" id="cDataUrl" placeholder="Fichier publié — data/latest.json" style="margin-bottom:6px">
+    <input type="text" id="cSbUrl" placeholder="URL du projet Supabase — https://xxxx.supabase.co" style="margin-bottom:6px">
+    <input type="text" id="cSbKey" placeholder="Clé publique anon de Supabase" style="margin-bottom:8px">
+    <button class="btn p" onclick="cfgEnr()">Enregistrer</button>
+    <p class="hint">La clé <b>anon</b> est prévue pour être publique : les règles RLS du projet n'autorisent que la lecture. N'inscrivez jamais ici la clé <b>service_role</b> — sa place est dans les secrets GitHub, elle seule peut écrire.</p>
+  </div>
+  <div class="carte">
+    <h3 style="font-size:15px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Profondeur de collecte</h3>
+    <select id="prof">
+      <option value="rapide">Rapide — sources nationales des 6 pays (≈ 30 flux)</option>
+      <option value="standard" selected>Standard — nationales + 33 zones de Côte d'Ivoire (≈ 70 flux)</option>
+      <option value="profond">Profond — tout le maillage, CI et limitrophes (≈ 110 flux)</option>
+    </select>
+    <p class="hint">Ne concerne que la collecte depuis l&rsquo;appareil. Quand le serveur alimente l&rsquo;application, il travaille toujours en mode Profond &mdash; 127 flux, sans coût pour votre forfait mobile.</p>
+  </div>
+  <div class="carte">
+    <h3 style="font-size:15px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Précision de la collecte</h3>
+    <p class="hint" style="margin-bottom:8px">Concentrez la veille sur un périmètre plus étroit, ou surveillez une zone en priorité sans attendre le prochain cycle complet.</p>
+    <label style="display:block;font-size:12px;color:var(--sourd);margin-bottom:4px">Pays inclus dans la collecte</label>
+    <div class="rang" id="cPays" style="margin-bottom:10px"></div>
+    <label style="display:block;font-size:12px;color:var(--sourd);margin-bottom:4px">Zone prioritaire</label>
+    <select id="cZonePrio" style="margin-bottom:4px"></select>
+    <p class="hint" style="margin-bottom:10px">La zone prioritaire est interrogée en tête de file et toujours en profondeur maximale, même en mode Rapide ou Standard.</p>
+    <div class="grille g2" style="margin-bottom:4px">
+      <div>
+        <label style="display:block;font-size:12px;color:var(--sourd);margin-bottom:4px">Fenêtre du flux</label>
+        <select id="cFenetre">
+          <option value="6">6 heures</option>
+          <option value="12">12 heures</option>
+          <option value="24">24 heures</option>
+          <option value="48">48 heures</option>
+        </select>
+      </div>
+      <div>
+        <label style="display:block;font-size:12px;color:var(--sourd);margin-bottom:4px">Intervalle automatique</label>
+        <select id="cIntervalle">
+          <option value="5">5 minutes</option>
+          <option value="15">15 minutes</option>
+          <option value="30">30 minutes</option>
+          <option value="60">60 minutes</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn p" onclick="collecteEnr()" style="margin-top:6px">Appliquer</button>
+  </div>
+  <div class="carte">
+    <h3 style="font-size:15px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Règles d'affichage</h3>
+    <label class="sw"><span>Faits hors périmètre<small>Afficher les faits sans rattachement à une zone du périmètre</small></span><input type="checkbox" id="oHors"></label>
+    <label class="sw"><span>Niveau de fiabilité<small>Afficher le score de fiabilité de chaque source sur les articles</small></span><input type="checkbox" id="oFiab" checked></label>
+    <label class="sw"><span>Collecte automatique<small>Relancer une collecte à l'intervalle choisi ci-dessus</small></span><input type="checkbox" id="oAuto"></label>
+  </div>
+  <div class="carte">
+    <h3 style="font-size:15px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Journal de collecte</h3>
+    <div class="log" id="log">En attente d'une première collecte.</div>
+    <div style="display:flex;gap:6px;margin-top:8px">
+      <button class="btn s" onclick="diag()">Tester les relais</button>
+      <button class="btn s" onclick="reset()">Vider le cache</button>
+    </div>
+  </div>
+  <div class="carte">
+    <h3 style="font-size:15px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Méthode et limites</h3>
+    <p style="font-size:12px;color:var(--sourd)">POINT SÛRETÉ agrège des flux RSS publics : agences et médias nationaux des six pays, presse régionale, et requêtes d'actualité ciblées sur chaque zone administrative. Le rattachement géographique se fait par détection de localité dans le texte, avec correspondance de mots entiers et normalisation des accents ; un fait dont aucune localité du périmètre n'est reconnue est classé hors périmètre plutôt que rattaché par défaut au pays du média.</p>
+    <p style="font-size:12px;color:var(--sourd);margin-top:8px">Le score de zone est une mesure de pression informationnelle, pas une mesure de risque absolue. Il dépend de la densité de couverture médiatique locale, qui est faible dans certaines régions. Recoupez toute décision opérationnelle avec vos propres canaux de terrain.</p>
+    <p style="font-size:12px;color:var(--faible);margin-top:8px">Aucune donnée ne quitte cet appareil. Tout est conservé dans le stockage local du navigateur.</p>
+  </div>
+</section>
+
+<!-- ============ AGENDA ============ -->
+<section class="panneau" id="p-agenda">
+  <div class="titre"><h2>Agenda sûreté</h2><small id="agendaCount">—</small></div>
+  <div class="aide">Événements en cours, à venir et échéances détectés dans les faits collectés — sommets, mobilisations, fermetures d'infrastructure, travaux programmés. Statuts déduits du texte et de la date de survenance ; à vérifier avant toute décision de déplacement.</div>
+  <div class="rang" id="agStatut"></div>
+  <div class="rang" id="agPays"></div>
+  <div id="agenda"></div>
+</section>
+
+<!-- ============ ALERTES ============ -->
+<section class="panneau" id="p-alertes">
+  <div class="titre"><h2>Alertes pays</h2><small>Grille · Chronologie</small></div>
+  <div class="aide">Niveau d'alerte calculé pour chaque pays du périmètre à partir du score de ses zones les plus exposées — pas d'une moyenne qui lisserait un point chaud isolé.</div>
+  <div class="rang">
+    <button class="puce on" id="alGrille" onclick="alVue('grille')">Grille</button>
+    <button class="puce" id="alChrono" onclick="alVue('chrono')">Chronologie</button>
+  </div>
+  <div id="alertes"></div>
+  <div class="carte" style="margin-top:4px">
+    <h3 style="font-size:14px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em">Méthode de calcul</h3>
+    <p style="font-size:12px;color:var(--sourd)">Niveau pays = niveau de sa zone la plus critique, pondéré à 60&nbsp;%, combiné à la moyenne de toutes ses zones, pondérée à 40&nbsp;%. Un point chaud localisé fait donc monter le pays sans être noyé dans la moyenne nationale.<br><br>
+    <b style="color:var(--sourd)">Seuils :</b> Score ≥75 → ROUGE · 60-74 → MARRON · 40-59 → ORANGE · 20-39 → JAUNE · 0-19 → VERT.</p>
+  </div>
+</section>
+
+<!-- ============ TABLEAU DE BORD ============ -->
+<section class="panneau" id="p-bord">
+  <div class="titre"><h2>Tableau de bord</h2><small id="bordMaj">—</small></div>
+  <div class="aide">Vision d'ensemble en temps réel — 6 pays, 73 zones, score de pression informationnelle 0 à 100.</div>
+  <div class="grille g4" id="bordKpi" style="margin-bottom:10px"></div>
+  <div class="carte">
+    <h3 style="font-size:14px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Carte de chaleur — zones du périmètre</h3>
+    <div id="chaleur" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:4px"></div>
+  </div>
+</section>
+
+<!-- ============ RAPPORTS ============ -->
+<section class="panneau" id="p-rapports">
+  <div class="titre"><h2>Rapports</h2><small>Word · CSV · JSON</small></div>
+  <div class="aide">Documents générés directement depuis les données collectées, filtrés par périmètre. Aucune donnée n'est envoyée à un tiers : les fichiers se construisent sur l'appareil.</div>
+  <div class="carte">
+    <h3 style="font-size:15px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Rapport complet</h3>
+    <p style="font-size:12px;color:var(--sourd);margin-bottom:10px">Zones, corridors, alertes pays et faits retenus, en un seul document Word.</p>
+    <button class="btn p" onclick="exportWord()">Exporter Word</button>
+    <button class="btn s" onclick="window.print()">Imprimer / PDF</button>
+  </div>
+  <div class="grille g2">
+    <div class="carte">
+      <h3 style="font-size:14px;margin-bottom:5px">Flux opérationnel</h3>
+      <p style="font-size:11.5px;color:var(--faible);margin-bottom:8px">Faits des dernières 24 h.</p>
+      <button class="btn s" onclick="exportCSV()">CSV</button>
+    </div>
+    <div class="carte">
+      <h3 style="font-size:14px;margin-bottom:5px">Agenda sûreté</h3>
+      <p style="font-size:11.5px;color:var(--faible);margin-bottom:8px">Événements en cours et à venir.</p>
+      <button class="btn s" onclick="exportAgenda()">Word</button>
+    </div>
+    <div class="carte">
+      <h3 style="font-size:14px;margin-bottom:5px">Alertes pays</h3>
+      <p style="font-size:11.5px;color:var(--faible);margin-bottom:8px">Niveaux, mesures, zones critiques.</p>
+      <button class="btn s" onclick="exportAlertes()">Word</button>
+    </div>
+    <div class="carte">
+      <h3 style="font-size:14px;margin-bottom:5px">Matrice des sources</h3>
+      <p style="font-size:11.5px;color:var(--faible);margin-bottom:8px">Sources suivies et fiabilité.</p>
+      <button class="btn s" onclick="exportSources()">CSV</button>
+    </div>
+  </div>
+  <div class="carte">
+    <h3 style="font-size:14px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Sauvegarde complète</h3>
+    <button class="btn s" onclick="exportJSON()">Sauvegarde JSON</button>
+  </div>
+</section>
+
+</main>
+
+<nav>
+  <button class="on" data-p="flux"><i>▤</i>Flux</button>
+  <button data-p="zones"><i>◈</i>Zones</button>
+  <button data-p="corr"><i>⇄</i>Corridors</button>
+  <button data-p="agenda"><i>◷</i>Agenda</button>
+  <button data-p="alertes"><i>⚑</i>Alertes</button>
+  <button data-p="bord"><i>▦</i>Bord</button>
+  <button data-p="synth"><i>▤</i>Point</button>
+  <button data-p="rapports"><i>⇩</i>Rapports</button>
+  <button data-p="admin"><i>◆</i>Admin</button>
+  <button data-p="par"><i>⚙</i>Réglages</button>
+</nav>
+
+<script>
+/* ==================================================================
+   POINT SÛRETÉ — noyau
+   Périmètre : Côte d'Ivoire + Burkina Faso, Mali, Guinée, Libéria, Ghana
+   Application statique, sans serveur, sans clé API.
+   ================================================================== */
+
+const PAYS = {
+  CI:{n:"Côte d'Ivoire", f:"🇨🇮", pivot:true,  gl:"CI", lang:"fr"},
+  BF:{n:"Burkina Faso",  f:"🇧🇫", gl:"BF", lang:"fr"},
+  ML:{n:"Mali",          f:"🇲🇱", gl:"ML", lang:"fr"},
+  GN:{n:"Guinée",        f:"🇬🇳", gl:"GN", lang:"fr"},
+  LR:{n:"Libéria",       f:"🇱🇷", gl:"LR", lang:"en"},
+  GH:{n:"Ghana",         f:"🇬🇭", gl:"GH", lang:"en"}
+};
+
+/* ---------- Maillage territorial ----------
+   CI : 31 régions + 2 districts autonomes = 33 zones
+   Limitrophes : zones frontalières et pôles majeurs                */
+const ZONES = [
+// --- CÔTE D'IVOIRE ---
+{p:"CI",z:"Abidjan",d:"District autonome",loc:["Abidjan","Abobo","Adjamé","Attécoubé","Cocody","Koumassi","Marcory","Plateau","Port-Bouët","Treichville","Yopougon","Anyama","Bingerville","Songon","Vridi","Riviera","Angré","Adjouffou","Niangon","Williamsville","Gesco","Bassam-route"]},
+{p:"CI",z:"Yamoussoukro",d:"District autonome",loc:["Yamoussoukro","Attiégouakro","Kossou","Lolobo"]},
+{p:"CI",z:"Gbôklé",d:"Bas-Sassandra",loc:["Sassandra","Fresco","Dakpadou"]},
+{p:"CI",z:"Nawa",d:"Bas-Sassandra",loc:["Soubré","Buyo","Guéyo","Méagui","Oupoyo"]},
+{p:"CI",z:"San-Pédro",d:"Bas-Sassandra",loc:["San-Pédro","San Pedro","Tabou","Grand-Béréby","Grabo","Doba","Olodio"]},
+{p:"CI",z:"Indénié-Djuablin",d:"Comoé",loc:["Abengourou","Agnibilékrou","Bettié","Zaranou","Niablé"]},
+{p:"CI",z:"Sud-Comoé",d:"Comoé",loc:["Aboisso","Adiaké","Grand-Bassam","Tiapoum","Ayamé","Noé","Bonoua","Maféré","Assinie","Étuéboué"]},
+{p:"CI",z:"Folon",d:"Denguélé",loc:["Minignan","Kaniasso","Goulia"]},
+{p:"CI",z:"Kabadougou",d:"Denguélé",loc:["Odienné","Madinani","Séguélon","Gbéléban","Samatiguila","Bako"]},
+{p:"CI",z:"Gôh",d:"Gôh-Djiboua",loc:["Gagnoa","Oumé","Guibéroua","Ouragahio","Bayota"]},
+{p:"CI",z:"Lôh-Djiboua",d:"Gôh-Djiboua",loc:["Divo","Lakota","Guitry","Zikisso","Hiré"]},
+{p:"CI",z:"Bélier",d:"Lacs",loc:["Toumodi","Tiébissou","Didiévi","Djékanou","Kokumbo"]},
+{p:"CI",z:"Iffou",d:"Lacs",loc:["Daoukro","Prikro","M'Bahiakro","Ouellé","Kouassi-Kouassikro"]},
+{p:"CI",z:"Moronou",d:"Lacs",loc:["Bongouanou","Arrah","M'Batto","Anoumaba"]},
+{p:"CI",z:"N'Zi",d:"Lacs",loc:["Dimbokro","Bocanda","Kouassi-Kouassikro","Bengassou"]},
+{p:"CI",z:"Agnéby-Tiassa",d:"Lagunes",loc:["Agboville","Tiassalé","Sikensi","Taabo","Azaguié","N'Douci","Rubino","Céchi"]},
+{p:"CI",z:"Grands-Ponts",d:"Lagunes",loc:["Dabou","Jacqueville","Grand-Lahou","Ahouanou","Toupah"]},
+{p:"CI",z:"La Mé",d:"Lagunes",loc:["Adzopé","Akoupé","Alépé","Yakassé-Attobrou","Afféry","Agou"]},
+{p:"CI",z:"Cavally",d:"Montagnes",loc:["Guiglo","Bloléquin","Toulépleu","Taï","Péhé","Zéaglo"]},
+{p:"CI",z:"Guémon",d:"Montagnes",loc:["Duékoué","Bangolo","Facobly","Kouibly","Guézon","Bagohouo"]},
+{p:"CI",z:"Tonkpi",d:"Montagnes",loc:["Man","Danané","Biankouma","Zouan-Hounien","Sipilou","Logoualé","Gbon-Houyé","Bin-Houyé","Kouan-Houlé"]},
+{p:"CI",z:"Haut-Sassandra",d:"Sassandra-Marahoué",loc:["Daloa","Issia","Vavoua","Zoukougbeu","Gboguhé","Saïoua"]},
+{p:"CI",z:"Marahoué",d:"Sassandra-Marahoué",loc:["Bouaflé","Sinfra","Zuénoula","Gohitafla","Bonon","Kononfla"]},
+{p:"CI",z:"Bagoué",d:"Savanes",loc:["Boundiali","Tengréla","Kouto","Kolia","Gbon","Kasséré","Débété"]},
+{p:"CI",z:"Poro",d:"Savanes",loc:["Korhogo","Sinématiali","Dikodougou","M'Bengué","Karakoro","Napié","Guiembé","Komborodougou"]},
+{p:"CI",z:"Tchologo",d:"Savanes",loc:["Ferkessédougou","Ouangolodougou","Kong","Diawala","Niellé","Laleraba","Kaouara","Tougbo","Sikolo"]},
+{p:"CI",z:"Gbêkê",d:"Vallée du Bandama",loc:["Bouaké","Béoumi","Sakassou","Botro","Diabo","Brobo","Djébonoua","Bodokro"]},
+{p:"CI",z:"Hambol",d:"Vallée du Bandama",loc:["Katiola","Dabakala","Niakaramandougou","Fronan","Tafiré","Niakara","Satama-Sokoro","Bassawa"]},
+{p:"CI",z:"Bafing",d:"Woroba",loc:["Touba","Koro","Ouaninou","Booko","Guintéguéla","Borotou"]},
+{p:"CI",z:"Béré",d:"Woroba",loc:["Mankono","Dianra","Kounahiri","Marandallah","Sarhala","Tiéningboué"]},
+{p:"CI",z:"Worodougou",d:"Woroba",loc:["Séguéla","Kani","Massala","Dualla","Sifié","Worofla"]},
+{p:"CI",z:"Bounkani",d:"Zanzan",loc:["Bouna","Doropo","Téhini","Nassian","Kalamon","Ondéfidouo","Parc de la Comoé","Comoé"]},
+{p:"CI",z:"Gontougo",d:"Zanzan",loc:["Bondoukou","Tanda","Koun-Fao","Transua","Sandégué","Soko","Assuéfry","Tabagne"]},
+// --- BURKINA FASO ---
+{p:"BF",z:"Cascades",d:"Frontière CI nord-est",loc:["Banfora","Sidéradougou","Mangodara","Niangoloko","Sindou","Ouo"]},
+{p:"BF",z:"Hauts-Bassins",d:"Frontière CI",loc:["Bobo-Dioulasso","Bobo Dioulasso","Orodara","Houndé","Dandé","Karangasso"]},
+{p:"BF",z:"Sud-Ouest",d:"Frontière CI est",loc:["Gaoua","Batié","Kampti","Diébougou","Dano","Loropéni"]},
+{p:"BF",z:"Centre / Ouagadougou",d:"Capitale",loc:["Ouagadougou","Ouaga","Saaba","Koubri"]},
+{p:"BF",z:"Boucle du Mouhoun",d:"Ouest",loc:["Dédougou","Nouna","Solenzo","Toma","Boromo"]},
+{p:"BF",z:"Centre-Ouest",d:"Centre",loc:["Koudougou","Réo","Léo","Sapouy"]},
+{p:"BF",z:"Sahel",d:"Nord — menace armée",loc:["Dori","Djibo","Gorom-Gorom","Sebba","Arbinda","Soum","Oudalan"]},
+{p:"BF",z:"Nord",d:"Nord",loc:["Ouahigouya","Titao","Yako","Gourcy"]},
+{p:"BF",z:"Est",d:"Est — menace armée",loc:["Fada N'Gourma","Fada","Pama","Diapaga","Kantchari","Gayéri"]},
+{p:"BF",z:"Centre-Est",d:"Sud-est",loc:["Tenkodogo","Garango","Pouytenga","Koupéla","Bittou"]},
+// --- MALI ---
+{p:"ML",z:"Sikasso",d:"Frontière CI nord",loc:["Sikasso","Kadiolo","Zégoua","Pogo","Kolondiéba","Loulouni","Misséni","Fourou","Niéna"]},
+{p:"ML",z:"Bougouni",d:"Frontière CI nord-ouest",loc:["Bougouni","Yanfolila","Kalana","Garalo","Kolondièba"]},
+{p:"ML",z:"Bamako",d:"Capitale",loc:["Bamako","Kati","Kalabancoro","Baguinéda"]},
+{p:"ML",z:"Ségou",d:"Centre",loc:["Ségou","Niono","San","Macina","Markala"]},
+{p:"ML",z:"Mopti",d:"Centre — menace armée",loc:["Mopti","Sévaré","Djenné","Bandiagara","Douentza","Bankass","Koro"]},
+{p:"ML",z:"Kayes",d:"Ouest",loc:["Kayes","Kita","Nioro","Bafoulabé","Diéma"]},
+{p:"ML",z:"Koulikoro",d:"Centre-ouest",loc:["Koulikoro","Kolokani","Banamba","Dioïla","Nara"]},
+{p:"ML",z:"Nord",d:"Gao · Tombouctou · Kidal",loc:["Gao","Tombouctou","Kidal","Ménaka","Ansongo","Taoudéni","Bourem"]},
+// --- GUINÉE ---
+{p:"GN",z:"Nzérékoré",d:"Frontière CI ouest",loc:["Nzérékoré","N'Zérékoré","Lola","Beyla","Yomou","Macenta","Guéckédou","Sinko","Bossou"]},
+{p:"GN",z:"Kankan",d:"Frontière CI nord-ouest",loc:["Kankan","Siguiri","Mandiana","Kérouané","Kouroussa","Baro"]},
+{p:"GN",z:"Conakry",d:"Capitale",loc:["Conakry","Ratoma","Matoto","Kaloum","Dixinn","Coyah"]},
+{p:"GN",z:"Faranah",d:"Centre",loc:["Faranah","Dabola","Dinguiraye","Kissidougou"]},
+{p:"GN",z:"Kindia",d:"Ouest",loc:["Kindia","Forécariah","Télimélé","Dubréka"]},
+{p:"GN",z:"Boké",d:"Nord-ouest",loc:["Boké","Kamsar","Fria","Boffa","Gaoual"]},
+{p:"GN",z:"Labé / Mamou",d:"Fouta-Djalon",loc:["Labé","Mamou","Pita","Dalaba","Koubia","Tougué"]},
+// --- LIBÉRIA ---
+{p:"LR",z:"Nimba",d:"Frontière CI ouest",loc:["Ganta","Sanniquellie","Yekepa","Nimba","Saclepea","Karnplay"]},
+{p:"LR",z:"Grand Gedeh",d:"Frontière CI",loc:["Zwedru","Grand Gedeh","Toe Town","Ziah Town"]},
+{p:"LR",z:"Maryland / River Gee",d:"Frontière CI sud",loc:["Harper","Maryland","River Gee","Fish Town","Pleebo","Barclayville","Grand Kru"]},
+{p:"LR",z:"Montserrado",d:"Capitale",loc:["Monrovia","Montserrado","Paynesville","Bushrod","Caldwell"]},
+{p:"LR",z:"Bong / Lofa",d:"Nord",loc:["Gbarnga","Bong","Lofa","Voinjama","Foya","Zorzor"]},
+{p:"LR",z:"Grand Bassa / Sinoe",d:"Côte",loc:["Buchanan","Grand Bassa","Sinoe","Greenville","River Cess"]},
+// --- GHANA ---
+{p:"GH",z:"Western North",d:"Frontière CI",loc:["Sefwi Wiawso","Enchi","Bibiani","Juaboso","Dadieso","Western North"]},
+{p:"GH",z:"Western",d:"Frontière CI sud",loc:["Takoradi","Sekondi","Elubo","Axim","Half Assini","Tarkwa","Jomoro"]},
+{p:"GH",z:"Bono / Bono East",d:"Frontière CI nord",loc:["Sunyani","Berekum","Dormaa","Techiman","Wenchi","Sampa","Drobo","Goaso","Ahafo"]},
+{p:"GH",z:"Savannah",d:"Nord-ouest",loc:["Damongo","Bole","Salaga","Sawla","Savannah Region"]},
+{p:"GH",z:"Upper West",d:"Nord",loc:["Wa","Tumu","Lawra","Nandom","Jirapa","Upper West"]},
+{p:"GH",z:"Upper East",d:"Nord-est",loc:["Bolgatanga","Bawku","Navrongo","Paga","Upper East"]},
+{p:"GH",z:"Northern",d:"Nord",loc:["Tamale","Yendi","Saveluku","Northern Region","Gushegu"]},
+{p:"GH",z:"Ashanti",d:"Centre",loc:["Kumasi","Obuasi","Ejisu","Konongo","Ashanti"]},
+{p:"GH",z:"Greater Accra",d:"Capitale",loc:["Accra","Tema","Ashaiman","Madina","Greater Accra"]}
+];
+
+/* ---------- Corridors ---------- */
+const CORRIDORS = [
+ {n:"Abidjan — Ouangolodougou — Ouagadougou", s:"Rail SITARAIL + RN1 · fret et voyageurs",
+  z:["Abidjan","Agnéby-Tiassa","Bélier","Yamoussoukro","N'Zi","Gbêkê","Hambol","Poro","Tchologo","Cascades","Hauts-Bassins","Centre / Ouagadougou"]},
+ {n:"Abidjan — Noé — Accra", s:"Corridor côtier ouest-africain",
+  z:["Abidjan","Sud-Comoé","Western","Greater Accra"]},
+ {n:"San-Pédro — Toulépleu — Nzérékoré", s:"Débouché portuaire de la Guinée forestière",
+  z:["San-Pédro","Nawa","Cavally","Guémon","Tonkpi","Nzérékoré"]},
+ {n:"Odienné — Zégoua — Bamako", s:"Axe nord-ouest vers le Mali",
+  z:["Kabadougou","Folon","Bagoué","Tchologo","Sikasso","Bougouni","Bamako"]},
+ {n:"Man — Danané — Ganta", s:"Axe libérien de l'Ouest",
+  z:["Tonkpi","Cavally","Nimba","Montserrado"]},
+ {n:"Bouna — Doropo — Gaoua", s:"Frange nord-est · parc de la Comoé",
+  z:["Bounkani","Gontougo","Tchologo","Sud-Ouest","Cascades"]}
+];
+
+/* ---------- Sources nationales directes ---------- */
+const NAT = [
+ {u:"https://www.aip.ci/feed/",p:"CI",n:"AIP — Agence ivoirienne de presse",f:88},
+ {u:"https://www.fratmat.info/feed",p:"CI",n:"Fraternité Matin",f:82},
+ {u:"https://www.linfodrome.com/feed",p:"CI",n:"L'Infodrome",f:70},
+ {u:"https://www.koaci.com/rss.xml",p:"CI",n:"KOACI",f:72},
+ {u:"https://www.sikafinance.com/rss",p:"CI",n:"Sika Finance",f:76},
+ {u:"https://www.connectionivoirienne.net/feed",p:"CI",n:"Connection Ivoirienne",f:60},
+ {u:"https://apanews.net/feed/",p:"CI",n:"APA News",f:78},
+ {u:"https://lefaso.net/spip.php?page=backend",p:"BF",n:"Lefaso.net",f:80},
+ {u:"https://www.wakatsera.com/feed/",p:"BF",n:"Wakat Séra",f:76},
+ {u:"https://www.sidwaya.info/feed/",p:"BF",n:"Sidwaya",f:78},
+ {u:"https://www.aib.media/feed/",p:"BF",n:"AIB — Agence d'information du Burkina",f:80},
+ {u:"https://www.maliweb.net/feed",p:"ML",n:"Maliweb",f:70},
+ {u:"https://malijet.com/rss",p:"ML",n:"Malijet",f:70},
+ {u:"https://www.studiotamani.org/index.php?format=feed&type=rss",p:"ML",n:"Studio Tamani",f:80},
+ {u:"https://www.guineenews.org/feed/",p:"GN",n:"Guinéenews",f:74},
+ {u:"https://www.africaguinee.com/feed/",p:"GN",n:"Africaguinée",f:72},
+ {u:"https://mosaiqueguinee.com/feed/",p:"GN",n:"Mosaïque Guinée",f:66},
+ {u:"https://frontpageafricaonline.com/feed/",p:"LR",n:"FrontPage Africa",f:76},
+ {u:"https://www.liberianobserver.com/feed",p:"LR",n:"Liberian Observer",f:74},
+ {u:"https://www.myjoyonline.com/feed/",p:"GH",n:"MyJoyOnline",f:78},
+ {u:"https://citinewsroom.com/feed/",p:"GH",n:"Citi Newsroom",f:76},
+ {u:"https://www.graphic.com.gh/feed",p:"GH",n:"Graphic Online",f:80},
+ {u:"https://www.ghanaweb.com/GhanaHomePage/rss/news.xml",p:"GH",n:"GhanaWeb",f:66},
+ {u:"https://reliefweb.int/updates/rss.xml?view=headlines&advanced-search=%28PC33_PC57_PC157_PC93_PC142_PC124%29",p:"CI",n:"ReliefWeb — Afrique de l'Ouest",f:90}
+];
+
+/* ---------- Requêtes thématiques par pays ---------- */
+const THEMES = ["sécurité OR attaque OR braquage","manifestation OR grève","frontière OR corridor OR douane","orpaillage OR mine OR foncier","inondation OR épidémie"];
+
+/* ---------- Relais CORS ---------- */
+const RELAIS = [
+ {n:"rss2json", type:"json", url:u=>"https://api.rss2json.com/v1/api.json?rss_url="+encodeURIComponent(u)+"&count=25"},
+ {n:"allorigins", type:"xml", url:u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u)},
+ {n:"corsproxy", type:"xml", url:u=>"https://corsproxy.io/?"+encodeURIComponent(u)},
+ {n:"codetabs", type:"xml", url:u=>"https://api.codetabs.com/v1/proxy/?quest="+encodeURIComponent(u)}
+];
+let RELAIS_ACTIF = null;
+
+/* ---------- Lexique de qualification ---------- */
+const LEX = {
+ CRITIQUE:["attaque","attentat","embuscade","assaut","terroriste","djihadiste","jihadiste","engin explosif","ied","mine artisanale","tue","tues","tuees","morts","tuerie","massacre","enlevement","enleve","kidnapping","rapt","otage","coup d etat","putsch","mutinerie","affrontements","incursion","fusillade","emeute","emeutes","assassinat","abattu","abattus","attack","attacked","killed","gunmen","gunfire","ambush","kidnapped","abducted","hostage","explosion","bomb","massacre","coup","mutiny","clashes","shooting","riot","assassination","insurgents","militants"],
+ ELEVE:["braquage","attaque a main armee","vol a main armee","coupeurs de route","agression","violences","heurts","manifestation reprimee","gaz lacrymogene","couvre-feu","etat d urgence","arrestations","fermeture de la frontiere","frontiere fermee","expulsion","refugies","deplaces","milice","groupe arme","orpaillage clandestin","incendie criminel","cambriolage","sequestration","conflit foncier","conflit intercommunautaire","evacuation","alerte","menace","curfew","state of emergency","armed robbery","robbery","banditry","violence","unrest","crackdown","tear gas","border closed","border closure","displaced","refugees","militia","armed group","arson","land dispute","evacuated"],
+ MODERE:["greve","manifestation","marche de protestation","sit-in","tension","litige","proces","interpellation","saisie","contrebande","trafic","stupefiants","drogue","corruption","penurie","hausse des prix","inondation","epidemie","cholera","meningite","accident","panne","coupure","delestage","fermeture","perturbation","travaux","deviation","strike","protest","demonstration","sit-in","tension","arrest","seizure","smuggling","trafficking","drugs","corruption","shortage","price hike","flood","flooding","epidemic","cholera","accident","outage","blackout","galamsey","illegal mining"],
+ FAIBLE:["reunion","seminaire","atelier","ceremonie","inauguration","visite","cooperation","signature","don","formation","sensibilisation","recensement","nomination","election","campagne","sommet","conference","festival","match","tournoi","meeting","workshop","ceremony","inauguration","visit","cooperation","training","summit"]
+};
+const CAT = {
+ securite:["attaque","attentat","braquage","vol","arme","police","gendarmerie","militaire","armee","terroriste","djihadiste","jihadiste","embuscade","fusillade","enlevement","otage","criminalite","bandit","coupeurs de route","milice","groupe arme","securite","surete","incursion","patrouille","couvre-feu","police","army","military","security","gunmen","armed","robbery","curfew","attack"],
+ humanitaire:["refugies","deplaces","humanitaire","famine","malnutrition","epidemie","cholera","meningite","inondation","secheresse","sinistres","aide","ocha","hcr","unicef","croix-rouge","assistance","vivres","sante","hopital","victimes","humanitarian","refugees","displaced","flood","epidemic","health","hospital","aid","victims"],
+ politique:["gouvernement","president","ministre","assemblee","election","parti","opposition","scrutin","coup d etat","putsch","constitution","diplomatie","ambassade","cedeao","aes","union africaine","manifestation","greve","syndicat","justice","proces","government","president","minister","parliament","election","opposition","protest","strike","court"],
+ economique:["economie","marche","prix","inflation","cacao","cafe","hevea","anacarde","coton","or","mine","petrole","port","fret","commerce","douane","exportation","importation","banque","investissement","carburant","transport","corridor","economy","market","prices","inflation","cocoa","gold","mining","port","trade","customs","fuel"]
+};
+const AGENDA_MOTS = ["sommet","conference","forum","seminaire","colloque","concertation","reunion regionale",
+ "manifestation prevue","marche annoncee","greve annoncee","greve prevue","mobilisation",
+ "fermeture programmee","fermeture temporaire","travaux","renovation","deviation","coupure prevue",
+ "election","scrutin","referendum","visite officielle","ceremonie","inauguration","tournoi","festival","foire","salon"];
+const AGENDA_TYPE = [
+ {t:"Manifestation", k:["manifestation","marche","mobilisation","sit-in"]},
+ {t:"Travaux",       k:["travaux","fermeture","renovation","deviation","coupure"]},
+ {t:"Gouvernemental", k:["election","scrutin","referendum","visite officielle","conseil des ministres"]},
+ {t:"Sommet / Conférence", k:["sommet","conference","forum","colloque","concertation","seminaire"]},
+ {t:"Sportif / Culturel", k:["tournoi","festival","foire","salon","match","concert"]}
+];
+const AGGRAV = [
+ {k:["frontiere fermee","fermeture de la frontiere","fermeture des frontieres","border closed","border closure","border shut"],v:6,l:"Fermeture de frontière"},
+ {k:["couvre-feu","etat d urgence","curfew","state of emergency"],v:6,l:"Mesure d'exception"},
+ {k:["acces humanitaire","mission suspendue","reportee sine die","zone inaccessible"],v:4,l:"Accès humanitaire dégradé"},
+ {k:["expatrie","expatries","etranger enleve","ressortissant francais","ressortissant etranger","ressortissants etrangers","ong ciblee","foreign national","expatriate","ngo staff"],v:5,l:"Exposition des expatriés"},
+ {k:["corridor","axe routier coupe","route coupee","pont coupe","voie ferree","sitarail"],v:4,l:"Rupture d'axe logistique"},
+ {k:["aeroport","port autonome","terminal"],v:3,l:"Infrastructure critique"},
+ {k:["parc de la comoe","zone frontaliere nord","incursion"],v:4,l:"Pression frontalière nord"}
+];
+
+/* ---------- Utilitaires ---------- */
+const norm = s => (s||"").toString().normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[’']/g," ").replace(/\s+/g," ").trim();
+const matchMot = (txt,mot) => {
+  const m = norm(mot).replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  try { return new RegExp("(^|[^\\p{L}\\p{N}])"+m+"(s|x|es)?($|[^\\p{L}\\p{N}])","u").test(txt); }
+  catch(e){ return txt.includes(m); }
+};
+const esc = s => (s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const now = () => Date.now();
+const hDep = ts => { const m=Math.round((now()-ts)/60000); if(m<60) return "il y a "+m+" min"; const h=Math.floor(m/60); return h<24 ? "il y a "+h+" h" : "il y a "+Math.floor(h/24)+" j"; };
+
+/* Index de détection : la localité précise prime sur le nom de région
+   (« Bawku » avant « Upper East »), puis le nom le plus long prime. */
+const IDX = [];
+ZONES.forEach(z => z.loc.forEach(l => {
+  const precise = norm(l) !== norm(z.z) && !/\b(region|district)\b/.test(norm(l)) ? 1 : 0;
+  IDX.push({n:norm(l), z:z.z, p:z.p, brut:l, s:precise});
+}));
+IDX.sort((a,b) => b.s - a.s || b.n.length - a.n.length);
+
+/* ---------- État ---------- */
+let ETAT = { arts:[], maj:0, fPays:"ALL", fCat:"ALL", zPays:"CI", log:[] };
+const CACHE = "PS_v1";
+
+function charger(){ try{ const d=JSON.parse(localStorage.getItem(CACHE)||"null"); if(d&&d.arts){ ETAT.arts=d.arts; ETAT.maj=d.maj||0; } }catch(e){} }
+function sauver(){ try{ localStorage.setItem(CACHE, JSON.stringify({arts:ETAT.arts.slice(0,900), maj:ETAT.maj})); }catch(e){ journal("Stockage local saturé — cache réduit."); ETAT.arts=ETAT.arts.slice(0,300); } }
+function journal(m){ ETAT.log.unshift(new Date().toLocaleTimeString("fr-FR")+"  "+m); ETAT.log=ETAT.log.slice(0,60); const el=$("#log"); if(el) el.textContent=ETAT.log.join("\n"); }
+
+/* ==================================================================
+   1. Construction de la liste des flux selon la profondeur
+   ================================================================== */
+function gnews(q, gl, lang){
+  const hl = lang==="en" ? "en-GB" : "fr";
+  const ceid = gl+":"+(lang==="en"?"en":"fr");
+  return "https://news.google.com/rss/search?q="+encodeURIComponent(q)+"&hl="+hl+"&gl="+gl+"&ceid="+ceid;
+}
+function listeFlux(prof, opts){
+  opts = opts || {};
+  const paysActifs = new Set(opts.paysActifs || Object.keys(PAYS));
+  const priorite = opts.zonePriorite || "";
+  const L = NAT.filter(s=>paysActifs.has(s.p)).map(s=>({...s, zone:null}));
+  // requêtes thématiques par pays actif
+  Object.keys(PAYS).filter(p=>paysActifs.has(p)).forEach(p=>{
+    const P=PAYS[p];
+    THEMES.forEach(t=>{
+      L.push({u:gnews('"'+P.n+'" '+t, P.gl, P.lang), p, n:"Veille thématique — "+P.n, f:65, zone:null});
+    });
+  });
+  const dejaZone = new Set();
+  function ajouterZone(z){
+    if(dejaZone.has(z.z) || !paysActifs.has(z.p)) return;
+    dejaZone.add(z.z);
+    const P=PAYS[z.p];
+    const q = z.loc.slice(0,3).map(l=>'"'+l+'"').join(" OR ");
+    L.push({u:gnews(q+(z.p==="CI"?" Côte d'Ivoire":" "+P.n), P.gl, P.lang), p:z.p, n:"Zone "+z.z+(z.p!=="CI"?" ("+P.n+")":""), f:z.p==="CI"?62:60, zone:z.z, prio:true});
+  }
+  // zone prioritaire : approfondie et placée en tête, quelle que soit la profondeur choisie
+  if(priorite){
+    const zp = ZONES.find(z=>z.z===priorite);
+    if(zp) ajouterZone(zp);
+  }
+  if(prof==="rapide") return L;
+  ZONES.filter(z=>z.p==="CI").forEach(ajouterZone);
+  if(prof==="profond") ZONES.filter(z=>z.p!=="CI").forEach(ajouterZone);
+  // la zone prioritaire passe en tête de file d'attente
+  L.sort((a,b)=> (b.prio?1:0) - (a.prio?1:0));
+  return L;
+}
+
+/* ==================================================================
+   2. Récupération via relais
+   ================================================================== */
+async function via(relais, url, ms=13000){
+  const ctrl = new AbortController();
+  const t = setTimeout(()=>ctrl.abort(), ms);
+  try{
+    const r = await fetch(relais.url(url), {signal:ctrl.signal, headers:{"Accept":"*/*"}});
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    if(relais.type==="json"){
+      const j = await r.json();
+      if(j.status!=="ok" || !j.items) throw new Error("réponse vide");
+      return j.items.map(i=>({t:i.title, l:i.link, d:i.pubDate, r:i.description||i.content||""}));
+    }
+    const txt = await r.text();
+    return parseXML(txt);
+  } finally { clearTimeout(t); }
+}
+function parseXML(txt){
+  const doc = new DOMParser().parseFromString(txt, "text/xml");
+  if(doc.querySelector("parsererror")) throw new Error("XML illisible");
+  const it = [...doc.querySelectorAll("item, entry")];
+  if(!it.length) throw new Error("aucun élément");
+  return it.map(n=>{
+    const g = t => n.querySelector(t)?.textContent?.trim() || "";
+    const lien = g("link") || n.querySelector("link")?.getAttribute("href") || "";
+    return { t:g("title"), l:lien, d:g("pubDate")||g("published")||g("updated")||g("date"), r:g("description")||g("summary")||g("content") };
+  });
+}
+async function recuperer(url){
+  const ordre = RELAIS_ACTIF ? [RELAIS_ACTIF, ...RELAIS.filter(r=>r!==RELAIS_ACTIF)] : RELAIS;
+  for(const r of ordre){
+    try{ const d = await via(r, url); if(d && d.length){ RELAIS_ACTIF = r; return d; } }catch(e){}
+  }
+  return null;
+}
+
+/* ==================================================================
+   3. Qualification
+   ================================================================== */
+function detecter(texte){
+  const t = norm(texte);
+  const trouve = [];
+  for(const e of IDX){
+    if(matchMot(t, e.n)){ trouve.push(e); if(trouve.length>=3) break; }
+  }
+  if(!trouve.length) return null;
+  // priorité : la localité la plus spécifique (nom le plus long) l'emporte
+  const p = trouve[0];
+  return { pays:p.p, zone:p.z, localite:p.brut, autres:trouve.slice(1).map(x=>x.brut) };
+}
+function criticite(texte){
+  const t = norm(texte);
+  for(const n of ["CRITIQUE","ELEVE","MODERE"]) if(LEX[n].some(k=>matchMot(t,k))) return n;
+  if(LEX.FAIBLE.some(k=>matchMot(t,k))) return "FAIBLE";
+  return "MODERE";
+}
+function categorie(texte){
+  const t = norm(texte);
+  let best="politique", sc=0;
+  for(const c in CAT){ const n = CAT[c].filter(k=>matchMot(t,k)).length; if(n>sc){ sc=n; best=c; } }
+  return sc ? best : "politique";
+}
+function aggravants(texte){
+  const t = norm(texte);
+  return AGGRAV.filter(a=>a.k.some(k=>matchMot(t,k)));
+}
+function estAgenda(texte){
+  const t = norm(texte);
+  return AGENDA_MOTS.some(k=>matchMot(t,k));
+}
+function typeAgenda(texte){
+  const t = norm(texte);
+  const m = AGENDA_TYPE.find(x=>x.k.some(k=>matchMot(t,k)));
+  return m ? m.t : "Gouvernemental";
+}
+function statutAgenda(texte, ts){
+  const t = norm(texte);
+  if(["en cours","actuellement","poursuit","se poursuit"].some(k=>matchMot(t,k))) return "EN COURS";
+  if(["prevu","prevue","annonce","annoncee","attendu","attendue","a venir","prochainement"].some(k=>matchMot(t,k))) return "À VENIR";
+  return (now()-ts) > 24*3600000 ? "ACHEVÉ" : "EN COURS";
+}
+function dater(d){
+  const ts = Date.parse(d);
+  return (isNaN(ts) || ts>now()+3600000) ? null : ts;
+}
+
+/* ==================================================================
+   4bis. Couche de données — trois origines, par ordre de préférence
+     1. Supabase       historique 90 jours, recherche, API tierce
+     2. Fichier publié latest.json produit par GitHub Actions toutes les 30 min
+     3. RSS direct     collecte depuis l'appareil via relais CORS (repli)
+   L'origine 2 est la plus économe en usage mobile : un seul appel réseau,
+   les 127 flux ayant déjà été interrogés côté serveur.
+   ================================================================== */
+const CFG = Object.assign(
+  { sbUrl:"", sbKey:"", dataUrl:"data/latest.json", origine:"auto",
+    paysActifs:["CI","BF","ML","GN","LR","GH"], zonePriorite:"", fenetreH:12,
+    intervalleMin:15, afficherFiab:true },
+  JSON.parse(localStorage.getItem("PS_cfg") || "{}")
+);
+const cfgSauver = () => localStorage.setItem("PS_cfg", JSON.stringify(CFG));
+
+function versArt(f){                        // format serveur → format interne
+  return { h:f.h, t:f.titre, l:f.lien, ts:Date.parse(f.survenu_le),
+           src:f.source, f:f.fiabilite ?? 60, p:f.pays, z:f.zone, loc:f.localite,
+           c:f.criticite, cat:f.categorie, ag:f.aggravants || [], r:f.resume || "" };
+}
+
+async function depuisGitHub(){
+  const r = await fetch(CFG.dataUrl + "?t=" + Math.floor(now()/60000), {cache:"no-store"});
+  if(!r.ok) throw new Error("HTTP " + r.status);
+  const d = await r.json();
+  if(!d.faits) throw new Error("format inattendu");
+  journal("Fichier publié du " + new Date(d.genere_le).toLocaleString("fr-FR") +
+          " — " + d.faits.length + " faits, " + d.flux_joignables + "/" + d.flux_interroges + " flux joignables.");
+  return d.faits.map(versArt);
+}
+
+async function depuisSupabase(){
+  if(!CFG.sbUrl || !CFG.sbKey) throw new Error("non configuré");
+  const url = CFG.sbUrl.replace(/\/$/,"") +
+    "/rest/v1/faits?select=*&survenu_le=gte." + new Date(now() - 24*3600e3).toISOString() +
+    "&order=survenu_le.desc&limit=600";
+  const r = await fetch(url, { headers:{ apikey:CFG.sbKey, Authorization:"Bearer " + CFG.sbKey } });
+  if(!r.ok) throw new Error("HTTP " + r.status);
+  const d = await r.json();
+  if(!d.length) throw new Error("aucun fait");
+  journal("Supabase — " + d.length + " faits sur 24h.");
+  return d.map(versArt);
+}
+
+/* Recherche sur tout l'historique — Supabase uniquement */
+async function rechercheHistorique(q){
+  if(!CFG.sbUrl || !CFG.sbKey) return null;
+  const r = await fetch(CFG.sbUrl.replace(/\/$/,"") + "/rest/v1/rpc/rechercher", {
+    method:"POST",
+    headers:{ apikey:CFG.sbKey, Authorization:"Bearer " + CFG.sbKey, "Content-Type":"application/json" },
+    body: JSON.stringify({ q, depuis:"90 days" })
+  });
+  return r.ok ? (await r.json()).map(versArt) : null;
+}
+
+async function chargerCloud(){
+  const essais = CFG.origine === "rss"      ? []
+               : CFG.origine === "supabase" ? [["Supabase", depuisSupabase]]
+               : CFG.origine === "github"   ? [["fichier publié", depuisGitHub]]
+               : [["Supabase", depuisSupabase], ["fichier publié", depuisGitHub]];
+  for(const [nom, fn] of essais){
+    try{
+      const arts = await fn();
+      if(arts.length){
+        const vus = new Set(arts.map(a=>a.h));
+        ETAT.arts = [...arts, ...ETAT.arts.filter(a=>!vus.has(a.h))].sort((a,b)=>b.ts-a.ts).slice(0,900);
+        ETAT.maj = now(); sauver(); return nom;
+      }
+    }catch(e){ journal(nom + " indisponible — " + e.message); }
+  }
+  return null;
+}
+
+/* ==================================================================
+   4. Collecte
+   ================================================================== */
+let enCours = false;
+async function collecter(){
+  if(enCours) return;
+  enCours = true;
+  $("#btnMaj").disabled = true;
+  $("#etat").textContent = "Mise a jour…";
+
+  // 1. Le serveur a deja interroge les 127 flux : un seul appel suffit.
+  const src = await chargerCloud();
+  if(src){
+    $("#etat").textContent = "À jour · " + src;
+    $("#btnMaj").disabled = false; enCours = false; rendre(); return;
+  }
+
+  // 2. Repli : collecte depuis l'appareil, via relais CORS.
+  journal("Aucune source serveur joignable — collecte directe depuis l'appareil.");
+  const prof = $("#prof").value;
+  const flux = listeFlux(prof, {paysActifs:CFG.paysActifs, zonePriorite:CFG.zonePriorite});
+  journal("Collecte "+prof+" — "+flux.length+" flux"+(CFG.zonePriorite?" · priorité "+CFG.zonePriorite:"")+(CFG.paysActifs.length<6?" · "+CFG.paysActifs.length+"/6 pays":"")+".");
+  let fait=0, ok=0, neufs=0;
+  const vus = new Set(ETAT.arts.map(a=>a.h));
+
+  const lot = 6;
+  for(let i=0; i<flux.length; i+=lot){
+    await Promise.all(flux.slice(i,i+lot).map(async s=>{
+      const d = await recuperer(s.u);
+      fait++;
+      $("#prog").style.width = (fait/flux.length*100)+"%";
+      $("#etat").textContent = "Collecte "+fait+"/"+flux.length;
+      if(!d){ return; }
+      ok++;
+      d.forEach(it=>{
+        if(!it.t) return;
+        const titre = it.t.replace(/\s+-\s+[^-]{2,40}$/,"").trim(); // Google News suffixe le média
+        const texte = titre+" "+(it.r||"").replace(/<[^>]+>/g," ");
+        const h = norm(titre).slice(0,90);
+        if(vus.has(h)) return;
+        vus.add(h);
+        const ts = dater(it.d);
+        if(!ts) return;                       // pas de date fiable → écarté
+        const geo = detecter(texte) || (s.zone ? {pays:s.p, zone:s.zone, localite:s.zone, autres:[]} : null);
+        const ag = aggravants(texte);
+        ETAT.arts.push({
+          h, t:titre, l:it.l, ts,
+          src:s.n, f:s.f,
+          p:geo?geo.pays:null, z:geo?geo.zone:null, loc:geo?geo.localite:null,
+          c:criticite(texte), cat:categorie(texte),
+          ag:ag.map(a=>({l:a.l,v:a.v})),
+          r:(it.r||"").replace(/<[^>]+>/g," ").slice(0,320).trim()
+        });
+        neufs++;
+      });
+    }));
+  }
+  ETAT.arts.sort((a,b)=>b.ts-a.ts);
+  ETAT.arts = ETAT.arts.slice(0,900);
+  ETAT.maj = now();
+  sauver();
+  journal("Terminé — "+ok+"/"+flux.length+" flux joignables, "+neufs+" faits nouveaux."+(RELAIS_ACTIF?" Relais : "+RELAIS_ACTIF.n+".":""));
+  $("#prog").style.width="0%";
+  $("#etat").textContent = ok ? "À jour" : "Aucun flux joignable";
+  $("#btnMaj").disabled = false;
+  enCours = false;
+  rendre();
+}
+
+/* ==================================================================
+   5. Scores
+   ================================================================== */
+const POIDS = {CRITIQUE:4, ELEVE:2, MODERE:1, FAIBLE:0};
+function scoreZone(zn){
+  const f = fenetre(24).filter(a=>a.z===zn);
+  let p = 0;
+  f.forEach(a=>{ p += POIDS[a.c]; a.ag.forEach(x=>p+=x.v*0.5); });
+  const s = Math.round(100*(1-Math.exp(-p/12)));
+  return {score:s, niveau:niveau(s), n:f.length,
+          crit:f.filter(a=>a.c==="CRITIQUE").length, elev:f.filter(a=>a.c==="ELEVE").length,
+          ag:[...new Set(f.flatMap(a=>a.ag.map(x=>x.l)))]};
+}
+function niveau(s){ return s>=75?"ROUGE" : s>=60?"MARRON" : s>=40?"ORANGE" : s>=20?"JAUNE" : "VERT"; }
+const LIB = {ROUGE:"Situation grave", MARRON:"Situation critique", ORANGE:"Situation tendue", JAUNE:"Situation d'alerte", VERT:"Situation normale"};
+function fenetre(h){ const t=now()-h*3600000; return ETAT.arts.filter(a=>a.ts>=t); }
+function scorePays(p){
+  const zs = ZONES.filter(z=>z.p===p).map(z=>scoreZone(z.z));
+  const max = zs.length ? Math.max(...zs.map(z=>z.score)) : 0;
+  const moy = zs.length ? zs.reduce((n,z)=>n+z.score,0)/zs.length : 0;
+  const s = Math.round(max*0.6 + moy*0.4);
+  const zoneCritique = zs.length ? ZONES.filter(z=>z.p===p)[zs.findIndex(z=>z.score===max)] : null;
+  return { score:s, niveau:niveau(s), n:fenetre(24).filter(a=>a.p===p).length,
+           crit:fenetre(24).filter(a=>a.p===p&&a.c==="CRITIQUE").length,
+           zonePic: zoneCritique?zoneCritique.z:null, zonePicScore:max,
+           ag:[...new Set(zs.flatMap(z=>z.ag))] };
+}
+
+/* ==================================================================
+   6. Rendu
+   ================================================================== */
+function rendre(){ rCorridor(); rFiltres(); rFlux(); rZones(); rCorrs(); rSynth(); rAgenda(); rAlertes(); rBord(); }
+
+function rCorridor(){
+  const c = CORRIDORS[0];
+  $("#corridor").innerHTML = c.z.map(zn=>{
+    const s = scoreZone(zn);
+    const z = ZONES.find(x=>x.z===zn);
+    return `<div class="noeud"><i class="b-${s.niveau}"></i><b>${esc(z? z.loc[0] : zn)}</b><u>${zn} · ${s.score}</u></div>`;
+  }).join("");
+}
+
+function rFiltres(){
+  const dispo = ["ALL", ...Object.keys(PAYS)];
+  $("#fPays").innerHTML = dispo.map(p=>{
+    const n = p==="ALL" ? "Tout le périmètre" : PAYS[p].f+" "+PAYS[p].n;
+    return `<button class="puce ${ETAT.fPays===p?"on":""}" data-fp="${p}">${n}</button>`;
+  }).join("");
+  const cats = [["ALL","Tout"],["securite","Sécurité"],["humanitaire","Humanitaire"],["politique","Politique"],["economique","Économique"],["CRITIQUE","Critiques"],["ELEVE","Élevés"]];
+  $("#fCat").innerHTML = cats.map(([k,n])=>`<button class="puce ${ETAT.fCat===k?"on":""}" data-fc="${k}">${n}</button>`).join("");
+  $("#zPays").innerHTML = Object.keys(PAYS).map(p=>`<button class="puce ${ETAT.zPays===p?"on":""}" data-zp="${p}">${PAYS[p].f} ${PAYS[p].n}</button>`).join("");
+  $$("[data-fp]").forEach(b=>b.onclick=()=>{ETAT.fPays=b.dataset.fp;rFiltres();rFlux();});
+  $$("[data-fc]").forEach(b=>b.onclick=()=>{ETAT.fCat=b.dataset.fc;rFiltres();rFlux();});
+  $$("[data-zp]").forEach(b=>b.onclick=()=>{ETAT.zPays=b.dataset.zp;rFiltres();rZones();});
+}
+
+function filtres(){
+  let l = fenetre(CFG.fenetreH);
+  if(!$("#oHors").checked) l = l.filter(a=>a.z);
+  if(ETAT.fPays!=="ALL") l = l.filter(a=>a.p===ETAT.fPays);
+  if(ETAT.fCat!=="ALL") l = ["CRITIQUE","ELEVE"].includes(ETAT.fCat) ? l.filter(a=>a.c===ETAT.fCat) : l.filter(a=>a.cat===ETAT.fCat);
+  const q = norm($("#fRech").value);
+  if(q) l = l.filter(a=>norm(a.t+" "+a.src+" "+(a.z||"")+" "+(a.loc||"")).includes(q));
+  return l;
+}
+
+function rFlux(){
+  const l = filtres();
+  $("#fluxCount").textContent = l.length ? l.length+" faits · maj "+(ETAT.maj?hDep(ETAT.maj):"—") : "—";
+  if(!l.length){
+    $("#flux").innerHTML = ETAT.arts.length
+      ? `<div class="vide"><b>Aucun fait sur ce filtre</b>Élargissez le périmètre, ou allongez la fenêtre du flux dans Réglages.</div>`
+      : `<div class="vide"><b>Rien n'a encore été collecté</b>Lancez une collecte. En mode Standard, les 33 zones de Côte d'Ivoire sont interrogées une par une.<br><br><button class="btn p" onclick="collecter()">Collecter maintenant</button></div>`;
+    return;
+  }
+  $("#flux").innerHTML = l.slice(0,180).map(a=>{
+    const z = ZONES.find(x=>x.z===a.z);
+    return `<article class="art ${a.c}">
+      <h3>${esc(a.t)}</h3>
+      <div class="meta">
+        <span class="tag ${a.c}">${a.c==="ELEVE"?"ÉLEVÉ":a.c==="MODERE"?"MODÉRÉ":a.c}</span>
+        ${a.z?`<span class="tag zone">${PAYS[a.p].f} ${esc(a.z)}${a.loc&&a.loc!==a.z?" · "+esc(a.loc):""}</span>`:`<span class="tag">Hors périmètre</span>`}
+        <span class="tag">${esc(a.cat)}</span>
+        ${a.ag.map(x=>`<span class="tag" style="border-color:rgba(217,173,84,.5);color:var(--or)">${esc(x.l)}</span>`).join("")}
+        <span>${esc(a.src)}${CFG.afficherFiab?" · fiabilité "+a.f+"%":""}</span><span>·</span><span>${hDep(a.ts)}</span>
+      </div>
+      ${a.r?`<p>${esc(a.r)}</p>`:""}
+      <div class="liens">${a.l?`<a href="${esc(a.l)}" target="_blank" rel="noopener">Ouvrir la source</a>`:""}
+      ${z?`<a href="#" onclick="voirZone('${esc(a.z)}');return false">Voir la zone ${esc(a.z)}</a>`:""}</div>
+    </article>`;
+  }).join("");
+}
+
+function rZones(){
+  const l = ZONES.filter(z=>z.p===ETAT.zPays).map(z=>({...z, s:scoreZone(z.z)}))
+                 .sort((a,b)=>b.s.score-a.s.score);
+  const tot = l.reduce((n,z)=>n+z.s.n,0);
+  $("#zones").innerHTML =
+   `<div class="grille g4" style="margin-bottom:10px">
+      <div class="kpi"><b>${l.length}</b><span>Zones suivies</span></div>
+      <div class="kpi"><b>${tot}</b><span>Faits / 24h</span></div>
+      <div class="kpi"><b class="n-ROUGE">${l.filter(z=>["ROUGE","MARRON"].includes(z.s.niveau)).length}</b><span>Zones critiques</span></div>
+      <div class="kpi"><b>${l.filter(z=>z.s.n===0).length}</b><span>Sans signal</span></div>
+    </div>` +
+   l.map(z=>`<div class="zone-l">
+      <div class="sc n-${z.s.niveau}">${z.s.score}</div>
+      <div class="nm">
+        <b>${esc(z.z)}</b>
+        <span>${esc(z.d)} · ${z.s.n} fait(s) · ${z.s.crit} critique(s) · ${LIB[z.s.niveau]}</span>
+        <div class="jauge"><i class="b-${z.s.niveau}" style="width:${z.s.score}%"></i></div>
+        ${z.s.ag.length?`<span style="color:var(--or)">${z.s.ag.map(esc).join(" · ")}</span>`:""}
+      </div>
+    </div>`).join("");
+}
+
+function rCorrs(){
+  $("#corrs").innerHTML = CORRIDORS.map(c=>{
+    const ss = c.z.map(zn=>scoreZone(zn));
+    const sc = Math.round(Math.max(...ss.map(s=>s.score))*0.6 + (ss.reduce((n,s)=>n+s.score,0)/ss.length)*0.4);
+    const nv = niveau(sc);
+    const faits = fenetre(24).filter(a=>c.z.includes(a.z));
+    return `<div class="carte">
+      <div style="display:flex;align-items:baseline;gap:8px">
+        <h3 class="cond" style="font-size:17px;font-weight:600;flex:1">${esc(c.n)}</h3>
+        <span class="mono n-${nv}" style="font-size:19px">${sc}</span>
+      </div>
+      <div style="font-size:11px;color:var(--faible);margin-bottom:8px">${esc(c.s)} · ${LIB[nv]} · ${faits.length} fait(s)/24h</div>
+      <div class="corridor-l" style="min-width:0;flex-wrap:wrap;gap:4px">
+        ${c.z.map((zn,i)=>{const s=ss[i];return `<span class="tag ${s.score>=40?"ELEVE":""}" style="border-left:3px solid var(--${s.niveau==="ROUGE"?"rouge":s.niveau==="MARRON"?"marron":s.niveau==="ORANGE"?"orange":s.niveau==="JAUNE"?"jaune":"vert"})">${esc(zn)} ${s.score}</span>`;}).join("")}
+      </div>
+      ${faits.filter(a=>["CRITIQUE","ELEVE"].includes(a.c)).slice(0,3).map(a=>`<div style="font-size:12px;color:var(--sourd);margin-top:7px;padding-left:8px;border-left:2px solid var(--ligne)">${esc(a.z)} — ${esc(a.t)}</div>`).join("")}
+    </div>`;
+  }).join("");
+}
+
+function rSynth(){
+  $("#synthDate").textContent = ETAT.maj ? "au "+new Date(ETAT.maj).toLocaleString("fr-FR") : "—";
+  const f = fenetre(24);
+  if(!f.length){ $("#synth").innerHTML = `<div class="vide"><b>Point indisponible</b>Le point de situation se construit à partir des faits collectés. Lancez une collecte.</div>`; return; }
+  const parZone = {};
+  f.forEach(a=>{ if(a.z){ (parZone[a.z]=parZone[a.z]||[]).push(a); } });
+  const classees = Object.keys(parZone).map(z=>({z, s:scoreZone(z), a:parZone[z]})).sort((x,y)=>y.s.score-x.s.score);
+  const ci = classees.filter(x=>ZONES.find(z=>z.z===x.z)?.p==="CI");
+  const lim = classees.filter(x=>ZONES.find(z=>z.z===x.z)?.p!=="CI");
+  const bloc = (titre, arr) => arr.length ? `<div class="carte"><h3 class="cond" style="font-size:17px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">${titre}</h3>`+
+    arr.slice(0,8).map(x=>`<div style="padding:7px 0;border-bottom:1px solid var(--ligne)">
+      <div style="display:flex;gap:8px;align-items:baseline"><span class="mono n-${x.s.niveau}">${x.s.score}</span><b class="cond" style="font-size:15px">${esc(x.z)}</b><span style="font-size:11px;color:var(--faible)">${LIB[x.s.niveau]} · ${x.a.length} fait(s)</span></div>
+      ${x.a.filter(a=>["CRITIQUE","ELEVE"].includes(a.c)).slice(0,2).map(a=>`<div style="font-size:12px;color:var(--sourd);margin-top:4px">— ${esc(a.t)} <span style="color:var(--faible)">(${esc(a.src)})</span></div>`).join("")}
+    </div>`).join("")+`</div>` : "";
+  const cats = ["securite","humanitaire","politique","economique"].map(c=>({c, n:f.filter(a=>a.cat===c).length}));
+  $("#synth").innerHTML =
+   `<div class="grille g4" style="margin-bottom:10px">
+      <div class="kpi"><b>${f.length}</b><span>Faits / 24h</span></div>
+      <div class="kpi"><b class="n-ROUGE">${f.filter(a=>a.c==="CRITIQUE").length}</b><span>Critiques</span></div>
+      <div class="kpi"><b>${Object.keys(parZone).length}</b><span>Zones actives</span></div>
+      <div class="kpi"><b>${new Set(f.map(a=>a.src)).size}</b><span>Sources</span></div>
+    </div>
+    <div class="carte"><h3 class="cond" style="font-size:17px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Répartition thématique</h3>
+      ${cats.map(x=>`<div style="display:flex;align-items:center;gap:8px;padding:4px 0"><span style="width:96px;font-size:12px;text-transform:capitalize">${x.c}</span><div class="jauge" style="flex:1"><i class="b-ORANGE" style="width:${f.length?Math.round(x.n/f.length*100):0}%"></i></div><span class="mono" style="font-size:12px;width:28px;text-align:right">${x.n}</span></div>`).join("")}
+    </div>`
+   + bloc("Côte d'Ivoire — zones les plus actives", ci)
+   + bloc("Pays limitrophes — zones les plus actives", lim);
+}
+
+/* ---------- Agenda ---------- */
+let ETAT_ag = { statut:"ALL", pays:"ALL" };
+function evenementsAgenda(){
+  return ETAT.arts.filter(a=>estAgenda(a.t+" "+a.r)).map(a=>({...a, ag_type:typeAgenda(a.t+" "+a.r), ag_statut:statutAgenda(a.t+" "+a.r, a.ts)}));
+}
+function rAgenda(){
+  const tous = evenementsAgenda();
+  $("#agendaCount").textContent = tous.length ? tous.length+" événement(s) détecté(s)" : "—";
+  const statuts = ["ALL","EN COURS","À VENIR","ACHEVÉ"];
+  $("#agStatut").innerHTML = statuts.map(s=>`<button class="puce ${ETAT_ag.statut===s?"on":""}" data-as="${s}">${s==="ALL"?"Tous statuts":s}</button>`).join("");
+  $("#agPays").innerHTML = ["ALL",...Object.keys(PAYS)].map(p=>`<button class="puce ${ETAT_ag.pays===p?"on":""}" data-ap="${p}">${p==="ALL"?"Tout le périmètre":PAYS[p].f+" "+PAYS[p].n}</button>`).join("");
+  $$("[data-as]").forEach(b=>b.onclick=()=>{ETAT_ag.statut=b.dataset.as;rAgenda();});
+  $$("[data-ap]").forEach(b=>b.onclick=()=>{ETAT_ag.pays=b.dataset.ap;rAgenda();});
+  let l = tous;
+  if(ETAT_ag.statut!=="ALL") l = l.filter(a=>a.ag_statut===ETAT_ag.statut);
+  if(ETAT_ag.pays!=="ALL") l = l.filter(a=>a.p===ETAT_ag.pays);
+  if(!l.length){ $("#agenda").innerHTML = `<div class="vide"><b>Aucun événement</b>Les sommets, mobilisations et fermetures programmées détectés dans le flux apparaîtront ici.</div>`; return; }
+  const styleStatut = {"EN COURS":"ELEVE","À VENIR":"MODERE","ACHEVÉ":"FAIBLE"};
+  $("#agenda").innerHTML = l.slice(0,120).map(a=>`<article class="art ${styleStatut[a.ag_statut]}">
+    <h3>${esc(a.t)}</h3>
+    <div class="meta">
+      <span class="tag ${styleStatut[a.ag_statut]}">${a.ag_statut}</span>
+      <span class="tag">${esc(a.ag_type)}</span>
+      ${a.z?`<span class="tag zone">${PAYS[a.p].f} ${esc(a.z)}</span>`:""}
+      <span>${esc(a.src)}</span><span>·</span><span>${hDep(a.ts)}</span>
+    </div>
+    ${a.r?`<p>${esc(a.r)}</p>`:""}
+    ${a.l?`<div class="liens"><a href="${esc(a.l)}" target="_blank" rel="noopener">Ouvrir la source</a></div>`:""}
+  </article>`).join("");
+}
+
+/* ---------- Alertes pays ---------- */
+let ETAT_al = "grille";
+function alVue(v){ ETAT_al=v; $("#alGrille").classList.toggle("on",v==="grille"); $("#alChrono").classList.toggle("on",v==="chrono"); rAlertes(); }
+function rAlertes(){
+  const ps = Object.keys(PAYS).map(p=>({p, s:scorePays(p)})).sort((a,b)=>b.s.score-a.s.score);
+  if(ETAT_al==="grille"){
+    $("#alertes").innerHTML = `<div class="grille g2">`+ps.map(x=>`
+      <div class="carte" style="border-left:3px solid var(--${x.s.niveau==="ROUGE"?"rouge":x.s.niveau==="MARRON"?"marron":x.s.niveau==="ORANGE"?"orange":x.s.niveau==="JAUNE"?"jaune":"vert"})">
+        <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:3px">
+          <span style="font-size:20px">${PAYS[x.p].f}</span>
+          <b class="cond" style="font-size:16px;flex:1">${esc(PAYS[x.p].n)}</b>
+          <span class="mono n-${x.s.niveau}" style="font-size:20px">${x.s.score}</span>
+        </div>
+        <div style="font-size:11px;color:var(--faible);margin-bottom:6px">${LIB[x.s.niveau]} · ${x.s.n} fait(s)/24h · ${x.s.crit} critique(s)</div>
+        <div class="jauge"><i class="b-${x.s.niveau}" style="width:${x.s.score}%"></i></div>
+        ${x.s.zonePic?`<div style="font-size:11px;margin-top:6px;color:var(--sourd)">Point le plus exposé : <b style="color:var(--texte)">${esc(x.s.zonePic)}</b> (${x.s.zonePicScore})</div>`:""}
+        ${x.s.ag.length?`<div style="font-size:10.5px;color:var(--or);margin-top:4px">${x.s.ag.slice(0,3).map(esc).join(" · ")}</div>`:""}
+      </div>`).join("")+`</div>`;
+  } else {
+    const faits = fenetre(48).filter(a=>["CRITIQUE","ELEVE"].includes(a.c)).sort((a,b)=>b.ts-a.ts);
+    $("#alertes").innerHTML = faits.length ? faits.slice(0,60).map(a=>`
+      <div class="zone-l" style="align-items:flex-start">
+        <div class="sc n-${a.c==="CRITIQUE"?"ROUGE":"ORANGE"}" style="font-size:10px;width:52px;padding-top:3px">${hDep(a.ts)}</div>
+        <div class="nm"><b>${a.p?PAYS[a.p].f+" "+esc(a.z||PAYS[a.p].n):"—"}</b><span>${esc(a.t)}</span></div>
+      </div>`).join("") : `<div class="vide"><b>Aucun incident majeur</b>Sur les 48 dernières heures, dans ce périmètre.</div>`;
+  }
+}
+
+/* ---------- Tableau de bord ---------- */
+function rBord(){
+  $("#bordMaj").textContent = ETAT.maj ? "maj "+hDep(ETAT.maj) : "—";
+  const f = fenetre(24);
+  const zs = ZONES.map(z=>({...z, s:scoreZone(z.z)}));
+  $("#bordKpi").innerHTML = [
+    [f.length,"Faits actifs /24h"],
+    [ZONES.length,"Zones couvertes"],
+    [f.filter(a=>a.c==="CRITIQUE").length,"Critiques"],
+    [f.filter(a=>a.c==="ELEVE").length,"Élevés"],
+    [new Set(f.map(a=>a.src)).size,"Sources actives"],
+    [zs.filter(z=>["ROUGE","MARRON"].includes(z.s.niveau)).length,"Zones en tension"],
+    [zs.filter(z=>z.s.n===0).length,"Zones sans signal"],
+    [ETAT.origine||"appareil","Origine des données"]
+  ].map(([v,l])=>`<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join("");
+  $("#chaleur").innerHTML = zs.sort((a,b)=>b.s.score-a.s.score).map(z=>`
+    <div title="${esc(z.z)} — ${z.s.score} — ${LIB[z.s.niveau]}" class="b-${z.s.niveau}" style="border-radius:3px;padding:5px 3px;text-align:center;cursor:pointer" onclick="voirZone('${esc(z.z)}')">
+      <div style="font-family:'Roboto Mono';font-size:11px;font-weight:600;color:rgba(10,16,20,.85)">${z.s.score}</div>
+      <div style="font-size:8px;color:rgba(10,16,20,.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(z.z)}</div>
+    </div>`).join("");
+}
+
+function voirZone(z){
+  ETAT.zPays = ZONES.find(x=>x.z===z)?.p || "CI";
+  onglet("zones"); rFiltres(); rZones();
+}
+
+/* ==================================================================
+   7. Exports
+   ================================================================== */
+function entete(){ return "POINT SÛRETÉ — Point de situation — "+new Date().toLocaleString("fr-FR")+" — Usage professionnel restreint"; }
+function tele(nom, contenu, type){
+  const b = new Blob([contenu],{type});
+  const u = URL.createObjectURL(b);
+  const a = document.createElement("a"); a.href=u; a.download=nom; a.click();
+  setTimeout(()=>URL.revokeObjectURL(u),4000);
+}
+function exportWord(){
+  const f = fenetre(24);
+  const zs = [...new Set(f.map(a=>a.z).filter(Boolean))].map(z=>({z,s:scoreZone(z)})).sort((a,b)=>b.s.score-a.s.score);
+  const h = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>Point Sûreté</title>
+  <style>@page{size:A4;margin:2cm}body{font-family:Calibri,Arial,sans-serif;font-size:10.5pt;color:#1a1a1a}
+  h1{color:#B5623A;font-size:19pt;margin:0 0 2pt}h2{color:#12201B;font-size:13pt;border-bottom:1.5pt solid #B5623A;padding-bottom:3pt;margin-top:16pt}
+  table{width:100%;border-collapse:collapse;font-size:9.5pt}th{background:#0A1014;color:#fff;padding:5pt;text-align:left}td{border-bottom:.5pt solid #ccc;padding:5pt}
+  .r{color:#B5453F;font-weight:bold}.m{color:#8C5A3C;font-weight:bold}.o{color:#C97A3F;font-weight:bold}.j{color:#9C8A2E}.v{color:#2F8F68}
+  .pied{font-size:8pt;color:#777;border-top:.5pt solid #ccc;padding-top:5pt;margin-top:18pt}</style></head><body>
+  <h1>POINT SÛRETÉ</h1>
+  <p style="color:#666;font-size:9pt;margin:0 0 12pt">Côte d'Ivoire et pays limitrophes — ${new Date().toLocaleString("fr-FR")} — fenêtre 24 heures</p>
+  <h2>Niveaux de zone</h2>
+  <table><tr><th>Zone</th><th>Pays</th><th>Score /100</th><th>Niveau</th><th>Faits</th><th>Facteurs aggravants</th></tr>
+  ${zs.map(x=>{const z=ZONES.find(v=>v.z===x.z);const cl={ROUGE:"r",MARRON:"m",ORANGE:"o",JAUNE:"j",VERT:"v"}[x.s.niveau];
+    return `<tr><td>${esc(x.z)}</td><td>${z?PAYS[z.p].n:""}</td><td class="${cl}">${x.s.score}</td><td class="${cl}">${x.s.niveau} — ${LIB[x.s.niveau]}</td><td>${x.s.n}</td><td>${x.s.ag.map(esc).join(", ")||"—"}</td></tr>`;}).join("")}
+  </table>
+  ${CORRIDORS.map(c=>{const ss=c.z.map(scoreZone);const sc=Math.round(Math.max(...ss.map(s=>s.score))*0.6+(ss.reduce((n,s)=>n+s.score,0)/ss.length)*0.4);
+    return `<p style="margin:3pt 0"><b>${esc(c.n)}</b> — ${sc}/100 · ${LIB[niveau(sc)]}</p>`;}).join("")}
+  <h2>Faits retenus</h2>
+  ${f.slice(0,70).map(a=>`<p style="margin:0 0 7pt"><b>${esc(a.z||"Hors périmètre")}</b> — ${esc(a.t)}<br>
+   <span style="font-size:8.5pt;color:#666">${a.c} · ${a.cat} · ${esc(a.src)} · ${new Date(a.ts).toLocaleString("fr-FR")}</span></p>`).join("")}
+  <div class="pied">${entete()}. Document généré à partir de flux publics collectés localement. Aide à la veille — à recouper avant toute décision opérationnelle.</div>
+  </body></html>`;
+  tele("POINT_SURETE_"+new Date().toISOString().slice(0,10)+".doc", h, "application/msword");
+}
+function exportCSV(){
+  const f = fenetre(24);
+  const ent = ["Date","Pays","Zone","Localite","Criticite","Categorie","Titre","Source","Fiabilite","Aggravants","Lien"];
+  const q = v => '"'+String(v??"").replace(/"/g,'""')+'"';
+  const csv = "\uFEFF"+[ent.join(";"), ...f.map(a=>[new Date(a.ts).toLocaleString("fr-FR"), a.p?PAYS[a.p].n:"", a.z||"", a.loc||"", a.c, a.cat, a.t, a.src, a.f, a.ag.map(x=>x.l).join(" | "), a.l].map(q).join(";"))].join("\n");
+  tele("POINT_SURETE_"+new Date().toISOString().slice(0,10)+".csv", csv, "text/csv;charset=utf-8");
+}
+function exportJSON(){
+  tele("POINT_SURETE_sauvegarde_"+new Date().toISOString().slice(0,10)+".json", JSON.stringify({maj:ETAT.maj, arts:ETAT.arts}, null, 1), "application/json");
+}
+function docWord(titre, corps){
+  return `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>${esc(titre)}</title>
+  <style>@page{size:A4;margin:2cm}body{font-family:Calibri,Arial,sans-serif;font-size:10.5pt;color:#1a1a1a}
+  h1{color:#B5623A;font-size:19pt;margin:0 0 2pt}h2{color:#12201B;font-size:13pt;border-bottom:1.5pt solid #B5623A;padding-bottom:3pt;margin-top:16pt}
+  table{width:100%;border-collapse:collapse;font-size:9.5pt}th{background:#0A1014;color:#fff;padding:5pt;text-align:left}td{border-bottom:.5pt solid #ccc;padding:5pt}
+  .r{color:#B5453F;font-weight:bold}.m{color:#8C5A3C;font-weight:bold}.o{color:#C97A3F;font-weight:bold}.j{color:#9C8A2E}.v{color:#2F8F68}
+  .pied{font-size:8pt;color:#777;border-top:.5pt solid #ccc;padding-top:5pt;margin-top:18pt}</style></head><body>
+  <h1>${esc(titre)}</h1>
+  <p style="color:#666;font-size:9pt;margin:0 0 12pt">POINT SÛRETÉ — Côte d'Ivoire et pays limitrophes — ${new Date().toLocaleString("fr-FR")}</p>
+  ${corps}
+  <div class="pied">${entete()}. Document généré à partir de flux publics collectés localement. Aide à la veille — à recouper avant toute décision opérationnelle.</div>
+  </body></html>`;
+}
+function exportAgenda(){
+  const ev = evenementsAgenda();
+  const corps = ev.length ? ev.slice(0,90).map(a=>`<p style="margin:0 0 7pt"><b>${esc(a.ag_statut)}</b> — ${esc(a.t)}<br>
+   <span style="font-size:8.5pt;color:#666">${esc(a.ag_type)} · ${a.z?esc(a.z):"—"} · ${esc(a.src)} · ${new Date(a.ts).toLocaleString("fr-FR")}</span></p>`).join("")
+   : "<p>Aucun événement détecté à ce jour.</p>";
+  tele("POINT_SURETE_agenda_"+new Date().toISOString().slice(0,10)+".doc", docWord("Agenda sûreté", "<h2>Événements en cours, à venir et échéances</h2>"+corps), "application/msword");
+}
+function exportAlertes(){
+  const ps = Object.keys(PAYS).map(p=>({p, s:scorePays(p)})).sort((a,b)=>b.s.score-a.s.score);
+  const cl = {ROUGE:"r",MARRON:"m",ORANGE:"o",JAUNE:"j",VERT:"v"};
+  const corps = `<h2>Niveaux d'alerte par pays</h2>
+  <table><tr><th>Pays</th><th>Score /100</th><th>Niveau</th><th>Faits/24h</th><th>Point le plus exposé</th><th>Facteurs aggravants</th></tr>
+  ${ps.map(x=>`<tr><td>${esc(PAYS[x.p].n)}</td><td class="${cl[x.s.niveau]}">${x.s.score}</td><td class="${cl[x.s.niveau]}">${x.s.niveau} — ${LIB[x.s.niveau]}</td><td>${x.s.n}</td><td>${x.s.zonePic?esc(x.s.zonePic)+" ("+x.s.zonePicScore+")":"—"}</td><td>${x.s.ag.map(esc).join(", ")||"—"}</td></tr>`).join("")}
+  </table>`;
+  tele("POINT_SURETE_alertes_pays_"+new Date().toISOString().slice(0,10)+".doc", docWord("Alertes pays", corps), "application/msword");
+}
+function exportSources(){
+  const ent = ["Source","Pays","Fiabilite"];
+  const q = v => '"'+String(v??"").replace(/"/g,'""')+'"';
+  const csv = "\uFEFF"+[ent.join(";"), ...NAT.map(s=>[s.n, PAYS[s.p].n, s.f].map(q).join(";"))].join("\n");
+  tele("POINT_SURETE_sources_"+new Date().toISOString().slice(0,10)+".csv", csv, "text/csv;charset=utf-8");
+}
+
+/* ==================================================================
+   8. Outils
+   ================================================================== */
+async function diag(){
+  journal("Test des relais…");
+  for(const r of RELAIS){
+    try{ const d = await via(r, NAT[0].u, 9000); journal("  "+r.n+" : joignable ("+(d?d.length:0)+" éléments)"); }
+    catch(e){ journal("  "+r.n+" : injoignable — "+e.message); }
+  }
+}
+function reset(){
+  if(!confirm("Vider le cache local et repartir de zéro ?")) return;
+  localStorage.removeItem(CACHE); ETAT.arts=[]; ETAT.maj=0; journal("Cache vidé."); rendre();
+}
+
+/* ==================================================================
+   9. Administration — accès, rôles et droits (local à l'appareil)
+   ================================================================== */
+const MODULES = [
+  ["flux","Flux"],["zones","Zones"],["corr","Corridors"],["agenda","Agenda"],
+  ["alertes","Alertes"],["bord","Tableau de bord"],["synth","Point de situation"],
+  ["rapports","Rapports"],["admin","Administration"],["par","Réglages"]
+];
+const DROITS_DEFAUT = {
+  admin:       Object.fromEntries(MODULES.map(([m])=>[m,true])),
+  utilisateur: Object.fromEntries(MODULES.map(([m])=>[m, !["admin","par"].includes(m)])),
+  lecteur:     Object.fromEntries(MODULES.map(([m])=>[m, ["flux","zones","corr","agenda","alertes","bord","synth"].includes(m)]))
+};
+function genererCode(){
+  const c = "PS"+Math.random().toString(36).slice(2,8).toUpperCase();
+  return c;
+}
+const ADM = Object.assign(
+  { code:genererCode(), roleActif:"admin", users:[], droits:JSON.parse(JSON.stringify(DROITS_DEFAUT)) },
+  JSON.parse(localStorage.getItem("PS_admin") || "{}")
+);
+const admSauver = () => localStorage.setItem("PS_admin", JSON.stringify(ADM));
+
+function copierCode(){
+  navigator.clipboard?.writeText(ADM.code).then(()=>journal("Code d'accès copié.")).catch(()=>{});
+}
+function regenererCode(){
+  if(!confirm("Remplacer le code d'accès actuel par un nouveau ?")) return;
+  ADM.code = genererCode(); admSauver(); $("#codeAcces").textContent = ADM.code;
+  journal("Nouveau code d'accès généré.");
+}
+function ajouterUtilisateur(){
+  const nom = $("#uNom").value.trim();
+  if(!nom){ alert("Indiquez un nom."); return; }
+  ADM.users.push({ id:Date.now(), nom, org:$("#uOrg").value.trim(), role:$("#uRole").value, statut:"Actif" });
+  $("#uNom").value = ""; $("#uOrg").value = "";
+  admSauver(); rUtilisateurs();
+  journal("Utilisateur ajouté : " + nom + ".");
+}
+function toggleUtilisateur(id){
+  const u = ADM.users.find(x=>x.id===id); if(!u) return;
+  u.statut = u.statut === "Actif" ? "Suspendu" : "Actif";
+  admSauver(); rUtilisateurs();
+}
+function supprimerUtilisateur(id){
+  if(!confirm("Supprimer cet utilisateur du registre ?")) return;
+  ADM.users = ADM.users.filter(x=>x.id!==id);
+  admSauver(); rUtilisateurs();
+}
+function rUtilisateurs(){
+  if(!ADM.users.length){ $("#utilisateurs").innerHTML = `<div class="vide" style="padding:18px"><b>Aucun utilisateur</b>Ajoutez les membres de l'équipe amenés à consulter cet appareil.</div>`; return; }
+  $("#utilisateurs").innerHTML = ADM.users.map(u=>`
+    <div class="zone-l">
+      <div style="width:30px;height:30px;border-radius:50%;background:var(--carte2);border:1px solid var(--ligne);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed';font-weight:700;font-size:13px;flex-shrink:0">${esc(u.nom[0]||"?").toUpperCase()}</div>
+      <div class="nm"><b>${esc(u.nom)}</b><span>${esc(u.org||"—")} · ${u.role==="admin"?"Administrateur":u.role==="utilisateur"?"Utilisateur":"Lecteur"} · ${u.statut}</span></div>
+      <button class="btn s" style="padding:5px 8px;font-size:11px" onclick="toggleUtilisateur(${u.id})">${u.statut==="Actif"?"Suspendre":"Réactiver"}</button>
+      <button class="btn s" style="padding:5px 8px;font-size:11px" onclick="supprimerUtilisateur(${u.id})">Suppr.</button>
+    </div>`).join("");
+}
+function rDroits(){
+  $("#droits").innerHTML = `<table><tr><th>Module</th><th>Admin</th><th>Utilisateur</th><th>Lecteur</th></tr>` +
+    MODULES.map(([m,l])=>`<tr><td>${esc(l)}</td>` +
+      ["admin","utilisateur","lecteur"].map(r=>`<td style="text-align:center"><input type="checkbox" ${ADM.droits[r][m]?"checked":""} ${r==="admin"&&m==="admin"?"disabled":""} onchange="ADM.droits['${r}']['${m}']=this.checked;admSauver();appliquerDroits()"></td>`).join("") +
+    `</tr>`).join("") + `</table>`;
+}
+function droitsDefaut(){
+  if(!confirm("Rétablir les droits par défaut pour les trois rôles ?")) return;
+  ADM.droits = JSON.parse(JSON.stringify(DROITS_DEFAUT)); admSauver(); rDroits(); appliquerDroits();
+  journal("Droits d'accès réinitialisés.");
+}
+function appliquerDroits(){
+  const d = ADM.droits[ADM.roleActif] || DROITS_DEFAUT.utilisateur;
+  $$("nav button[data-p]").forEach(b=>{
+    const ok = d[b.dataset.p] !== false;
+    b.style.display = ok ? "" : "none";
+  });
+  const panneauActif = $(".panneau.on");
+  if(panneauActif && d[panneauActif.id.replace("p-","")] === false) onglet("flux");
+}
+function initAdmin(){
+  $("#codeAcces").textContent = ADM.code;
+  $("#roleActif").value = ADM.roleActif;
+  $("#roleActif").onchange = () => { ADM.roleActif = $("#roleActif").value; admSauver(); appliquerDroits(); journal("Rôle actif : " + ADM.roleActif + "."); };
+  rUtilisateurs();
+  rDroits();
+  appliquerDroits();
+}
+
+function onglet(p){
+  $$("nav button").forEach(b=>b.classList.toggle("on", b.dataset.p===p));
+  $$(".panneau").forEach(s=>s.classList.toggle("on", s.id==="p-"+p));
+  window.scrollTo({top:0});
+}
+$$("nav button").forEach(b=>b.onclick=()=>onglet(b.dataset.p));
+$("#btnMaj").onclick = collecter;
+$("#fRech").oninput = rFlux;
+["oHors","oFiab"].forEach(id=>$("#"+id).onchange=()=>{ if(id==="oFiab") CFG.afficherFiab=$("#oFiab").checked, cfgSauver(); rFlux(); });
+
+function demarrerAuto(){
+  clearInterval(window._auto);
+  if($("#oAuto").checked){
+    window._auto = setInterval(collecter, CFG.intervalleMin*60000);
+    journal("Collecte automatique activée (" + CFG.intervalleMin + " min).");
+  }
+}
+$("#oAuto").onchange = demarrerAuto;
+
+/* ---------- Précision de la collecte ---------- */
+function rCollecteUI(){
+  $("#cPays").innerHTML = Object.keys(PAYS).map(p=>
+    `<button class="puce ${CFG.paysActifs.includes(p)?"on":""}" data-cp="${p}">${PAYS[p].f} ${PAYS[p].n}</button>`).join("");
+  $$("[data-cp]").forEach(b=>b.onclick=()=>{
+    const p=b.dataset.cp;
+    if(CFG.paysActifs.includes(p)){ if(CFG.paysActifs.length>1) CFG.paysActifs=CFG.paysActifs.filter(x=>x!==p); }
+    else CFG.paysActifs=[...CFG.paysActifs,p];
+    rCollecteUI();
+  });
+  const zonesTri = [...ZONES].sort((a,b)=>a.z.localeCompare(b.z,"fr"));
+  $("#cZonePrio").innerHTML = `<option value="">Aucune — couverture égale sur tout le périmètre</option>` +
+    zonesTri.map(z=>`<option value="${esc(z.z)}" ${CFG.zonePriorite===z.z?"selected":""}>${PAYS[z.p].f} ${esc(z.z)} — ${esc(z.d)}</option>`).join("");
+  $("#cFenetre").value = String(CFG.fenetreH);
+  $("#cIntervalle").value = String(CFG.intervalleMin);
+}
+function collecteEnr(){
+  CFG.zonePriorite = $("#cZonePrio").value;
+  CFG.fenetreH = Number($("#cFenetre").value);
+  CFG.intervalleMin = Number($("#cIntervalle").value);
+  cfgSauver();
+  journal("Précision enregistrée — " + CFG.paysActifs.length + "/6 pays, fenêtre " + CFG.fenetreH + "h" +
+          (CFG.zonePriorite ? ", priorité " + CFG.zonePriorite : "") + ".");
+  $("#fluxAide").textContent = "Faits collectés sur les " + CFG.fenetreH + " dernières heures, rattachés à la zone administrative où ils se produisent — pas au siège du média qui les publie.";
+  demarrerAuto();
+  rFlux();
+}
+rCollecteUI();
+$("#oFiab").checked = CFG.afficherFiab;
+collecteEnr();
+
+function cfgEnr(){
+  CFG.origine = $("#orig").value;
+  CFG.dataUrl = $("#cDataUrl").value.trim() || "data/latest.json";
+  CFG.sbUrl   = $("#cSbUrl").value.trim();
+  CFG.sbKey   = $("#cSbKey").value.trim();
+  try{
+    const charge = JSON.parse(atob(CFG.sbKey.split(".")[1] || ""));
+    if(charge.role === "service_role"){
+      alert("Cette clé est une clé service_role : elle donne un accès en écriture et n'a rien à faire dans une page publique. Utilisez la clé anon.");
+      return;
+    }
+  }catch(e){}
+  cfgSauver();
+  journal("Origine des données : " + CFG.origine + ".");
+  collecter();
+}
+$("#orig").value      = CFG.origine;
+$("#cDataUrl").value  = CFG.dataUrl;
+$("#cSbUrl").value    = CFG.sbUrl;
+$("#cSbKey").value    = CFG.sbKey;
+
+/* Démarrage */
+charger();
+rendre();
+initAdmin();
+chargerCloud().then(src => { if(src){ $("#etat").textContent = "À jour · " + src; rendre(); } });
+if(ETAT.maj) journal("Cache chargé — "+ETAT.arts.length+" faits, dernière collecte "+hDep(ETAT.maj)+".");
+else $("#etat").textContent = "Aucune donnée";
+</script>
+</body>
+</html>
