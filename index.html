@@ -135,6 +135,7 @@ label.sw small{display:block;color:var(--faible);font-size:11px}
     <div class="logo"><b>POINT <span>SÛRETÉ</span></b><em>CI + 5 limitrophes</em></div>
     <div class="spacer"></div>
     <span class="pastille"><i class="pt"></i><span id="etat">Prêt</span></span>
+    <button class="btn s" id="btnManuel">+ Ajouter</button>
     <button class="btn p" id="btnMaj">Collecter</button>
   </div>
   <div class="progress"><i id="prog"></i></div>
@@ -144,6 +145,66 @@ label.sw small{display:block;color:var(--faible);font-size:11px}
     <div class="corridor-l" id="corridor"></div>
   </div>
 </header>
+
+<!-- ============ SAISIE MANUELLE ============ -->
+<div id="voileManuel" style="display:none;position:fixed;inset:0;z-index:60;background:rgba(10,16,20,.72);backdrop-filter:blur(2px);padding:14px;overflow-y:auto" onclick="if(event.target===this)fermerManuel()">
+  <div style="max-width:520px;margin:20px auto 40px;background:var(--carte);border:1px solid var(--ligne);border-radius:8px;padding:16px">
+    <div style="display:flex;align-items:baseline;margin-bottom:4px"><h2 style="font-size:18px;text-transform:uppercase;letter-spacing:.05em;flex:1">Ajouter un renseignement</h2><button class="btn s" onclick="fermerManuel()">Fermer</button></div>
+    <p class="aide" style="margin-bottom:12px">Pour tout ce que la collecte automatisée ne peut pas atteindre légitimement : une radio locale entendue en direct, une publication Facebook, un groupe WhatsApp des forces de sécurité, un canal WhatsApp, une remontée de terrain. Vous restez responsable de l'exactitude de ce que vous saisissez ici.</p>
+
+    <label style="display:block;font-size:12px;color:var(--sourd);margin-bottom:4px">Titre du fait *</label>
+    <input type="text" id="mTitre" placeholder="Ex. : Braquage signalé sur l'axe Ferké–Ouangolodougou" style="margin-bottom:9px">
+
+    <label style="display:block;font-size:12px;color:var(--sourd);margin-bottom:4px">Description</label>
+    <textarea id="mDesc" rows="3" placeholder="Détails, circonstances, source précise…" style="width:100%;background:var(--carte2);border:1px solid var(--ligne);color:var(--texte);padding:8px 9px;border-radius:var(--r);margin-bottom:9px;resize:vertical"></textarea>
+
+    <div class="grille g2" style="margin-bottom:9px">
+      <div><label style="display:block;font-size:12px;color:var(--sourd);margin-bottom:4px">Pays *</label>
+        <select id="mPays"></select></div>
+      <div><label style="display:block;font-size:12px;color:var(--sourd);margin-bottom:4px">Zone</label>
+        <select id="mZone"></select></div>
+    </div>
+    <input type="text" id="mLocalite" placeholder="Localité précise (facultatif)" style="margin-bottom:9px">
+
+    <div class="grille g2" style="margin-bottom:9px">
+      <div><label style="display:block;font-size:12px;color:var(--sourd);margin-bottom:4px">Criticité *</label>
+        <select id="mCrit">
+          <option value="CRITIQUE">Critique</option>
+          <option value="ELEVE">Élevé</option>
+          <option value="MODERE" selected>Modéré</option>
+          <option value="FAIBLE">Faible</option>
+        </select></div>
+      <div><label style="display:block;font-size:12px;color:var(--sourd);margin-bottom:4px">Catégorie *</label>
+        <select id="mCat">
+          <option value="securite">Sécurité</option>
+          <option value="humanitaire">Humanitaire</option>
+          <option value="politique" selected>Politique</option>
+          <option value="economique">Économique</option>
+        </select></div>
+    </div>
+
+    <label style="display:block;font-size:12px;color:var(--sourd);margin-bottom:4px">Type de source *</label>
+    <select id="mType" style="margin-bottom:9px" onchange="mAjusterFiabilite()">
+      <option value="Radio locale">Radio locale</option>
+      <option value="Page Facebook locale">Page Facebook locale</option>
+      <option value="Groupe WhatsApp (forces de sécurité)">Groupe WhatsApp (forces de sécurité)</option>
+      <option value="Canal WhatsApp">Canal WhatsApp</option>
+      <option value="Terrain / contact direct">Terrain / contact direct</option>
+      <option value="Autre">Autre</option>
+    </select>
+
+    <div class="grille g2" style="margin-bottom:9px">
+      <input type="text" id="mNomSrc" placeholder="Nom de la source (ex. Radio Jam FM)">
+      <input type="number" id="mFiab" min="0" max="100" placeholder="Fiabilité estimée %">
+    </div>
+    <input type="text" id="mLien" placeholder="Lien ou référence (facultatif)" style="margin-bottom:9px">
+    <label style="display:block;font-size:12px;color:var(--sourd);margin-bottom:4px">Date et heure du fait</label>
+    <input type="datetime-local" id="mDate" style="margin-bottom:12px">
+
+    <button class="btn p" onclick="enregistrerManuel()" style="width:100%">Enregistrer le renseignement</button>
+  </div>
+</div>
+
 
 <main>
 
@@ -267,6 +328,7 @@ label.sw small{display:block;color:var(--faible);font-size:11px}
     <label style="display:block;font-size:12px;color:var(--sourd);margin-bottom:4px">Zone prioritaire</label>
     <select id="cZonePrio" style="margin-bottom:4px"></select>
     <p class="hint" style="margin-bottom:10px">La zone prioritaire est interrogée en tête de file et toujours en profondeur maximale, même en mode Rapide ou Standard.</p>
+    <label class="sw" style="border:none;padding:0 0 10px"><span>Radios et pages locales<small>Ajoute une recherche dédiée aux radios et à la presse locale, en complément des médias nationaux</small></span><input type="checkbox" id="cRadios" checked></label>
     <div class="grille g2" style="margin-bottom:4px">
       <div>
         <label style="display:block;font-size:12px;color:var(--sourd);margin-bottom:4px">Fenêtre du flux</label>
@@ -305,7 +367,8 @@ label.sw small{display:block;color:var(--faible);font-size:11px}
   </div>
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Méthode et limites</h3>
-    <p style="font-size:12px;color:var(--sourd)">POINT SÛRETÉ agrège des flux RSS publics : agences et médias nationaux des six pays, presse régionale, et requêtes d'actualité ciblées sur chaque zone administrative. Le rattachement géographique se fait par détection de localité dans le texte, avec correspondance de mots entiers et normalisation des accents ; un fait dont aucune localité du périmètre n'est reconnue est classé hors périmètre plutôt que rattaché par défaut au pays du média.</p>
+    <p style="font-size:12px;color:var(--sourd)">POINT SÛRETÉ agrège des flux RSS publics : agences et médias nationaux des six pays, presse régionale, radios locales, et requêtes d'actualité ciblées sur chaque zone administrative. Le rattachement géographique se fait par détection de localité dans le texte, avec correspondance de mots entiers et normalisation des accents ; un fait dont aucune localité du périmètre n'est reconnue est classé hors périmètre plutôt que rattaché par défaut au pays du média.</p>
+    <p style="font-size:12px;color:var(--sourd);margin-top:8px">Facebook et WhatsApp ne sont volontairement pas collectés automatiquement : ni l'un ni l'autre n'exposent de flux public exploitable depuis une application statique, et une collecte automatisée d'un groupe WhatsApp reviendrait à aspirer des communications privées sans autorisation. Ce type de renseignement passe par la <b style="color:var(--sourd)">saisie manuelle</b> (bouton « + Ajouter » en en-tête) : un analyste légitimement présent dans ces canaux y saisit lui-même ce qu'il juge pertinent, avec la source tracée.</p>
     <p style="font-size:12px;color:var(--sourd);margin-top:8px">Deux médias qui rapportent le même fait ne comptent pas comme deux faits : un recoupement lexical par zone et fenêtre de temps regroupe les articles proches et distingue les faits confirmés par au moins deux sources indépendantes (✓) de ceux qui restent à recouper (?). Un fait confirmé pèse davantage dans le score de zone ; un fait isolé pèse moins — pour éviter qu'une source unique et non recoupée fasse basculer un niveau d'alerte.</p>
     <p style="font-size:12px;color:var(--sourd);margin-top:8px">Le Point de situation détecte aussi les corrélations régionales : un thème apparaissant le même jour dans au moins trois pays du périmètre est signalé, pour faire ressortir une dynamique transfrontalière qu'une lecture zone par zone ne révèle pas.</p>
     <p style="font-size:12px;color:var(--sourd);margin-top:8px">Le score de zone est une mesure de pression informationnelle, pas une mesure de risque absolue. Il dépend de la densité de couverture médiatique locale, qui est faible dans certaines régions. Recoupez toute décision opérationnelle avec vos propres canaux de terrain.</p>
@@ -635,31 +698,37 @@ function listeFlux(prof, opts){
   opts = opts || {};
   const paysActifs = new Set(opts.paysActifs || Object.keys(PAYS));
   const priorite = opts.zonePriorite || "";
-  const L = NAT.filter(s=>paysActifs.has(s.p)).map(s=>({...s, zone:null}));
+  const inclureRadios = opts.inclureRadios !== false;
+  const L = NAT.filter(s=>paysActifs.has(s.p)).map(s=>({...s, zone:null, prio:true}));
   // requêtes thématiques par pays actif
   Object.keys(PAYS).filter(p=>paysActifs.has(p)).forEach(p=>{
     const P=PAYS[p];
     THEMES.forEach(t=>{
       L.push({u:gnews('"'+P.n+'" '+t, P.gl, P.lang), p, n:"Veille thématique — "+P.n, f:65, zone:null});
     });
+    // radios et presse locale : mêmes faits, souvent relayés avant la presse nationale
+    if(inclureRadios){
+      L.push({u:gnews('"'+P.n+'" radio', P.gl, P.lang), p, n:"Radios locales — "+P.n, f:52, zone:null, type:"radio"});
+      L.push({u:gnews('"'+P.n+'" (site OR blog OR journal local)', P.gl, P.lang), p, n:"Presse et pages locales — "+P.n, f:48, zone:null, type:"local"});
+    }
   });
   const dejaZone = new Set();
-  function ajouterZone(z){
+  function ajouterZone(z, estPrioritaire){
     if(dejaZone.has(z.z) || !paysActifs.has(z.p)) return;
     dejaZone.add(z.z);
     const P=PAYS[z.p];
     const q = z.loc.slice(0,3).map(l=>'"'+l+'"').join(" OR ");
-    L.push({u:gnews(q+(z.p==="CI"?" Côte d'Ivoire":" "+P.n), P.gl, P.lang), p:z.p, n:"Zone "+z.z+(z.p!=="CI"?" ("+P.n+")":""), f:z.p==="CI"?62:60, zone:z.z, prio:true});
+    L.push({u:gnews(q+(z.p==="CI"?" Côte d'Ivoire":" "+P.n), P.gl, P.lang), p:z.p, n:"Zone "+z.z+(z.p!=="CI"?" ("+P.n+")":""), f:z.p==="CI"?62:60, zone:z.z, prio:!!estPrioritaire});
   }
   // zone prioritaire : approfondie et placée en tête, quelle que soit la profondeur choisie
   if(priorite){
     const zp = ZONES.find(z=>z.z===priorite);
-    if(zp) ajouterZone(zp);
+    if(zp) ajouterZone(zp, true);
   }
-  if(prof==="rapide") return L;
-  ZONES.filter(z=>z.p==="CI").forEach(ajouterZone);
-  if(prof==="profond") ZONES.filter(z=>z.p!=="CI").forEach(ajouterZone);
-  // la zone prioritaire passe en tête de file d'attente
+  if(prof==="rapide"){ L.sort((a,b)=>(b.prio?1:0)-(a.prio?1:0)); return L; }
+  ZONES.filter(z=>z.p==="CI").forEach(z=>ajouterZone(z, false));
+  if(prof==="profond") ZONES.filter(z=>z.p!=="CI").forEach(z=>ajouterZone(z, false));
+  // seules les sources nationales et la zone prioritaire passent en tête de file
   L.sort((a,b)=> (b.prio?1:0) - (a.prio?1:0));
   return L;
 }
@@ -762,7 +831,7 @@ function dater(d){
 const CFG = Object.assign(
   { sbUrl:"", sbKey:"", dataUrl:"data/latest.json", origine:"auto",
     paysActifs:["CI","BF","ML","GN","LR","GH"], zonePriorite:"", fenetreH:12,
-    intervalleMin:15, afficherFiab:true },
+    intervalleMin:15, afficherFiab:true, inclureRadios:true },
   JSON.parse(localStorage.getItem("PS_cfg") || "{}")
 );
 const cfgSauver = () => localStorage.setItem("PS_cfg", JSON.stringify(CFG));
@@ -845,7 +914,7 @@ async function collecter(){
   // 2. Repli : collecte depuis l'appareil, via relais CORS.
   journal("Aucune source serveur joignable — collecte directe depuis l'appareil.");
   const prof = $("#prof").value;
-  const flux = listeFlux(prof, {paysActifs:CFG.paysActifs, zonePriorite:CFG.zonePriorite});
+  const flux = listeFlux(prof, {paysActifs:CFG.paysActifs, zonePriorite:CFG.zonePriorite, inclureRadios:CFG.inclureRadios});
   journal("Collecte "+prof+" — "+flux.length+" flux"+(CFG.zonePriorite?" · priorité "+CFG.zonePriorite:"")+(CFG.paysActifs.length<6?" · "+CFG.paysActifs.length+"/6 pays":"")+".");
   let fait=0, ok=0, neufs=0;
   const vus = new Set(ETAT.arts.map(a=>a.h));
@@ -1042,9 +1111,11 @@ function rFlux(){
   $("#flux").innerHTML = l.slice(0,180).map(a=>{
     const z = ZONES.find(x=>x.z===a.z);
     const g = CORRO.get(a.h);
-    const badge = g ? (g.verifie
-      ? `<span class="tag conf" title="${g.srcs.map(esc).join(', ')}">✓ ${g.n} src</span>`
-      : `<span class="tag nonconf">? 1 src</span>`) : "";
+    const badge = a.manuel
+      ? `<span class="tag" style="border-color:rgba(217,173,84,.5);color:var(--or)">✎ Saisie manuelle</span>`
+      : g ? (g.verifie
+        ? `<span class="tag conf" title="${g.srcs.map(esc).join(', ')}">✓ ${g.n} src</span>`
+        : `<span class="tag nonconf">? 1 src</span>`) : "";
     return `<article class="art ${a.c}">
       <h3>${esc(a.t)}</h3>
       <div class="meta">
@@ -1268,12 +1339,12 @@ function exportWord(){
 }
 function exportCSV(){
   const f = fenetre(24);
-  const ent = ["Date","Pays","Zone","Localite","Criticite","Categorie","Titre","Source","Fiabilite","Recoupe","Sources_corroborantes","Aggravants","Lien"];
+  const ent = ["Date","Pays","Zone","Localite","Criticite","Categorie","Titre","Source","Fiabilite","Saisie","Type_source","Recoupe","Sources_corroborantes","Aggravants","Lien"];
   const q = v => '"'+String(v??"").replace(/"/g,'""')+'"';
   const csv = "\uFEFF"+[ent.join(";"), ...f.map(a=>{
     const g = CORRO.get(a.h);
     return [new Date(a.ts).toLocaleString("fr-FR"), a.p?PAYS[a.p].n:"", a.z||"", a.loc||"", a.c, a.cat, a.t, a.src, a.f,
-      g?.verifie ? "Oui" : "Non", g ? g.n : 1, a.ag.map(x=>x.l).join(" | "), a.l].map(q).join(";");
+      a.manuel?"Manuelle":"Automatisée", a.stype||"", g?.verifie ? "Oui" : "Non", g ? g.n : 1, a.ag.map(x=>x.l).join(" | "), a.l].map(q).join(";");
   })].join("\n");
   tele("POINT_SURETE_"+new Date().toISOString().slice(0,10)+".csv", csv, "text/csv;charset=utf-8");
 }
@@ -1330,6 +1401,68 @@ function reset(){
   if(!confirm("Vider le cache local et repartir de zéro ?")) return;
   localStorage.removeItem(CACHE); ETAT.arts=[]; ETAT.maj=0; journal("Cache vidé."); rendre();
 }
+
+/* ==================================================================
+   8bis. Saisie manuelle de renseignement
+   Pour tout ce que la collecte automatisée ne peut pas et ne doit pas
+   atteindre : réseaux sociaux privés, radios sans flux exploitable,
+   groupes et canaux WhatsApp. L'analyste reste la source de vérité ;
+   l'application se contente de tracer, dater et scorer.
+   ================================================================== */
+const FIAB_TYPE = {
+  "Radio locale":60, "Page Facebook locale":45, "Groupe WhatsApp (forces de sécurité)":65,
+  "Canal WhatsApp":55, "Terrain / contact direct":75, "Autre":50
+};
+function mAjusterFiabilite(){
+  const t = $("#mType").value;
+  if(!$("#mFiab").value) $("#mFiab").placeholder = "Fiabilité estimée % (suggéré : "+FIAB_TYPE[t]+")";
+}
+function ouvrirManuel(){
+  $("#mPays").innerHTML = Object.keys(PAYS).map(p=>`<option value="${p}">${PAYS[p].f} ${PAYS[p].n}</option>`).join("");
+  const majZones = () => {
+    const p = $("#mPays").value;
+    $("#mZone").innerHTML = `<option value="">Zone non précisée</option>` +
+      ZONES.filter(z=>z.p===p).sort((a,b)=>a.z.localeCompare(b.z,"fr")).map(z=>`<option value="${esc(z.z)}">${esc(z.z)} — ${esc(z.d)}</option>`).join("");
+  };
+  $("#mPays").value = "CI"; majZones();
+  $("#mPays").onchange = majZones;
+  $("#mDate").value = new Date(now() - new Date().getTimezoneOffset()*60000).toISOString().slice(0,16);
+  $("#mTitre").value=""; $("#mDesc").value=""; $("#mLocalite").value=""; $("#mNomSrc").value=""; $("#mFiab").value=""; $("#mLien").value="";
+  mAjusterFiabilite();
+  $("#voileManuel").style.display = "block";
+  document.body.style.overflow = "hidden";
+}
+function fermerManuel(){
+  $("#voileManuel").style.display = "none";
+  document.body.style.overflow = "";
+}
+function enregistrerManuel(){
+  const titre = $("#mTitre").value.trim();
+  if(!titre){ alert("Le titre du fait est obligatoire."); return; }
+  const type = $("#mType").value;
+  const nomSrc = $("#mNomSrc").value.trim() || type;
+  const ts = $("#mDate").value ? new Date($("#mDate").value).getTime() : now();
+  const fiab = Number($("#mFiab").value) || FIAB_TYPE[type];
+  const zone = $("#mZone").value || null;
+  const pays = $("#mPays").value;
+  const art = {
+    h: "m"+Date.now().toString(36)+Math.random().toString(36).slice(2,8),
+    t: titre, l: $("#mLien").value.trim() || null, ts,
+    src: nomSrc + " (" + type + ")", f: Math.min(100,Math.max(0,fiab)),
+    p: pays, z: zone, loc: $("#mLocalite").value.trim() || zone,
+    c: $("#mCrit").value, cat: $("#mCat").value, ag: aggravants(titre+" "+$("#mDesc").value),
+    r: $("#mDesc").value.trim(), manuel:true, stype:type
+  };
+  ETAT.arts.unshift(art);
+  ETAT.arts.sort((a,b)=>b.ts-a.ts);
+  ETAT.maj = now();
+  sauver();
+  journal("Renseignement ajouté manuellement — " + type + " · " + (zone||PAYS[pays].n) + ".");
+  fermerManuel();
+  rendre();
+  onglet("flux");
+}
+$("#btnManuel").onclick = ouvrirManuel;
 
 /* ==================================================================
    9. Administration — accès, rôles et droits (local à l'appareil)
@@ -1453,11 +1586,13 @@ function rCollecteUI(){
     zonesTri.map(z=>`<option value="${esc(z.z)}" ${CFG.zonePriorite===z.z?"selected":""}>${PAYS[z.p].f} ${esc(z.z)} — ${esc(z.d)}</option>`).join("");
   $("#cFenetre").value = String(CFG.fenetreH);
   $("#cIntervalle").value = String(CFG.intervalleMin);
+  $("#cRadios").checked = CFG.inclureRadios;
 }
 function collecteEnr(){
   CFG.zonePriorite = $("#cZonePrio").value;
   CFG.fenetreH = Number($("#cFenetre").value);
   CFG.intervalleMin = Number($("#cIntervalle").value);
+  CFG.inclureRadios = $("#cRadios").checked;
   cfgSauver();
   journal("Précision enregistrée — " + CFG.paysActifs.length + "/6 pays, fenêtre " + CFG.fenetreH + "h" +
           (CFG.zonePriorite ? ", priorité " + CFG.zonePriorite : "") + ".");
