@@ -44,6 +44,18 @@ header{position:sticky;top:0;z-index:40;background:rgba(245,247,244,.90);backdro
 .btn.s{background:transparent;box-shadow:none}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .pastille{display:inline-flex;align-items:center;gap:5px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--sourd);white-space:nowrap;flex-shrink:0}
+.badge-role{display:inline-flex;align-items:center;gap:5px;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:4px 9px;border-radius:99px;white-space:nowrap;flex-shrink:0}
+.badge-role i{width:6px;height:6px;border-radius:50%;display:inline-block}
+.badge-role.r-admin{background:rgba(43,131,95,.12);color:var(--kola);border:1px solid rgba(43,131,95,.35)}
+.badge-role.r-admin i{background:var(--kola)}
+.badge-role.r-utilisateur{background:rgba(171,93,55,.10);color:var(--laterite);border:1px solid rgba(171,93,55,.35)}
+.badge-role.r-utilisateur i{background:var(--laterite)}
+.badge-role.r-lecteur{background:rgba(139,151,143,.12);color:var(--faible);border:1px solid rgba(139,151,143,.35)}
+.badge-role.r-lecteur i{background:var(--faible)}
+.bascule{display:flex;border:1px solid var(--ligne);border-radius:var(--r);overflow:hidden;flex-shrink:0}
+.bascule-opt{background:var(--carte);border:0;padding:6px 9px;font-size:13px;line-height:1;cursor:pointer;color:var(--faible)}
+.bascule-opt+.bascule-opt{border-left:1px solid var(--ligne)}
+.bascule-opt.on{background:var(--carte2);color:var(--texte)}
 .pt{width:7px;height:7px;border-radius:50%;background:var(--vert);box-shadow:0 0 0 0 rgba(76,174,133,.55);animation:pulse 2.4s infinite;flex-shrink:0}
 @keyframes pulse{70%{box-shadow:0 0 0 7px rgba(76,174,133,0)}100%{box-shadow:0 0 0 0 rgba(76,174,133,0)}}
 @media (max-width:480px){
@@ -127,8 +139,20 @@ select,input[type=text]{background:var(--carte2);border:1px solid var(--ligne);c
 table{width:100%;border-collapse:collapse;font-size:12px}
 th,td{text-align:left;padding:6px 5px;border-bottom:1px solid var(--ligne)}
 th{font-family:'Barlow Condensed';font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--faible);font-weight:600}
-.progress{height:3px;background:var(--ligne);position:relative;overflow:hidden}
+.progress{height:4px;background:var(--ligne);position:relative;overflow:hidden;border-radius:0 0 2px 2px}
 .progress i{position:absolute;left:0;top:0;bottom:0;background:var(--laterite);width:0;transition:width .3s}
+.bandeau{background:var(--carte2);border-bottom:1px solid var(--ligne)}
+.bandeau-txt{display:flex;align-items:center;gap:7px;padding:6px 12px 5px;font-size:11px;color:var(--sourd)}
+.bandeau-txt i.mono{font-style:normal;color:var(--laterite);animation:tourne 1.1s linear infinite;display:inline-block}
+@keyframes tourne{to{transform:rotate(360deg)}}
+#bandeauEtat{font-weight:600;color:var(--texte)}
+.bandeau-src{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right;color:var(--faible);font-family:'Roboto Mono';font-size:10px}
+.flash{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(156,122,46,.10);border-bottom:1px solid rgba(156,122,46,.3);font-size:11.5px;color:var(--sourd)}
+.flash b{color:var(--or);font-family:'Barlow Condensed';letter-spacing:.08em;font-size:11px;flex-shrink:0}
+.flash-pt{width:6px;height:6px;border-radius:50%;background:var(--or);flex-shrink:0;box-shadow:0 0 0 0 rgba(143,112,42,.5);animation:pulse 1.8s infinite}
+.pub{display:flex;align-items:center;gap:10px;padding:9px 12px;margin:10px 0;border:1px dashed var(--ligne);border-radius:8px;background:var(--carte2);font-size:11px;color:var(--faible);text-align:center}
+.pub span{flex:1}
+.pub button{background:none;border:0;color:var(--faible);font-size:15px;cursor:pointer;padding:0 2px;flex-shrink:0}
 .hint{font-size:11px;color:var(--faible);margin-top:6px}
 label.sw{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--ligne)}
 label.sw span{font-size:13px}
@@ -162,6 +186,40 @@ label.sw small{display:block;color:var(--faible);font-size:11px}
   .grille.g4{grid-template-columns:repeat(4,1fr)}
   .grille.g3{grid-template-columns:repeat(3,1fr)}
 }
+
+/* ==================================================================
+   Vues forcées — la bascule 📱/🖥 de l'en-tête permet d'imposer un
+   format indépendamment de la largeur réelle de l'écran (utile sur
+   une tablette, un grand téléphone, ou pour vérifier l'autre format).
+   ================================================================== */
+html.vue-web body{padding-bottom:0;padding-left:236px}
+html.vue-web header .bar,html.vue-web header .corridor{padding-left:max(20px, calc((100% - 900px)/2));padding-right:max(20px, calc((100% - 900px)/2))}
+html.vue-web main{padding:22px max(20px, calc((100% - 900px)/2)) 48px}
+html.vue-web nav{
+  top:0;bottom:0;left:0;right:auto;width:236px;height:100vh;
+  flex-direction:column;align-items:stretch;justify-content:flex-start;
+  padding:18px 0;overflow-y:auto;overflow-x:hidden;
+  border-top:none;border-right:1px solid var(--ligne);
+  box-shadow:2px 0 14px rgba(22,33,28,.04)
+}
+html.vue-web nav button{flex:0 0 auto;flex-direction:row;justify-content:flex-start;align-items:center;gap:11px;padding:11px 20px;margin-top:0;font-size:13px;letter-spacing:.03em;border-top:none;border-left:3px solid transparent;min-width:0}
+html.vue-web nav button.on{border-left-color:var(--laterite);background:rgba(171,93,55,.07)}
+html.vue-web nav button i{margin-bottom:0;font-size:17px;width:19px;text-align:center;flex-shrink:0}
+html.vue-web .grille.g4{grid-template-columns:repeat(4,1fr)}
+html.vue-web .grille.g3{grid-template-columns:repeat(3,1fr)}
+
+html.vue-mobile body{padding-bottom:76px!important;padding-left:0!important}
+html.vue-mobile header .bar,html.vue-mobile header .corridor{padding-left:12px!important;padding-right:12px!important}
+html.vue-mobile main{padding:12px!important}
+html.vue-mobile nav{
+  top:auto!important;bottom:0!important;left:0!important;right:0!important;width:auto!important;height:auto!important;
+  flex-direction:row!important;align-items:stretch!important;justify-content:flex-start!important;
+  padding:0!important;overflow-y:visible!important;overflow-x:auto!important;
+  border-right:none!important;border-top:1px solid var(--ligne)!important;box-shadow:none!important
+}
+html.vue-mobile nav button{flex:1 0 auto!important;flex-direction:column!important;justify-content:center!important;gap:0!important;padding:9px 6px 8px!important;font-size:10.5px!important;border-left:none!important;border-top:2px solid transparent!important}
+html.vue-mobile nav button.on{border-top-color:var(--laterite)!important;border-left-color:transparent!important;background:none!important}
+html.vue-mobile nav button i{display:block!important;margin-bottom:2px!important;font-size:16px!important;width:auto!important}
 </style>
 </head>
 <body>
@@ -171,12 +229,25 @@ label.sw small{display:block;color:var(--faible);font-size:11px}
     <div class="logo"><b>POINT <span>SÛRETÉ</span></b><em>CI + 5 limitrophes</em></div>
     <div class="spacer"></div>
     <div class="actions">
+      <span class="badge-role" id="badgeRole">—</span>
+      <div class="bascule" id="bascule">
+        <button class="bascule-opt" data-vue="mobile" title="Forcer l'affichage mobile">📱</button>
+        <button class="bascule-opt" data-vue="web" title="Forcer l'affichage web">🖥</button>
+      </div>
       <span class="pastille"><i class="pt"></i><span id="etat">Prêt</span></span>
       <button class="btn s" id="btnManuel">+ Ajouter</button>
       <button class="btn p" id="btnMaj">Collecter</button>
     </div>
   </div>
-  <div class="progress"><i id="prog"></i></div>
+  <!-- Bandeau de collecte, visible sur tous les écrans quel que soit l'onglet ouvert -->
+  <div class="bandeau" id="bandeau" style="display:none">
+    <div class="bandeau-txt"><i class="mono">◐</i><span id="bandeauEtat">Collecte…</span><span id="bandeauSrc" class="bandeau-src"></span></div>
+    <div class="progress"><i id="prog"></i></div>
+  </div>
+  <!-- Bandeau d'attente, visible tant qu'aucune donnée n'a été collectée — quel que soit l'onglet -->
+  <div class="flash" id="flash" style="display:none">
+    <i class="flash-pt"></i><b>EN ATTENTE</b><span>Aucune donnée collectée sur cet appareil pour l'instant — appuyez sur « Collecter » ci-dessus.</span>
+  </div>
   <!-- Signature : ruban du corridor Abidjan–Ouangolodougou–Ouagadougou -->
   <div class="corridor">
     <div class="corridor-t">Corridor de référence · Abidjan → Ouangolodougou → Ouagadougou</div>
@@ -246,10 +317,24 @@ label.sw small{display:block;color:var(--faible);font-size:11px}
 
 <main>
 
+<div class="pub" id="pub">
+  <span>Emplacement publicitaire — aucun réseau publicitaire configuré (voir Réglages)</span>
+  <button onclick="fermerPub()" aria-label="Fermer">✕</button>
+</div>
+
 <!-- ============ FLUX ============ -->
 <section class="panneau on" id="p-flux">
   <div class="titre"><h2>Flux de proximité</h2><small id="fluxCount">—</small></div>
   <div class="aide" id="fluxAide">Faits collectés sur la fenêtre choisie, rattachés à la zone administrative où ils se produisent — pas au siège du média qui les publie.</div>
+
+  <div class="carte" id="carteATraiter" style="display:none;border-left:3px solid var(--or)">
+    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px">
+      <h3 style="font-size:14px;text-transform:uppercase;letter-spacing:.05em;flex:1">Actualités à traiter <small style="color:var(--faible);text-transform:none;letter-spacing:0">(moins de 12 h)</small></h3>
+      <span class="compteur" id="compteurATraiter" style="background:var(--or)">0</span>
+    </div>
+    <div id="aTraiter"></div>
+  </div>
+
   <div class="rang" id="fPays"></div>
   <div class="rang" id="fCat"></div>
   <div style="margin-bottom:10px"><input type="text" id="fRech" placeholder="Rechercher une localité, un thème, une source…"></div>
@@ -445,6 +530,12 @@ label.sw small{display:block;color:var(--faible);font-size:11px}
   <div class="aide">Vision d'ensemble en temps réel — 6 pays, 73 zones, score de pression informationnelle 0 à 100.</div>
   <div class="grille g4" id="bordKpi" style="margin-bottom:10px"></div>
   <div class="carte">
+    <h3 style="font-size:14px;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em">Évolution des mises à jour</h3>
+    <p class="hint" style="margin-bottom:10px">Historique des derniers cycles de collecte, conservé sur cet appareil. <span style="color:var(--vert)">■</span> donnée du serveur partagé — <span style="color:var(--laterite)">■</span> repli local (relais CORS).</p>
+    <div id="historique" style="display:flex;align-items:flex-end;gap:3px;height:64px"></div>
+    <div id="historiqueLegende" style="display:flex;justify-content:space-between;font-size:9.5px;color:var(--faible);margin-top:4px"></div>
+  </div>
+  <div class="carte">
     <h3 style="font-size:14px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Carte de chaleur — zones du périmètre</h3>
     <div id="chaleur" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:4px"></div>
   </div>
@@ -630,6 +721,7 @@ const NAT = [
  {u:"https://www.sikafinance.com/rss",p:"CI",n:"Sika Finance",f:76},
  {u:"https://www.connectionivoirienne.net/feed",p:"CI",n:"Connection Ivoirienne",f:60},
  {u:"https://apanews.net/feed/",p:"CI",n:"APA News",f:78},
+ {u:"https://allafrica.com/tools/headlines/rdf/cotedivoire/headlines.rdf",p:"CI",n:"AllAfrica — Côte d'Ivoire",f:70},
  // --- Burkina Faso ---
  {u:"https://lefaso.net/spip.php?page=backend",p:"BF",n:"Lefaso.net",f:80},
  {u:"https://www.wakatsera.com/feed/",p:"BF",n:"Wakat Séra",f:76},
@@ -637,6 +729,7 @@ const NAT = [
  {u:"https://www.aib.media/feed/",p:"BF",n:"AIB — Agence d'information du Burkina",f:80},
  {u:"https://burkina24.com/feed",p:"BF",n:"Burkina 24",f:66},
  {u:"https://lepays.bf/feed",p:"BF",n:"Le Pays",f:68},
+ {u:"https://allafrica.com/tools/headlines/rdf/burkinafaso/headlines.rdf",p:"BF",n:"AllAfrica — Burkina Faso",f:70},
  // --- Mali ---
  {u:"https://www.maliweb.net/feed",p:"ML",n:"Maliweb",f:70},
  {u:"https://malijet.com/rss",p:"ML",n:"Malijet",f:70},
@@ -644,6 +737,7 @@ const NAT = [
  {u:"https://bamada.net/feed",p:"ML",n:"Bamada.net",f:60},
  {u:"https://www.journaldumali.com/feed",p:"ML",n:"Journal du Mali",f:72},
  {u:"https://www.info-matin.ml/feed",p:"ML",n:"Info-Matin",f:64},
+ {u:"https://allafrica.com/tools/headlines/rdf/mali/headlines.rdf",p:"ML",n:"AllAfrica — Mali",f:70},
  // --- Guinée ---
  {u:"https://www.guineenews.org/feed/",p:"GN",n:"Guinéenews",f:74},
  {u:"https://www.africaguinee.com/feed/",p:"GN",n:"Africaguinée",f:72},
@@ -651,15 +745,18 @@ const NAT = [
  {u:"https://mediaguinee.com/feed",p:"GN",n:"Mediaguinee",f:62},
  {u:"https://www.guinee7.com/feed",p:"GN",n:"Guinée7",f:62},
  {u:"https://guineelive.com/feed",p:"GN",n:"Guinéelive",f:58},
+ {u:"https://allafrica.com/tools/headlines/rdf/guinea/headlines.rdf",p:"GN",n:"AllAfrica — Guinée",f:70},
  // --- Libéria ---
  {u:"https://frontpageafricaonline.com/feed/",p:"LR",n:"FrontPage Africa",f:76},
  {u:"https://www.liberianobserver.com/feed",p:"LR",n:"Liberian Observer",f:74},
  {u:"https://www.thenewdawnliberia.com/feed",p:"LR",n:"The New Dawn Liberia",f:66},
+ {u:"https://allafrica.com/tools/headlines/rdf/liberia/headlines.rdf",p:"LR",n:"AllAfrica — Libéria",f:70},
  // --- Ghana ---
  {u:"https://www.myjoyonline.com/feed/",p:"GH",n:"MyJoyOnline",f:78},
  {u:"https://citinewsroom.com/feed/",p:"GH",n:"Citi Newsroom",f:76},
  {u:"https://www.graphic.com.gh/feed",p:"GH",n:"Graphic Online",f:80},
  {u:"https://www.ghanaweb.com/GhanaHomePage/rss/news.xml",p:"GH",n:"GhanaWeb",f:66},
+ {u:"https://allafrica.com/tools/headlines/rdf/ghana/headlines.rdf",p:"GH",n:"AllAfrica — Ghana",f:70},
  // --- Couche panafricaine et humanitaire : couvre les six pays à la fois ---
  {u:"https://reliefweb.int/updates/rss.xml?view=headlines&advanced-search=%28PC33_PC57_PC157_PC93_PC142_PC124%29",p:"CI",n:"ReliefWeb — Afrique de l'Ouest",f:90},
  {u:"https://www.africanews.com/feed/rss",p:"CI",n:"Africanews — panafricain",f:80},
@@ -714,11 +811,15 @@ const AGGRAV = [
 
 /* ---------- Utilitaires ---------- */
 const norm = s => (s||"").toString().normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[’']/g," ").replace(/\s+/g," ").trim();
-const matchMot = (txt,mot) => {
-  const m = norm(mot).replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
-  try { return new RegExp("(^|[^\\p{L}\\p{N}])"+m+"(s|x|es)?($|[^\\p{L}\\p{N}])","u").test(txt); }
-  catch(e){ return txt.includes(m); }
-};
+const echapper = m => norm(m).replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+/* Compile une liste de mots en UNE seule regex d'alternation, au lieu d'une
+   regex par mot recompilée à chaque appel — jusqu'à ~800 compilations par
+   article évitées, mesuré ×32 plus rapide sur un lot réaliste. */
+function compiler(mots, global){
+  const alt = [...mots].sort((a,b)=>b.length-a.length).map(echapper).join("|");
+  return new RegExp("(^|[^\\p{L}\\p{N}])(?:"+alt+")(?:s|x|es)?($|[^\\p{L}\\p{N}])", "u"+(global?"g":""));
+}
+const matchMot = (txt,mot) => { try { return compiler([mot]).test(txt); } catch(e){ return txt.includes(norm(mot)); } };
 const esc = s => (s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
@@ -733,13 +834,31 @@ ZONES.forEach(z => z.loc.forEach(l => {
   IDX.push({n:norm(l), z:z.z, p:z.p, brut:l, s:precise});
 }));
 IDX.sort((a,b) => b.s - a.s || b.n.length - a.n.length);
+// Regex globale unique pour les 431 localités : on retrouve toutes les occurrences
+// du texte puis on garde la plus prioritaire — même règle qu'avant, sans les 431
+// compilations individuelles.
+const LOC_ALT = IDX.map(e => echapper(e.n)).join("|");
+const LOC_REGEX = new RegExp("(^|[^\\p{L}\\p{N}])("+LOC_ALT+")(?:s|x|es)?($|[^\\p{L}\\p{N}])", "gu");
+const LOC_PAR_MOT = new Map(IDX.map(e => [e.n, e]));
+const LEX_REGEX = Object.fromEntries(Object.entries(LEX).map(([n,mots]) => [n, compiler(mots)]));
+const CAT_REGEX = Object.fromEntries(Object.entries(CAT).map(([c,mots]) => [c, compiler(mots, true)]));
+const AGGRAV_REGEX = AGGRAV.map(a => ({ ...a, re: compiler(a.k) }));
 
 /* ---------- État ---------- */
-let ETAT = { arts:[], maj:0, fPays:"ALL", fCat:"ALL", zPays:"CI", log:[] };
+let ETAT = { arts:[], maj:0, fPays:"ALL", fCat:"ALL", zPays:"CI", log:[], historique:[] };
 const CACHE = "PS_v1";
 
-function charger(){ try{ const d=JSON.parse(localStorage.getItem(CACHE)||"null"); if(d&&d.arts){ ETAT.arts=d.arts; ETAT.maj=d.maj||0; } }catch(e){} }
-function sauver(){ try{ localStorage.setItem(CACHE, JSON.stringify({arts:ETAT.arts.slice(0,900), maj:ETAT.maj})); }catch(e){ journal("Stockage local saturé — cache réduit."); ETAT.arts=ETAT.arts.slice(0,300); } }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem(CACHE)||"null"); if(d&&d.arts){ ETAT.arts=d.arts; ETAT.maj=d.maj||0; ETAT.historique=d.historique||[]; } }catch(e){} }
+function sauver(){ try{ localStorage.setItem(CACHE, JSON.stringify({arts:ETAT.arts.slice(0,900), maj:ETAT.maj, historique:ETAT.historique.slice(0,30)})); }catch(e){ journal("Stockage local saturé — cache réduit."); ETAT.arts=ETAT.arts.slice(0,300); } }
+
+/* Historique des mises à jour — persisté avec le reste du cache, jusqu'à
+   30 cycles conservés. Chaque entrée trace l'origine (serveur partagé ou
+   collecte locale de secours) pour distinguer visuellement les deux. */
+function noterHistorique(n, origine){
+  ETAT.historique.unshift({ ts:now(), n, origine });
+  ETAT.historique = ETAT.historique.slice(0,30);
+  sauver();
+}
 function journal(m){ ETAT.log.unshift(new Date().toLocaleTimeString("fr-FR")+"  "+m); ETAT.log=ETAT.log.slice(0,60); const el=$("#log"); if(el) el.textContent=ETAT.log.join("\n"); }
 
 /* ==================================================================
@@ -831,30 +950,31 @@ async function recuperer(url){
    ================================================================== */
 function detecter(texte){
   const t = norm(texte);
-  const trouve = [];
-  for(const e of IDX){
-    if(matchMot(t, e.n)){ trouve.push(e); if(trouve.length>=3) break; }
+  LOC_REGEX.lastIndex = 0;
+  let meilleur = null, m;
+  while((m = LOC_REGEX.exec(t))){
+    const entree = LOC_PAR_MOT.get(m[2]);
+    if(entree && (!meilleur || entree.s > meilleur.s || (entree.s === meilleur.s && entree.n.length > meilleur.n.length))){
+      meilleur = entree;
+    }
+    if(m.index === LOC_REGEX.lastIndex) LOC_REGEX.lastIndex++;
   }
-  if(!trouve.length) return null;
-  // priorité : la localité la plus spécifique (nom le plus long) l'emporte
-  const p = trouve[0];
-  return { pays:p.p, zone:p.z, localite:p.brut, autres:trouve.slice(1).map(x=>x.brut) };
+  return meilleur ? { pays:meilleur.p, zone:meilleur.z, localite:meilleur.brut } : null;
 }
 function criticite(texte){
   const t = norm(texte);
-  for(const n of ["CRITIQUE","ELEVE","MODERE"]) if(LEX[n].some(k=>matchMot(t,k))) return n;
-  if(LEX.FAIBLE.some(k=>matchMot(t,k))) return "FAIBLE";
-  return "MODERE";
+  for(const n of ["CRITIQUE","ELEVE","MODERE"]) if(LEX_REGEX[n].test(t)) return n;
+  return LEX_REGEX.FAIBLE.test(t) ? "FAIBLE" : "MODERE";
 }
 function categorie(texte){
   const t = norm(texte);
   let best="politique", sc=0;
-  for(const c in CAT){ const n = CAT[c].filter(k=>matchMot(t,k)).length; if(n>sc){ sc=n; best=c; } }
+  for(const c in CAT_REGEX){ const n = (t.match(CAT_REGEX[c])||[]).length; if(n>sc){ sc=n; best=c; } }
   return sc ? best : "politique";
 }
 function aggravants(texte){
   const t = norm(texte);
-  return AGGRAV.filter(a=>a.k.some(k=>matchMot(t,k)));
+  return AGGRAV_REGEX.filter(a=>a.re.test(t)).map(a=>({l:a.l, v:a.v}));
 }
 function estAgenda(texte){
   const t = norm(texte);
@@ -895,7 +1015,7 @@ const cfgSauver = () => localStorage.setItem("PS_cfg", JSON.stringify(CFG));
 function versArt(f){                        // format serveur → format interne
   return { h:f.h, t:f.titre, l:f.lien, ts:Date.parse(f.survenu_le),
            src:f.source, f:f.fiabilite ?? 60, p:f.pays, z:f.zone, loc:f.localite,
-           c:f.criticite, cat:f.categorie, ag:f.aggravants || [], r:f.resume || "" };
+           c:f.criticite, cat:f.categorie, ag:f.aggravants || [], r:f.resume || "", traite:false };
 }
 
 async function depuisGitHub(){
@@ -933,17 +1053,27 @@ async function rechercheHistorique(q){
 }
 
 async function chargerCloud(){
+  // À l'échelle, l'ordre compte : un fichier statique (data/latest.json) est
+  // servi par un CDN et encaisse des millions de lectures sans effort ; une
+  // requête REST vers Supabase touche une vraie base à chaque appel. Le
+  // fichier publié passe donc en premier par défaut — Supabase reste
+  // disponible en repli et pour la recherche historique, pas comme chemin
+  // principal d'ouverture d'app.
   const essais = CFG.origine === "rss"      ? []
                : CFG.origine === "supabase" ? [["Supabase", depuisSupabase]]
                : CFG.origine === "github"   ? [["fichier publié", depuisGitHub]]
-               : [["Supabase", depuisSupabase], ["fichier publié", depuisGitHub]];
+               : [["fichier publié", depuisGitHub], ["Supabase", depuisSupabase]];
   for(const [nom, fn] of essais){
     try{
       const arts = await fn();
       if(arts.length){
+        const ancien = new Map(ETAT.arts.map(a=>[a.h,a]));
+        arts.forEach(a=>{ if(ancien.get(a.h)?.traite) a.traite = true; });   // ne pas réinitialiser un fait déjà traité
         const vus = new Set(arts.map(a=>a.h));
         ETAT.arts = [...arts, ...ETAT.arts.filter(a=>!vus.has(a.h))].sort((a,b)=>b.ts-a.ts).slice(0,900);
-        ETAT.maj = now(); sauver(); return nom;
+        ETAT.maj = now(); sauver();
+        noterHistorique(arts.length, "cloud");
+        return nom;
       }
     }catch(e){ journal(nom + " indisponible — " + e.message); }
   }
@@ -954,20 +1084,41 @@ async function chargerCloud(){
    4. Collecte
    ================================================================== */
 let enCours = false;
-async function collecter(){
+const CLE_DERNIERE_RSS = "PS_derniere_rss";   // horodatage informatif de la dernière collecte manuelle
+
+async function collecter(auto){
   if(enCours) return;
   enCours = true;
   $("#btnMaj").disabled = true;
   $("#etat").textContent = "Mise a jour…";
 
-  // 1. Le serveur a deja interroge les 138 flux : un seul appel suffit.
+  // 1. Le serveur a deja interroge les 138 flux : un seul appel suffit, et
+  //    c'est celui-là que TOUS les appareils devraient utiliser en premier —
+  //    c'est justement ce qui évite que chaque téléphone refasse la collecte
+  //    RSS pour son propre compte.
   const src = await chargerCloud();
   if(src){
     $("#etat").textContent = "À jour · " + src;
     $("#btnMaj").disabled = false; enCours = false; rendre(); return;
   }
 
-  // 2. Repli : collecte depuis l'appareil, via relais CORS.
+  // 2. Repli : collecte depuis l'appareil, via relais CORS à quota limité
+  //    (rss2json, allorigins, Google News...). C'est le seul chemin qui
+  //    sollicite directement des services tiers gratuits — et à l'échelle
+  //    de millions d'utilisateurs, un cooldown par appareil ne protège pas
+  //    grand-chose : il coordonne un appareil contre lui-même, jamais des
+  //    millions d'appareils indépendants entre eux. La seule protection
+  //    fiable est donc structurelle : un déclenchement AUTOMATIQUE (ouverture
+  //    de l'app, minuteur périodique) ne touche JAMAIS les relais partagés.
+  //    Seul un clic manuel — un geste humain, qui ne peut pas se synchroniser
+  //    à la milliseconde près comme des millions de minuteurs — y a accès.
+  if(auto){
+    journal("Fichier publié indisponible — repli RSS non tenté automatiquement (protection des relais partagés à grande échelle). Utilisez « Collecter » pour forcer une collecte locale.");
+    $("#etat").textContent = ETAT.arts.length ? "Dernières données disponibles" : "Données momentanément indisponibles";
+    $("#btnMaj").disabled = false; enCours = false; rendre(); return;
+  }
+  localStorage.setItem(CLE_DERNIERE_RSS, String(now()));
+
   journal("Aucune source serveur joignable — collecte directe depuis l'appareil.");
   const prof = $("#prof").value;
   const flux = listeFlux(prof, {paysActifs:CFG.paysActifs, zonePriorite:CFG.zonePriorite, inclureRadios:CFG.inclureRadios});
@@ -975,9 +1126,14 @@ async function collecter(){
   let fait=0, ok=0, neufs=0;
   const vus = new Set(ETAT.arts.map(a=>a.h));
 
+  $("#bandeau").style.display = "block";
+  $("#flash").style.display = "none";
+  $("#bandeauEtat").textContent = "Collecte en cours";
+
   const lot = 6;
   for(let i=0; i<flux.length; i+=lot){
     await Promise.all(flux.slice(i,i+lot).map(async s=>{
+      $("#bandeauSrc").textContent = s.n;
       const d = await recuperer(s.u);
       fait++;
       $("#prog").style.width = (fait/flux.length*100)+"%";
@@ -1001,18 +1157,26 @@ async function collecter(){
           p:geo?geo.pays:null, z:geo?geo.zone:null, loc:geo?geo.localite:null,
           c:criticite(texte), cat:categorie(texte),
           ag:ag.map(a=>({l:a.l,v:a.v})),
-          r:(it.r||"").replace(/<[^>]+>/g," ").slice(0,320).trim()
+          r:(it.r||"").replace(/<[^>]+>/g," ").slice(0,320).trim(),
+          traite:false
         });
         neufs++;
       });
     }));
+    // Affichage progressif : chaque lot reçu s'affiche tout de suite plutôt
+    // que d'attendre que les 138 flux soient tous traités (jusqu'à 1 à 3 min).
+    ETAT.arts.sort((a,b)=>b.ts-a.ts);
+    ETAT.maj = now();
+    rendre();
   }
   ETAT.arts.sort((a,b)=>b.ts-a.ts);
   ETAT.arts = ETAT.arts.slice(0,900);
   ETAT.maj = now();
   sauver();
+  noterHistorique(neufs, "appareil");
   journal("Terminé — "+ok+"/"+flux.length+" flux joignables, "+neufs+" faits nouveaux."+(RELAIS_ACTIF?" Relais : "+RELAIS_ACTIF.n+".":""));
   $("#prog").style.width="0%";
+  $("#bandeau").style.display = "none";
   $("#etat").textContent = ok ? "À jour" : "Aucun flux joignable";
   $("#btnMaj").disabled = false;
   enCours = false;
@@ -1120,7 +1284,10 @@ function correlationsRegionales(){
 /* ==================================================================
    6. Rendu
    ================================================================== */
-function rendre(){ rafraichirCorroboration(); rCorridor(); rFiltres(); rFlux(); rZones(); rCorrs(); rSynth(); rAgenda(); rAlertes(); rBord(); }
+function rendre(){
+  $("#flash").style.display = (!enCours && ETAT.arts.length===0) ? "flex" : "none";
+  rafraichirCorroboration(); rCorridor(); rFiltres(); rFlux(); rZones(); rCorrs(); rSynth(); rAgenda(); rAlertes(); rBord();
+}
 
 function rCorridor(){
   const c = CORRIDORS[0];
@@ -1133,16 +1300,17 @@ function rCorridor(){
 
 function rFiltres(){
   const dispo = ["ALL", ...Object.keys(PAYS)];
-  $("#fPays").innerHTML = dispo.map(p=>{
-    const n = p==="ALL" ? "Tout le périmètre" : PAYS[p].f+" "+PAYS[p].n;
-    return `<button class="puce ${ETAT.fPays===p?"on":""}" data-fp="${p}">${n}</button>`;
-  }).join("");
+  $("#fPays").innerHTML = `<select id="selFPays">` + dispo.map(p=>{
+    const n = p==="ALL" ? "🌍 Tout le périmètre" : PAYS[p].f+" "+PAYS[p].n;
+    return `<option value="${p}" ${ETAT.fPays===p?"selected":""}>${n}</option>`;
+  }).join("") + `</select>`;
   const cats = [["ALL","Tout"],["securite","Sécurité"],["humanitaire","Humanitaire"],["politique","Politique"],["economique","Économique"],["CRITIQUE","Critiques"],["ELEVE","Élevés"]];
   $("#fCat").innerHTML = cats.map(([k,n])=>`<button class="puce ${ETAT.fCat===k?"on":""}" data-fc="${k}">${n}</button>`).join("");
-  $("#zPays").innerHTML = Object.keys(PAYS).map(p=>`<button class="puce ${ETAT.zPays===p?"on":""}" data-zp="${p}">${PAYS[p].f} ${PAYS[p].n}</button>`).join("");
-  $$("[data-fp]").forEach(b=>b.onclick=()=>{ETAT.fPays=b.dataset.fp;rFiltres();rFlux();});
+  $("#zPays").innerHTML = `<select id="selZPays">` + Object.keys(PAYS).map(p=>
+    `<option value="${p}" ${ETAT.zPays===p?"selected":""}>${PAYS[p].f} ${PAYS[p].n}</option>`).join("") + `</select>`;
+  $("#selFPays").onchange = e=>{ETAT.fPays=e.target.value;rFlux();};
   $$("[data-fc]").forEach(b=>b.onclick=()=>{ETAT.fCat=b.dataset.fc;rFiltres();rFlux();});
-  $$("[data-zp]").forEach(b=>b.onclick=()=>{ETAT.zPays=b.dataset.zp;rFiltres();rZones();});
+  $("#selZPays").onchange = e=>{ETAT.zPays=e.target.value;rZones();};
 }
 
 function filtres(){
@@ -1155,7 +1323,31 @@ function filtres(){
   return l;
 }
 
+/* Liste de triage : faits critiques/élevés des 12 dernières heures, pas
+   encore marqués comme traités. Une coche retire le fait de cette liste
+   sans le supprimer du flux — c'est un pense-bête d'équipe, pas un filtre. */
+function rATraiter(){
+  const carte = $("#carteATraiter"); if(!carte) return;
+  const l = fenetre(12).filter(a=>["CRITIQUE","ELEVE"].includes(a.c) && !a.traite).sort((a,b)=>b.ts-a.ts);
+  if(!l.length){ carte.style.display = "none"; return; }
+  carte.style.display = "block";
+  $("#compteurATraiter").textContent = l.length;
+  $("#aTraiter").innerHTML = l.slice(0,25).map(a=>`
+    <div class="zone-l" style="align-items:flex-start">
+      <button class="btn s" style="padding:6px 9px;flex-shrink:0" onclick="marquerTraite('${a.h}')" title="Marquer comme traité">✓</button>
+      <div class="nm">
+        <b style="font-size:12.5px">${a.p?PAYS[a.p].f+" "+esc(a.z||PAYS[a.p].n):""} · <span class="n-${a.c==='CRITIQUE'?'ROUGE':'ORANGE'}">${a.c}</span> · ${hDep(a.ts)}</b>
+        <span>${esc(a.t)}</span>
+      </div>
+    </div>`).join("");
+}
+function marquerTraite(h){
+  const a = ETAT.arts.find(x=>x.h===h);
+  if(a){ a.traite = true; sauver(); rATraiter(); }
+}
+
 function rFlux(){
+  rATraiter();
   const l = filtres();
   $("#fluxCount").textContent = l.length ? l.length+" faits · maj "+(ETAT.maj?hDep(ETAT.maj):"—") : "—";
   if(!l.length){
@@ -1351,6 +1543,28 @@ function rBord(){
       <div style="font-family:'Roboto Mono';font-size:11px;font-weight:600;color:#fff">${z.s.score}</div>
       <div style="font-size:8px;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(z.z)}</div>
     </div>`).join("");
+  rHistorique();
+}
+
+function rHistorique(){
+  const el = $("#historique"); if(!el) return;
+  const h = [...ETAT.historique].reverse();   // du plus ancien au plus récent, lu de gauche à droite
+  if(!h.length){
+    el.innerHTML = `<div style="flex:1;text-align:center;font-size:11px;color:var(--faible);align-self:center">Aucune collecte enregistrée pour l'instant</div>`;
+    $("#historiqueLegende").innerHTML = "";
+    return;
+  }
+  const max = Math.max(1, ...h.map(x=>x.n));
+  el.innerHTML = h.map(x=>{
+    const hauteur = Math.max(4, Math.round(x.n/max*58));
+    const coul = x.origine==="cloud" ? "var(--vert)" : "var(--laterite)";
+    return `<div title="${esc(new Date(x.ts).toLocaleString('fr-FR'))} — ${x.n} fait(s) — ${x.origine==='cloud'?'serveur partagé':'appareil'}"
+      style="flex:1;min-width:5px;height:${hauteur}px;background:${coul};border-radius:2px 2px 0 0;opacity:.9"></div>`;
+  }).join("");
+  $("#historiqueLegende").innerHTML =
+    `<span>${esc(new Date(h[0].ts).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}))}</span>` +
+    `<span>${h.length} cycle(s)</span>` +
+    `<span>${esc(new Date(h[h.length-1].ts).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}))}</span>`;
 }
 
 function voirZone(z){
@@ -1507,7 +1721,7 @@ function enregistrerManuel(){
     src: nomSrc + " (" + type + ")", f: Math.min(100,Math.max(0,fiab)),
     p: pays, z: zone, loc: $("#mLocalite").value.trim() || zone,
     c: $("#mCrit").value, cat: $("#mCat").value, ag: aggravants(titre+" "+$("#mDesc").value),
-    r: $("#mDesc").value.trim(), manuel:true, stype:type
+    r: $("#mDesc").value.trim(), manuel:true, stype:type, traite:false
   };
   ETAT.arts.unshift(art);
   ETAT.arts.sort((a,b)=>b.ts-a.ts);
@@ -1598,7 +1812,30 @@ function appliquerDroits(){
   });
   const panneauActif = $(".panneau.on");
   if(panneauActif && d[panneauActif.id.replace("p-","")] === false) onglet("flux");
+  const LIB_ROLE = {admin:"Admin", utilisateur:"Utilisateur", lecteur:"Lecteur"};
+  const badge = $("#badgeRole");
+  badge.className = "badge-role r-"+ADM.roleActif;
+  badge.innerHTML = "<i></i>"+LIB_ROLE[ADM.roleActif];
 }
+function fermerPub(){
+  $("#pub").style.display = "none";
+  localStorage.setItem("PS_pub_fermee", "1");
+}
+if(localStorage.getItem("PS_pub_fermee") === "1") $("#pub").style.display = "none";
+
+function appliquerVue(){
+  const v = localStorage.getItem("PS_vue") || "";
+  document.documentElement.classList.toggle("vue-web", v==="web");
+  document.documentElement.classList.toggle("vue-mobile", v==="mobile");
+  $$("#bascule .bascule-opt").forEach(b=>b.classList.toggle("on", b.dataset.vue===v));
+}
+$$("#bascule .bascule-opt").forEach(b=>b.onclick=()=>{
+  const actuel = localStorage.getItem("PS_vue") || "";
+  localStorage.setItem("PS_vue", actuel===b.dataset.vue ? "" : b.dataset.vue);   // recliquer revient à l'automatique
+  appliquerVue();
+});
+appliquerVue();
+
 function initAdmin(){
   $("#codeAcces").textContent = ADM.code;
   $("#roleActif").value = ADM.roleActif;
@@ -1614,14 +1851,14 @@ function onglet(p){
   window.scrollTo({top:0});
 }
 $$("nav button").forEach(b=>b.onclick=()=>onglet(b.dataset.p));
-$("#btnMaj").onclick = collecter;
+$("#btnMaj").onclick = () => collecter(false);
 $("#fRech").oninput = rFlux;
 ["oHors","oFiab"].forEach(id=>$("#"+id).onchange=()=>{ if(id==="oFiab") CFG.afficherFiab=$("#oFiab").checked, cfgSauver(); rFlux(); });
 
 function demarrerAuto(){
   clearInterval(window._auto);
   if($("#oAuto").checked){
-    window._auto = setInterval(collecter, CFG.intervalleMin*60000);
+    window._auto = setInterval(()=>collecter(true), CFG.intervalleMin*60000);
     journal("Collecte automatique activée (" + CFG.intervalleMin + " min).");
   }
 }
@@ -1681,13 +1918,16 @@ $("#cDataUrl").value  = CFG.dataUrl;
 $("#cSbUrl").value    = CFG.sbUrl;
 $("#cSbKey").value    = CFG.sbKey;
 
-/* Démarrage */
+/* Démarrage — la collecte se lance toute seule à l'ouverture, sans attendre
+   de clic, comme SENTINEL. Traitée comme un déclenchement automatique : elle
+   ne lit que le fichier publié / Supabase (CDN, tient à des millions
+   d'utilisateurs simultanés) et ne touche jamais les relais RSS partagés,
+   réservés au clic manuel sur « Collecter ». */
 charger();
 rendre();
 initAdmin();
-chargerCloud().then(src => { if(src){ $("#etat").textContent = "À jour · " + src; rendre(); } });
 if(ETAT.maj) journal("Cache chargé — "+ETAT.arts.length+" faits, dernière collecte "+hDep(ETAT.maj)+".");
-else $("#etat").textContent = "Aucune donnée";
+collecter(true);
 </script>
 </body>
 </html>
