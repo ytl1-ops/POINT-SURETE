@@ -1,0 +1,14 @@
+{
+    "name": "point-surete",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "description": "POINT SURETE - collecte et analyse du renseignement de surete, Cote d'Ivoire et pays limitrophes",
+    "scripts": {
+          "collecte": "node scripts/collecte.mjs",
+          "collecte:rapide": "PROFONDEUR=rapide node scripts/collecte.mjs"
+    },
+    "dependencies": {
+          "fast-xml-parser": "^4.5.0"
+    }
+}
