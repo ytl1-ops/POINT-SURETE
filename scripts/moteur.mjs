@@ -54,7 +54,7 @@ export const ZONES = [
 {p:"BF",z:"Centre / Ouagadougou",d:"Capitale",loc:["Ouagadougou","Ouaga","Saaba","Koubri"]},
 {p:"BF",z:"Boucle du Mouhoun",d:"Ouest",loc:["Dédougou","Nouna","Solenzo","Toma","Boromo"]},
 {p:"BF",z:"Centre-Ouest",d:"Centre",loc:["Koudougou","Réo","Léo","Sapouy"]},
-{p:"BF",z:"Sahel",d:"Nord — menace armée",loc:["Dori","Djibo","Gorom-Gorom","Sebba","Arbinda","Soum","Oudalan"]},
+{p:"BF",z:"Sahel",d:"Nord — menace armée",loc:["Dori","Djibo","Gorom-Gorom","Sebba","Arbinda","Soum","Oudalan","Yagha","Solhan","Mansila"]},
 {p:"BF",z:"Nord",d:"Nord",loc:["Ouahigouya","Titao","Yako","Gourcy"]},
 {p:"BF",z:"Est",d:"Est — menace armée",loc:["Fada N'Gourma","Fada","Pama","Diapaga","Kantchari","Gayéri"]},
 {p:"BF",z:"Centre-Est",d:"Sud-est",loc:["Tenkodogo","Garango","Pouytenga","Koupéla","Bittou"]},
@@ -62,7 +62,7 @@ export const ZONES = [
 {p:"ML",z:"Bougouni",d:"Frontière CI nord-ouest",loc:["Bougouni","Yanfolila","Kalana","Garalo"]},
 {p:"ML",z:"Bamako",d:"Capitale",loc:["Bamako","Kati","Kalabancoro","Baguinéda"]},
 {p:"ML",z:"Ségou",d:"Centre",loc:["Ségou","Niono","San","Macina","Markala"]},
-{p:"ML",z:"Mopti",d:"Centre — menace armée",loc:["Mopti","Sévaré","Djenné","Bandiagara","Douentza","Bankass","Koro"]},
+{p:"ML",z:"Mopti",d:"Centre — menace armée",loc:["Mopti","Sévaré","Djenné","Bandiagara","Douentza","Bankass","Koro","Ogossagou","Sobane Da"]},
 {p:"ML",z:"Kayes",d:"Ouest",loc:["Kayes","Kita","Nioro","Bafoulabé","Diéma"]},
 {p:"ML",z:"Koulikoro",d:"Centre-ouest",loc:["Koulikoro","Kolokani","Banamba","Dioïla","Nara"]},
 {p:"ML",z:"Nord",d:"Gao · Tombouctou · Kidal",loc:["Gao","Tombouctou","Kidal","Ménaka","Ansongo","Bourem"]},
@@ -129,6 +129,7 @@ export const NAT = [
  // --- Guinée ---
  {u:"https://www.guineenews.org/feed/",p:"GN",n:"Guinéenews",f:74},
  {u:"https://www.africaguinee.com/feed/",p:"GN",n:"Africaguinée",f:72},
+ {u:"https://guineematin.com/feed",p:"GN",n:"Guinée Matin — Guinée profonde",f:64},
  {u:"https://mosaiqueguinee.com/feed/",p:"GN",n:"Mosaïque Guinée",f:66},
  {u:"https://mediaguinee.com/feed",p:"GN",n:"Mediaguinee",f:62},
  {u:"https://www.guinee7.com/feed",p:"GN",n:"Guinée7",f:62},
@@ -152,16 +153,16 @@ export const NAT = [
 
 ];
 
-export const THEMES = ["sécurité OR attaque OR braquage","manifestation OR grève","frontière OR corridor OR douane","orpaillage OR mine OR foncier","inondation OR épidémie"];
+export const THEMES = ["sécurité OR attaque OR braquage","manifestation OR grève","frontière OR corridor OR douane","orpaillage OR mine OR foncier","inondation OR épidémie","coupeurs de route OR attaque de car OR braquage de véhicule OR barrage armé","orpaillage clandestin OR site aurifère illégal OR creuseurs clandestins","incursion armée OR attaque djihadiste OR poste militaire attaqué"];
 
 export const LEX = {
- CRITIQUE:["attaque","attentat","embuscade","assaut","terroriste","djihadiste","jihadiste","engin explosif","ied","mine artisanale","tue","tues","tuees","morts","tuerie","massacre","enlevement","enleve","kidnapping","rapt","otage","coup d etat","putsch","mutinerie","affrontements","incursion","fusillade","emeute","emeutes","assassinat","abattu","abattus","attack","attacked","killed","gunmen","gunfire","ambush","kidnapped","abducted","hostage","explosion","bomb","massacre","coup","mutiny","clashes","shooting","riot","assassination","insurgents","militants"],
- ELEVE:["braquage","attaque a main armee","vol a main armee","coupeurs de route","agression","violences","heurts","manifestation reprimee","gaz lacrymogene","couvre-feu","etat d urgence","arrestations","fermeture de la frontiere","frontiere fermee","expulsion","refugies","deplaces","milice","groupe arme","orpaillage clandestin","incendie criminel","cambriolage","sequestration","conflit foncier","conflit intercommunautaire","evacuation","alerte","menace","curfew","state of emergency","armed robbery","robbery","banditry","violence","unrest","crackdown","tear gas","border closed","border closure","displaced","refugees","militia","armed group","arson","land dispute","evacuated"],
+ CRITIQUE:["attaque","attentat","embuscade","assaut","terroriste","djihadiste","jihadiste","engin explosif","ied","mine artisanale","tue","tues","tuees","morts","tuerie","massacre","enlevement","enleve","kidnapping","rapt","otage","coup d etat","putsch","mutinerie","affrontements","incursion","fusillade","emeute","emeutes","assassinat","abattu","abattus","intrusion armee","intrusion terroriste","infiltration armee","poste militaire attaque","detachement attaque","position militaire attaquee","attaque transfrontaliere","attack","attacked","killed","gunmen","gunfire","ambush","kidnapped","abducted","hostage","explosion","bomb","massacre","coup","mutiny","clashes","shooting","riot","assassination","insurgents","militants","armed intrusion","cross-border attack","military post attacked","army post attacked"],
+ ELEVE:["braquage","attaque a main armee","vol a main armee","coupeurs de route","coupeur de route","attaque de vehicule","car attaque","car braque","vehicule mitraille","barrage arme","faux barrage","hold-up","braqueurs","agression","violences","heurts","manifestation reprimee","gaz lacrymogene","couvre-feu","etat d urgence","arrestations","fermeture de la frontiere","frontiere fermee","expulsion","refugies","deplaces","milice","groupe arme","orpaillage clandestin","orpailleurs clandestins","creuseurs clandestins","site d orpaillage","mine artisanale illegale","site aurifere illegal","exploitation aurifere illegale","incendie criminel","cambriolage","sequestration","conflit foncier","conflit intercommunautaire","evacuation","alerte","menace","curfew","state of emergency","armed robbery","robbery","banditry","road ambush","highway robbery","illegal miners","illegal gold mining","violence","unrest","crackdown","tear gas","border closed","border closure","displaced","refugees","militia","armed group","arson","land dispute","evacuated"],
  MODERE:["greve","manifestation","marche de protestation","sit-in","tension","litige","proces","interpellation","saisie","contrebande","trafic","stupefiants","drogue","corruption","penurie","hausse des prix","inondation","epidemie","cholera","meningite","accident","panne","coupure","delestage","fermeture","perturbation","travaux","deviation","strike","protest","demonstration","sit-in","tension","arrest","seizure","smuggling","trafficking","drugs","corruption","shortage","price hike","flood","flooding","epidemic","cholera","accident","outage","blackout","galamsey","illegal mining"],
  FAIBLE:["reunion","seminaire","atelier","ceremonie","inauguration","visite","cooperation","signature","don","formation","sensibilisation","recensement","nomination","election","campagne","sommet","conference","festival","match","tournoi","meeting","workshop","ceremony","inauguration","visit","cooperation","training","summit"]
 };
 export const CAT = {
- securite:["attaque","attentat","braquage","vol","arme","police","gendarmerie","militaire","armee","terroriste","djihadiste","jihadiste","embuscade","fusillade","enlevement","otage","criminalite","bandit","coupeurs de route","milice","groupe arme","securite","surete","incursion","patrouille","couvre-feu","police","army","military","security","gunmen","armed","robbery","curfew","attack","tue","tuee","tues","tuees","abattu","abattus","balle","assassine","killed","shot"],
+ securite:["attaque","attentat","braquage","vol","arme","police","gendarmerie","militaire","armee","terroriste","djihadiste","jihadiste","embuscade","fusillade","enlevement","otage","criminalite","bandit","coupeurs de route","coupeur de route","braqueurs","barrage arme","car attaque","orpaillage clandestin","orpailleurs clandestins","creuseurs clandestins","site d orpaillage","milice","groupe arme","securite","surete","incursion","patrouille","couvre-feu","police","army","military","security","gunmen","armed","robbery","curfew","attack","tue","tuee","tues","tuees","abattu","abattus","balle","assassine","killed","shot"],
  humanitaire:["refugies","deplaces","humanitaire","famine","malnutrition","epidemie","cholera","meningite","inondation","secheresse","sinistres","aide","ocha","hcr","unicef","croix-rouge","assistance","vivres","sante","hopital","victimes","humanitarian","refugees","displaced","flood","epidemic","health","hospital","aid","victims","accident","noyade","noye","noyes","chavire","naufrage","accidents","incendie","incendies","feu","embrase","embrasee"],
  politique:["gouvernement","president","ministre","assemblee","election","parti","opposition","scrutin","coup d etat","putsch","constitution","diplomatie","ambassade","cedeao","aes","union africaine","manifestation","greve","syndicat","justice","proces","government","president","minister","parliament","election","opposition","protest","strike","court"],
  economique:["economie","marche","prix","inflation","cacao","cafe","hevea","anacarde","coton","or","mine","petrole","port","fret","commerce","douane","exportation","importation","banque","investissement","carburant","transport","corridor","economy","market","prices","inflation","cocoa","gold","mining","port","trade","customs","fuel"]
