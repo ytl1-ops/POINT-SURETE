@@ -101,6 +101,12 @@ export const CORRIDORS = [
  {n:"Bouna — Doropo — Gaoua", s:"Frange nord-est · parc de la Comoé", z:["Bounkani","Gontougo","Tchologo","Sud-Ouest","Cascades"]}
 ];
 
+/* À NE JAMAIS AJOUTER : les domaines "news-pravda.com" (ex. "Pravda Burkina
+   Faso", "Pravda Mali") relaient le réseau de désinformation "African
+   Initiative", lié au ministère russe de la Défense / Africa Corps
+   (successeur de Wagner) et ciblant spécifiquement les pays de l'AES.
+   Ils se présentent comme des sites d'actualité Sahel crédibles — ce n'en
+   sont pas. Vérifier toute nouvelle source contre ce risque avant ajout. */
 export const NAT = [
  // --- Côte d'Ivoire ---
  {u:"https://www.aip.ci/feed/",p:"CI",n:"AIP — Agence ivoirienne de presse",f:88},
