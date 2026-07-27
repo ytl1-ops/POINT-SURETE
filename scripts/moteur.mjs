@@ -46,7 +46,7 @@ export const ZONES = [
 {p:"CI",z:"Bafing",d:"Woroba",loc:["Touba","Koro","Ouaninou","Booko","Guintéguéla","Borotou"]},
 {p:"CI",z:"Béré",d:"Woroba",loc:["Mankono","Dianra","Kounahiri","Marandallah","Sarhala","Tiéningboué"]},
 {p:"CI",z:"Worodougou",d:"Woroba",loc:["Séguéla","Kani","Massala","Dualla","Worofla"]},
-{p:"CI",z:"Bounkani",d:"Zanzan",loc:["Bouna","Doropo","Téhini","Nassian","Kalamon","Ondéfidouo","Parc de la Comoé"]},
+{p:"CI",z:"Bounkani",d:"Zanzan",loc:["Bouna","Doropo","Téhini","Nassian","Kalamon","Ondéfidouo","Parc de la Comoé","Kafolo","Kolobougou"]},
 {p:"CI",z:"Gontougo",d:"Zanzan",loc:["Bondoukou","Tanda","Koun-Fao","Transua","Sandégué","Soko","Assuéfry","Tabagne"]},
 {p:"BF",z:"Cascades",d:"Frontière CI nord-est",loc:["Banfora","Sidéradougou","Mangodara","Niangoloko","Sindou","Ouo"]},
 {p:"BF",z:"Hauts-Bassins",d:"Frontière CI",loc:["Bobo-Dioulasso","Bobo Dioulasso","Orodara","Houndé","Dandé","Karangasso"]},
