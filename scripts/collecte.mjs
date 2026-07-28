@@ -106,6 +106,61 @@ async function versSupabase(faits){
   return n;
 }
 
+/* ==================================================================
+   Marché — indices BRVM (Bourse Régionale des Valeurs Mobilières,
+   place boursière commune à l'UEMOA : Côte d'Ivoire, Burkina Faso,
+   Mali et cinq autres pays).
+   Best-effort : brvm.org n'expose pas d'API publique documentée,
+   l'extraction se fait par reconnaissance de motifs dans la page
+   d'accueil rendue. Si la structure du site change (ou si les
+   indices y sont injectés côté client sans rendu serveur), la
+   collecte échoue proprement — marché marqué indisponible plutôt
+   qu'une valeur inventée — sans jamais bloquer le reste du pipeline.
+   ================================================================== */
+const BRVM_URL = "https://www.brvm.org/en/";
+const BRVM_INDICES = [
+  {n:"BRVM Composite", re:/BRVM\s*Composite/i},
+  {n:"BRVM 10",         re:/BRVM\s*10\b/i},
+  {n:"BRVM Prestige",   re:/BRVM\s*Prestige/i}
+];
+function extraireIndicesBRVM(html){
+  const texte = html.replace(/<script[\s\S]*?<\/script>/gi," ").replace(/<style[\s\S]*?<\/style>/gi," ")
+    .replace(/<[^>]+>/g," ").replace(/&nbsp;/gi," ").replace(/\s+/g," ");
+  const out = [];
+  for(const {n,re} of BRVM_INDICES){
+    const m = re.exec(texte);
+    if(!m) continue;
+    const suite = texte.slice(m.index, m.index+200);
+    const valeur = suite.match(/\b\d{2,3}[\s.,]\d{3}[.,]\d{1,2}\b|\b\d{3,5}[.,]\d{1,2}\b/);
+    const variation = suite.match(/[+-]\s?\d{1,2}[.,]\d{1,2}\s?%/);
+    if(!valeur && !variation) continue;
+    out.push({
+      indice: n,
+      valeur: valeur ? Number(valeur[0].replace(/\s/g,"").replace(",",".")) : null,
+      variation: variation ? Number(variation[0].replace(/[\s%]/g,"").replace(",",".")) : null
+    });
+  }
+  return out;
+}
+async function recupererMarcheBRVM(){
+  const ctrl = new AbortController();
+  const t = setTimeout(()=>ctrl.abort(), DELAI);
+  try{
+    const r = await fetch(BRVM_URL, {
+      signal: ctrl.signal,
+      headers:{ "User-Agent":"POINT-SURETE/1.0 (veille économique; contact via dépôt GitHub)", "Accept":"text/html" }
+    });
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    const html = await r.text();
+    const indices = extraireIndicesBRVM(html);
+    if(!indices.length) throw new Error("aucun indice reconnu dans la page");
+    return { disponible:true, collecte_le:new Date().toISOString(), source:BRVM_URL, indices };
+  } catch(e){
+    log("Marché BRVM indisponible —", e.message);
+    return { disponible:false, collecte_le:new Date().toISOString(), source:BRVM_URL, indices:[], erreur:e.message };
+  } finally { clearTimeout(t); }
+}
+
 async function main(){
   const flux = listeFlux(PROF, { paysActifs:Object.keys(PAYS), zonePriorite:process.env.ZONE_PRIORITAIRE || "", inclureRadios:true });
   log(`Collecte ${PROF} — ${flux.length} flux, ${ZONES.length} zones, ${NAT.length} sources fixes.`);
@@ -154,6 +209,9 @@ async function main(){
     return { nom:c.n, sous_titre:c.s, score:sc, niveau:niveau(sc), zones:c.z.map((zn,i)=>({zone:zn, score:ss[i]})) };
   });
 
+  const marche = await recupererMarcheBRVM();
+  log(marche.disponible ? `Marché BRVM — ${marche.indices.length} indice(s) collecté(s).` : "Marché BRVM indisponible.");
+
   await mkdir("data", { recursive:true });
   await writeFile("data/latest.json", JSON.stringify({
     genere_le: new Date().toISOString(),
@@ -161,7 +219,7 @@ async function main(){
     flux_interroges: flux.length,
     flux_joignables: ok,
     faits: h24.slice(0,600),
-    zones, corridors
+    zones, corridors, marche
   }));
   await writeFile("data/zones.json", JSON.stringify({ genere_le:new Date().toISOString(), zones, corridors }));
 
@@ -171,7 +229,5 @@ async function main(){
 
   if(ok === 0){ console.error("Aucun flux joignable — sortie en échec."); process.exit(1); }
 }
-
-main().catch(e => { console.error(e); process.exit(1); });
 
 main().catch(e => { console.error(e); process.exit(1); });
