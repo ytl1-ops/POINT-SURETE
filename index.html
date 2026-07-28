@@ -94,8 +94,8 @@ main{padding:12px}
 .aide{color:var(--sourd);font-size:12px;border-left:2px solid var(--ligne);padding-left:9px;margin-bottom:12px}
 .carte{background:var(--carte);border:1px solid var(--ligne);border-radius:8px;padding:12px;margin-bottom:10px;box-shadow:var(--ombre)}
 .grille{display:grid;gap:8px}
-.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
-@media(max-width:520px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g6{grid-template-columns:repeat(6,1fr)}
+@media(max-width:520px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.g6{grid-template-columns:repeat(3,1fr)}}
 .kpi{background:var(--carte);border:1px solid var(--ligne);border-radius:8px;padding:10px;box-shadow:var(--ombre)}
 .kpi b{display:block;font-family:'Roboto Mono';font-size:22px;font-weight:500;line-height:1.1}
 .kpi span{font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--faible)}
@@ -321,6 +321,13 @@ html.vue-mobile nav button i{display:block!important;margin-bottom:2px!important
   <span>Emplacement publicitaire — aucun réseau publicitaire configuré (voir Réglages)</span>
   <button onclick="fermerPub()" aria-label="Fermer">✕</button>
 </div>
+
+<!-- ============ DIRECTION ============ -->
+<section class="panneau" id="p-direction">
+  <div class="titre"><h2>Direction</h2><small id="dirMaj">—</small></div>
+  <div class="aide">Synthèse en un écran, générée à partir des seuls faits collectés — pour une lecture en 20 secondes avant une décision.</div>
+  <div id="direction"></div>
+</section>
 
 <!-- ============ FLUX ============ -->
 <section class="panneau on" id="p-flux">
@@ -608,6 +615,7 @@ html.vue-mobile nav button i{display:block!important;margin-bottom:2px!important
 </main>
 
 <nav>
+  <button data-p="direction"><i>◉</i>Direction</button>
   <button class="on" data-p="flux"><i>▤</i>Flux</button>
   <button data-p="zones"><i>◈</i>Zones</button>
   <button data-p="corr"><i>⇄</i>Corridors</button>
@@ -880,11 +888,22 @@ const CAT_REGEX = Object.fromEntries(Object.entries(CAT).map(([c,mots]) => [c, c
 const AGGRAV_REGEX = AGGRAV.map(a => ({ ...a, re: compiler(a.k) }));
 
 /* ---------- État ---------- */
-let ETAT = { arts:[], maj:0, fPays:"ALL", fCat:"ALL", zPays:"CI", log:[], historique:[], marche:null };
+let ETAT = { arts:[], maj:0, fPays:"ALL", fCat:"ALL", zPays:"CI", log:[], historique:[], marche:null, marcheHist:[] };
 const CACHE = "PS_v1";
 
-function charger(){ try{ const d=JSON.parse(localStorage.getItem(CACHE)||"null"); if(d&&d.arts){ ETAT.arts=d.arts; ETAT.maj=d.maj||0; ETAT.historique=d.historique||[]; ETAT.marche=d.marche||null; } }catch(e){} }
-function sauver(){ try{ localStorage.setItem(CACHE, JSON.stringify({arts:ETAT.arts.slice(0,900), maj:ETAT.maj, historique:ETAT.historique.slice(0,30), marche:ETAT.marche})); }catch(e){ journal("Stockage local saturé — cache réduit."); ETAT.arts=ETAT.arts.slice(0,300); } }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem(CACHE)||"null"); if(d&&d.arts){ ETAT.arts=d.arts; ETAT.maj=d.maj||0; ETAT.historique=d.historique||[]; ETAT.marche=d.marche||null; ETAT.marcheHist=d.marcheHist||[]; } }catch(e){} }
+function sauver(){ try{ localStorage.setItem(CACHE, JSON.stringify({arts:ETAT.arts.slice(0,900), maj:ETAT.maj, historique:ETAT.historique.slice(0,30), marche:ETAT.marche, marcheHist:ETAT.marcheHist.slice(-20)})); }catch(e){ journal("Stockage local saturé — cache réduit."); ETAT.arts=ETAT.arts.slice(0,300); } }
+/* Historique du niveau de l'indice BRVM Composite, un point par collecte —
+   sert uniquement à tracer une sparkline dans la vue Direction ; rien n'est
+   affiché tant qu'au moins deux points n'ont pas été réellement collectés. */
+function noterMarcheHist(){
+  const compo = ETAT.marche && ETAT.marche.disponible ? ETAT.marche.indices.find(i=>i.indice==="BRVM Composite") : null;
+  if(!compo || compo.valeur===null) return;
+  const dernier = ETAT.marcheHist[ETAT.marcheHist.length-1];
+  if(dernier && dernier.v===compo.valeur) return;   // pas de nouvelle valeur depuis le dernier point
+  ETAT.marcheHist.push({ts:now(), v:compo.valeur});
+  ETAT.marcheHist = ETAT.marcheHist.slice(-20);
+}
 
 /* Historique des mises à jour — persisté avec le reste du cache, jusqu'à
    30 cycles conservés. Chaque entrée trace l'origine (serveur partagé ou
@@ -1058,7 +1077,7 @@ async function depuisGitHub(){
   if(!r.ok) throw new Error("HTTP " + r.status);
   const d = await r.json();
   if(!d.faits) throw new Error("format inattendu");
-  if(d.marche) ETAT.marche = d.marche;
+  if(d.marche){ ETAT.marche = d.marche; noterMarcheHist(); }
   journal("Fichier publié du " + new Date(d.genere_le).toLocaleString("fr-FR") +
           " — " + d.faits.length + " faits, " + d.flux_joignables + "/" + d.flux_interroges + " flux joignables.");
   return d.faits.map(versArt);
@@ -1280,6 +1299,13 @@ function scoreZone(zn){
 function niveau(s){ return s>=75?"ROUGE" : s>=60?"MARRON" : s>=40?"ORANGE" : s>=20?"JAUNE" : "VERT"; }
 const LIB = {ROUGE:"Situation grave", MARRON:"Situation critique", ORANGE:"Situation tendue", JAUNE:"Situation d'alerte", VERT:"Situation normale"};
 function fenetre(h){ const t=now()-h*3600000; return ETAT.arts.filter(a=>a.ts>=t); }
+/* Fenêtre décalée : les faits survenus entre hFin et hDebut heures avant
+   maintenant — sert à comparer une période à celle qui la précède
+   immédiatement (ex. fenetrePeriode(24,48) = les 24h avant les dernières 24h). */
+function fenetrePeriode(hDebut, hFin){
+  const debut = now()-hFin*3600000, fin = now()-hDebut*3600000;
+  return ETAT.arts.filter(a=>a.ts>=debut && a.ts<fin);
+}
 function scorePays(p){
   const zs = ZONES.filter(z=>z.p===p).map(z=>scoreZone(z.z));
   const max = zs.length ? Math.max(...zs.map(z=>z.score)) : 0;
@@ -1290,6 +1316,13 @@ function scorePays(p){
            crit:fenetre(24).filter(a=>a.p===p&&a.c==="CRITIQUE").length,
            zonePic: zoneCritique?zoneCritique.z:null, zonePicScore:max,
            ag:[...new Set(zs.flatMap(z=>z.ag))] };
+}
+// Même formule que scorePays, appliquée aux zones d'un corridor plutôt
+// qu'à celles d'un pays — partagée par la vue Corridors et la vue Direction.
+function scoreCorridor(c){
+  const ss = c.z.map(zn=>scoreZone(zn));
+  const sc = Math.round(Math.max(...ss.map(s=>s.score))*0.6 + (ss.reduce((n,s)=>n+s.score,0)/ss.length)*0.4);
+  return { score:sc, niveau:niveau(sc), zones:ss };
 }
 
 /* ==================================================================
@@ -1322,7 +1355,7 @@ function correlationsRegionales(){
    ================================================================== */
 function rendre(){
   $("#flash").style.display = (!enCours && ETAT.arts.length===0) ? "flex" : "none";
-  rafraichirCorroboration(); rCorridor(); rFiltres(); rFlux(); rZones(); rCorrs(); rEco(); rSynth(); rAgenda(); rAlertes(); rBord();
+  rafraichirCorroboration(); rDirection(); rCorridor(); rFiltres(); rFlux(); rZones(); rCorrs(); rEco(); rSynth(); rAgenda(); rAlertes(); rBord();
 }
 
 function rCorridor(){
@@ -1441,9 +1474,7 @@ function rZones(){
 
 function rCorrs(){
   $("#corrs").innerHTML = CORRIDORS.map(c=>{
-    const ss = c.z.map(zn=>scoreZone(zn));
-    const sc = Math.round(Math.max(...ss.map(s=>s.score))*0.6 + (ss.reduce((n,s)=>n+s.score,0)/ss.length)*0.4);
-    const nv = niveau(sc);
+    const {score:sc, niveau:nv, zones:ss} = scoreCorridor(c);
     const faits = fenetre(24).filter(a=>c.z.includes(a.z));
     return `<div class="carte">
       <div style="display:flex;align-items:baseline;gap:8px">
@@ -1457,6 +1488,120 @@ function rCorrs(){
       ${faits.filter(a=>["CRITIQUE","ELEVE"].includes(a.c)).slice(0,3).map(a=>`<div style="font-size:12px;color:var(--sourd);margin-top:7px;padding-left:8px;border-left:2px solid var(--ligne)">${esc(a.z)} — ${esc(a.t)}</div>`).join("")}
     </div>`;
   }).join("");
+}
+
+/* ==================================================================
+   Direction — brief exécutif : une lecture d'écran, générée à partir
+   des seuls scores et faits déjà calculés ailleurs dans l'app (aucun
+   nouveau calcul de fond, uniquement une mise en avant et un tri).
+   ================================================================== */
+function rDirection(){
+  $("#dirMaj").textContent = ETAT.maj ? "au "+new Date(ETAT.maj).toLocaleString("fr-FR") : "—";
+  const el = $("#direction"); if(!el) return;
+  if(!ETAT.arts.length){
+    el.innerHTML = `<div class="vide"><b>Synthèse indisponible</b>La vue Direction se construit à partir des faits collectés. Lancez une collecte.</div>`;
+    return;
+  }
+
+  const zs = ZONES.map(z=>({...z, s:scoreZone(z.z)})).sort((a,b)=>b.s.score-a.s.score);
+  const top = zs[0];
+  const critiques = zs.filter(z=>["ROUGE","MARRON"].includes(z.s.niveau)).length;
+
+  const pays = Object.keys(PAYS).map(p=>({p, s:scorePays(p)}));
+  const scoreGlobal = Math.round(Math.max(...pays.map(x=>x.s.score))*0.6 + (pays.reduce((n,x)=>n+x.s.score,0)/pays.length)*0.4);
+  const nvGlobal = niveau(scoreGlobal);
+
+  const corridorsScored = CORRIDORS.map(c=>({...c, s:scoreCorridor(c)})).sort((a,b)=>b.s.score-a.s.score);
+  const pireCorridor = corridorsScored[0];
+
+  const f24 = fenetre(24);
+  const sensibles24 = f24.filter(a=>["CRITIQUE","ELEVE"].includes(a.c));
+  const partCorridor = sensibles24.length ? Math.round(sensibles24.filter(a=>pireCorridor.z.includes(a.z)).length/sensibles24.length*100) : 0;
+
+  const critActuel = f24.filter(a=>a.c==="CRITIQUE").length;
+  const periodePrecedente = fenetrePeriode(24,48);
+  const deltaCrit = critActuel - periodePrecedente.filter(a=>a.c==="CRITIQUE").length;
+  const deltaDispo = periodePrecedente.length > 0;
+
+  const compo = ETAT.marche && ETAT.marche.disponible ? ETAT.marche.indices.find(i=>i.indice==="BRVM Composite") : null;
+
+  const titre = top.s.score >= 20 ? `${top.z.toUpperCase()} — ${LIB[top.s.niveau].toUpperCase()}` : "PÉRIMÈTRE CALME";
+  const phrase = [
+    `${critiques} zone${critiques>1?"s":""} critique${critiques>1?"s":""} sur ${zs.length}`,
+    compo && compo.variation!==null ? `BRVM Composite ${compo.variation>=0?"+":""}${compo.variation}%` : null,
+    pireCorridor.s.score>=20 && sensibles24.length ? `le corridor ${pireCorridor.n} concentre ${partCorridor}% des faits sensibles des dernières 24h` : null
+  ].filter(Boolean).join(" · ") + ".";
+
+  const sparkline = (()=>{
+    const pts = ETAT.marcheHist;
+    if(pts.length<2) return "";
+    const vals = pts.map(p=>p.v), min = Math.min(...vals), max = Math.max(...vals), range = (max-min)||1;
+    const coords = pts.map((p,i)=>`${(i/(pts.length-1)*100).toFixed(1)},${(26-((p.v-min)/range)*26).toFixed(1)}`).join(" ");
+    const coul = compo && compo.variation<0 ? "var(--rouge)" : "var(--vert)";
+    return `<svg width="100%" height="26" viewBox="0 0 100 26" preserveAspectRatio="none" style="display:block;margin-top:6px"><polyline points="${coords}" fill="none" stroke="${coul}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  })();
+
+  const heat = Object.keys(PAYS).map(p=>{
+    const s = scorePays(p);
+    return `<div class="b-${s.niveau}" style="border-radius:8px;padding:10px 6px;text-align:center">
+      <div style="font-size:19px;line-height:1">${PAYS[p].f}</div>
+      <div class="mono" style="font-size:15px;font-weight:600;color:#fff;margin-top:3px">${s.score}</div>
+      <div style="font-size:8.5px;color:rgba(255,255,255,.85);text-transform:uppercase;letter-spacing:.04em;margin-top:1px">${esc(PAYS[p].n)}</div>
+    </div>`;
+  }).join("");
+
+  const POIDS_TRI = {CRITIQUE:3, ELEVE:2, MODERE:1, FAIBLE:0};
+  const points = [...f24].sort((a,b)=>(POIDS_TRI[b.c]-POIDS_TRI[a.c])||(b.ts-a.ts)).slice(0,3);
+
+  el.innerHTML = `
+    <div class="carte" style="border-left:3px solid var(--${nvGlobal==="ROUGE"?"rouge":nvGlobal==="MARRON"?"marron":nvGlobal==="ORANGE"?"orange":nvGlobal==="JAUNE"?"jaune":"vert"});margin-bottom:12px">
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+        <span class="b-${nvGlobal}" style="display:inline-flex;align-items:center;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:4px 10px;border-radius:99px;color:#fff">${LIB[nvGlobal]}</span>
+        <b class="cond" style="font-size:22px;font-weight:700;text-transform:uppercase;letter-spacing:.02em">${esc(titre)}</b>
+      </div>
+      <p style="font-size:13px;color:var(--sourd);margin:0;max-width:680px">${esc(phrase)}</p>
+      <div class="hint" style="margin-top:10px">Synthèse générée automatiquement à partir des faits collectés · aucun contenu n'est inventé.</div>
+    </div>
+
+    <div class="grille g4" style="margin-bottom:12px">
+      <div class="kpi"><b>${critActuel}${deltaDispo?` <span class="mono n-${deltaCrit>0?"ROUGE":deltaCrit<0?"VERT":""}" style="font-size:12px;font-weight:600">${deltaCrit>0?"▲":deltaCrit<0?"▼":"·"} ${Math.abs(deltaCrit)}</span>`:""}</b><span>Faits critiques /24h</span></div>
+      <div class="kpi"><b class="n-${critiques?"ROUGE":"VERT"}">${critiques}</b><span>Zones en tension</span></div>
+      <div class="kpi">
+        <b>${compo&&compo.valeur!==null?compo.valeur.toLocaleString("fr-FR"):"—"}${compo&&compo.variation!==null?` <span class="mono n-${compo.variation>=0?"VERT":"ROUGE"}" style="font-size:12px;font-weight:600">${compo.variation>=0?"▲":"▼"} ${Math.abs(compo.variation)}%</span>`:""}</b>
+        <span>BRVM Composite</span>
+        ${sparkline}
+      </div>
+      <div class="kpi"><b class="n-${pireCorridor.s.niveau}">${pireCorridor.s.score}</b><span>Corridor le + dégradé</span><div style="font-size:11px;color:var(--sourd);margin-top:3px">${esc(pireCorridor.n)}</div></div>
+    </div>
+
+    <div class="grille g2" style="align-items:start;margin-bottom:12px">
+      <div class="carte">
+        <h3 style="font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faible);font-weight:700;margin-bottom:10px">Périmètre — pression par pays</h3>
+        <div class="grille g6">${heat}</div>
+        <p class="hint">Score de pression informationnelle 0–100 · zone la plus critique du pays pondérée à 60&nbsp;%.</p>
+      </div>
+      <div class="carte">
+        <h3 style="font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faible);font-weight:700;margin-bottom:10px">Trois points à connaître</h3>
+        ${points.length ? points.map(a=>{
+          const z = ZONES.find(x=>x.z===a.z);
+          return `<div style="border-left:3px solid var(--${a.c==="CRITIQUE"?"rouge":a.c==="ELEVE"?"orange":a.c==="MODERE"?"jaune":"vert"});padding-left:10px;margin-bottom:10px">
+            <b style="font-size:13px">${a.z?PAYS[a.p].f+" "+esc(a.z):(a.p?PAYS[a.p].n:"Hors périmètre")}</b>
+            <div style="font-size:12px;color:var(--sourd);margin-top:2px">${esc(a.t)}</div>
+            ${z?`<a href="#" style="font-size:11px" onclick="voirZone('${esc(a.z)}');return false">Voir la zone ${esc(a.z)}</a>`:""}
+          </div>`;
+        }).join("") : `<p class="hint">Aucun fait sur les dernières 24 heures.</p>`}
+      </div>
+    </div>
+
+    <div class="carte">
+      <h3 style="font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faible);font-weight:700;margin-bottom:10px">Corridors — santé logistique</h3>
+      <div class="grille g3">
+        ${corridorsScored.map(c=>`<div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px"><b>${esc(c.n)}</b><span class="mono">${c.s.score}</span></div>
+          <div class="jauge"><i class="b-${c.s.niveau}" style="width:${c.s.score}%"></i></div>
+        </div>`).join("")}
+      </div>
+    </div>`;
 }
 
 function rSynth(){
@@ -1927,14 +2072,14 @@ $("#btnManuel").onclick = ouvrirManuel;
    9. Administration — accès, rôles et droits (local à l'appareil)
    ================================================================== */
 const MODULES = [
-  ["flux","Flux"],["zones","Zones"],["corr","Corridors"],["eco","Intelligence économique"],["agenda","Agenda"],
+  ["direction","Direction"],["flux","Flux"],["zones","Zones"],["corr","Corridors"],["eco","Intelligence économique"],["agenda","Agenda"],
   ["alertes","Alertes"],["bord","Tableau de bord"],["synth","Point de situation"],
   ["rapports","Rapports"],["admin","Administration"],["par","Réglages"]
 ];
 const DROITS_DEFAUT = {
   admin:       Object.fromEntries(MODULES.map(([m])=>[m,true])),
   utilisateur: Object.fromEntries(MODULES.map(([m])=>[m, !["admin","par"].includes(m)])),
-  lecteur:     Object.fromEntries(MODULES.map(([m])=>[m, ["flux","zones","corr","eco","agenda","alertes","bord","synth"].includes(m)]))
+  lecteur:     Object.fromEntries(MODULES.map(([m])=>[m, ["direction","flux","zones","corr","eco","agenda","alertes","bord","synth"].includes(m)]))
 };
 function genererCode(){
   const c = "PS"+Math.random().toString(36).slice(2,8).toUpperCase();
