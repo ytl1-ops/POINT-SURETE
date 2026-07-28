@@ -356,6 +356,15 @@ html.vue-mobile nav button i{display:block!important;margin-bottom:2px!important
   <div id="corrs"></div>
 </section>
 
+<!-- ============ INTELLIGENCE ÉCONOMIQUE ============ -->
+<section class="panneau" id="p-eco">
+  <div class="titre"><h2>Intelligence économique</h2><small id="ecoCount">—</small></div>
+  <div class="aide">Faits à dominante économique extraits du même flux de collecte — matières premières agricoles, mines, énergie, commerce et logistique, finance — rattachés à leur zone d'origine, pas au siège du média qui les publie.</div>
+  <div class="grille g4" id="ecoKpi" style="margin-bottom:10px"></div>
+  <div class="rang" id="ecoTheme"></div>
+  <div id="eco"></div>
+</section>
+
 <!-- ============ SYNTHÈSE ============ -->
 <section class="panneau" id="p-synth">
   <div class="titre"><h2>Point de situation</h2><small id="synthDate">—</small></div>
@@ -568,6 +577,11 @@ html.vue-mobile nav button i{display:block!important;margin-bottom:2px!important
       <button class="btn s" onclick="exportAlertes()">Word</button>
     </div>
     <div class="carte">
+      <h3 style="font-size:14px;margin-bottom:5px">Intelligence économique</h3>
+      <p style="font-size:11.5px;color:var(--faible);margin-bottom:8px">Faits économiques des dernières 24 h, par thème.</p>
+      <button class="btn s" onclick="exportEco()">Word</button>
+    </div>
+    <div class="carte">
       <h3 style="font-size:14px;margin-bottom:5px">Matrice des sources</h3>
       <p style="font-size:11.5px;color:var(--faible);margin-bottom:8px">Sources suivies et fiabilité.</p>
       <button class="btn s" onclick="exportSources()">CSV</button>
@@ -585,6 +599,7 @@ html.vue-mobile nav button i{display:block!important;margin-bottom:2px!important
   <button class="on" data-p="flux"><i>▤</i>Flux</button>
   <button data-p="zones"><i>◈</i>Zones</button>
   <button data-p="corr"><i>⇄</i>Corridors</button>
+  <button data-p="eco"><i>€</i>Éco</button>
   <button data-p="agenda"><i>◷</i>Agenda</button>
   <button data-p="alertes"><i>⚑</i>Alertes</button>
   <button data-p="bord"><i>▦</i>Bord</button>
@@ -1294,7 +1309,7 @@ function correlationsRegionales(){
    ================================================================== */
 function rendre(){
   $("#flash").style.display = (!enCours && ETAT.arts.length===0) ? "flex" : "none";
-  rafraichirCorroboration(); rCorridor(); rFiltres(); rFlux(); rZones(); rCorrs(); rSynth(); rAgenda(); rAlertes(); rBord();
+  rafraichirCorroboration(); rCorridor(); rFiltres(); rFlux(); rZones(); rCorrs(); rEco(); rSynth(); rAgenda(); rAlertes(); rBord();
 }
 
 function rCorridor(){
@@ -1501,6 +1516,60 @@ function rAgenda(){
   </article>`).join("");
 }
 
+/* ---------- Intelligence économique ---------- */
+const ECO_THEMES = [
+  {k:"agri",       l:"Matières premières agricoles", mots:["cacao","cafe","hevea","anacarde","coton","cocoa"]},
+  {k:"mines",      l:"Mines et ressources",           mots:["or","mine","mines","minier","miniere","orpaillage","orpailleurs","gold","mining"]},
+  {k:"energie",    l:"Énergie et carburant",          mots:["petrole","carburant","essence","gasoil","hydrocarbure","fuel","oil"]},
+  {k:"logistique", l:"Commerce et logistique",        mots:["port","fret","douane","exportation","importation","transport","corridor","commerce","trade","customs","export","import"]},
+  {k:"finance",    l:"Finance et marché",             mots:["banque","investissement","inflation","prix","marche","economie","bank","investment","market","prices","economy"]}
+];
+function themeEco(a){
+  const t = norm(a.t+" "+(a.r||""));
+  for(const th of ECO_THEMES) if(th.mots.some(m=>matchMot(t,m))) return th.k;
+  return "finance";
+}
+let ETAT_eco = { theme:"ALL" };
+function rEco(){
+  const l = fenetre(CFG.fenetreH).filter(a=>a.cat==="economique");
+  $("#ecoCount").textContent = l.length ? l.length+" fait(s) · maj "+(ETAT.maj?hDep(ETAT.maj):"—") : "—";
+  const parTheme = {};
+  l.forEach(a=>{ const k=themeEco(a); (parTheme[k]=parTheme[k]||[]).push(a); });
+  $("#ecoKpi").innerHTML = [
+    [l.length, "Faits économiques"],
+    [l.filter(a=>["CRITIQUE","ELEVE"].includes(a.c)).length, "Sensibles"],
+    [new Set(l.map(a=>a.z).filter(Boolean)).size, "Zones touchées"],
+    [l.filter(a=>CORRO.get(a.h)?.verifie).length, "✓ Recoupés"]
+  ].map(([v,t])=>`<div class="kpi"><b>${v}</b><span>${t}</span></div>`).join("");
+  $("#ecoTheme").innerHTML = [["ALL","Tous thèmes"], ...ECO_THEMES.map(t=>[t.k,t.l])].map(([k,n])=>
+    `<button class="puce ${ETAT_eco.theme===k?"on":""}" data-et="${k}">${n}${k!=="ALL"?" ("+(parTheme[k]?.length||0)+")":""}</button>`).join("");
+  $$("[data-et]").forEach(b=>b.onclick=()=>{ETAT_eco.theme=b.dataset.et;rEco();});
+  const liste = ETAT_eco.theme==="ALL" ? l : (parTheme[ETAT_eco.theme]||[]);
+  if(!liste.length){ $("#eco").innerHTML = `<div class="vide"><b>Aucun fait économique</b>Sur la fenêtre et le thème choisis. Élargissez la fenêtre dans Réglages, ou lancez une collecte.</div>`; return; }
+  $("#eco").innerHTML = liste.slice(0,150).map(a=>{
+    const z = ZONES.find(x=>x.z===a.z);
+    const g = CORRO.get(a.h);
+    const badge = a.manuel
+      ? `<span class="tag" style="background:rgba(143,112,42,.10);border-color:rgba(143,112,42,.35);color:var(--or)">✎ Saisie manuelle</span>`
+      : g ? (g.verifie
+        ? `<span class="tag conf" title="${g.srcs.map(esc).join(', ')}">✓ ${g.n} src</span>`
+        : `<span class="tag nonconf">? 1 src</span>`) : "";
+    return `<article class="art ${a.c}">
+      <h3>${esc(a.t)}</h3>
+      <div class="meta">
+        <span class="tag ${a.c}">${a.c==="ELEVE"?"ÉLEVÉ":a.c==="MODERE"?"MODÉRÉ":a.c}</span>
+        ${badge}
+        ${a.z?`<span class="tag zone">${PAYS[a.p].f} ${esc(a.z)}${a.loc&&a.loc!==a.z?" · "+esc(a.loc):""}</span>`:`<span class="tag">Hors périmètre</span>`}
+        <span class="tag">${ECO_THEMES.find(t=>t.k===themeEco(a))?.l||"Finance et marché"}</span>
+        <span>${esc(a.src)}${CFG.afficherFiab?" · fiabilité "+a.f+"%":""}</span><span>·</span><span>${hDep(a.ts)}</span>
+      </div>
+      ${a.r?`<p>${esc(a.r)}</p>`:""}
+      <div class="liens">${a.l?`<a href="${esc(a.l)}" target="_blank" rel="noopener">Ouvrir la source</a>`:""}
+      ${z?`<a href="#" onclick="voirZone('${esc(a.z)}');return false">Voir la zone ${esc(a.z)}</a>`:""}</div>
+    </article>`;
+  }).join("");
+}
+
 /* ---------- Alertes pays ---------- */
 let ETAT_al = "grille";
 function alVue(v){ ETAT_al=v; $("#alGrille").classList.toggle("on",v==="grille"); $("#alChrono").classList.toggle("on",v==="chrono"); rAlertes(); }
@@ -1658,6 +1727,18 @@ function exportAlertes(){
   </table>`;
   tele("POINT_SURETE_alertes_pays_"+new Date().toISOString().slice(0,10)+".doc", docWord("Alertes pays", corps), "application/msword");
 }
+function exportEco(){
+  const f = fenetre(24).filter(a=>a.cat==="economique");
+  const parTheme = {};
+  f.forEach(a=>{ const k=themeEco(a); (parTheme[k]=parTheme[k]||[]).push(a); });
+  const corps = f.length ? ECO_THEMES.map(th=>{
+    const arr = parTheme[th.k]||[];
+    if(!arr.length) return "";
+    return `<h2>${esc(th.l)}</h2>` + arr.slice(0,40).map(a=>`<p style="margin:0 0 7pt"><b>${esc(a.z||(a.p?PAYS[a.p].n:"Hors périmètre"))}</b> — ${esc(a.t)}<br>
+     <span style="font-size:8.5pt;color:#666">${a.c} · ${esc(a.src)} · ${new Date(a.ts).toLocaleString("fr-FR")}</span></p>`).join("");
+  }).join("") : "<p>Aucun fait économique collecté sur les dernières 24 heures.</p>";
+  tele("POINT_SURETE_economie_"+new Date().toISOString().slice(0,10)+".doc", docWord("Intelligence économique", corps), "application/msword");
+}
 function exportSources(){
   const ent = ["Source","Pays","Fiabilite"];
   const q = v => '"'+String(v??"").replace(/"/g,'""')+'"';
@@ -1746,14 +1827,14 @@ $("#btnManuel").onclick = ouvrirManuel;
    9. Administration — accès, rôles et droits (local à l'appareil)
    ================================================================== */
 const MODULES = [
-  ["flux","Flux"],["zones","Zones"],["corr","Corridors"],["agenda","Agenda"],
+  ["flux","Flux"],["zones","Zones"],["corr","Corridors"],["eco","Intelligence économique"],["agenda","Agenda"],
   ["alertes","Alertes"],["bord","Tableau de bord"],["synth","Point de situation"],
   ["rapports","Rapports"],["admin","Administration"],["par","Réglages"]
 ];
 const DROITS_DEFAUT = {
   admin:       Object.fromEntries(MODULES.map(([m])=>[m,true])),
   utilisateur: Object.fromEntries(MODULES.map(([m])=>[m, !["admin","par"].includes(m)])),
-  lecteur:     Object.fromEntries(MODULES.map(([m])=>[m, ["flux","zones","corr","agenda","alertes","bord","synth"].includes(m)]))
+  lecteur:     Object.fromEntries(MODULES.map(([m])=>[m, ["flux","zones","corr","eco","agenda","alertes","bord","synth"].includes(m)]))
 };
 function genererCode(){
   const c = "PS"+Math.random().toString(36).slice(2,8).toUpperCase();
