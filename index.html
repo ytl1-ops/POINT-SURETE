@@ -361,6 +361,7 @@ html.vue-mobile nav button i{display:block!important;margin-bottom:2px!important
   <div class="titre"><h2>Intelligence économique</h2><small id="ecoCount">—</small></div>
   <div class="aide">Faits à dominante économique extraits du même flux de collecte — matières premières agricoles, mines, énergie, commerce et logistique, finance — rattachés à leur zone d'origine, pas au siège du média qui les publie.</div>
   <div id="marcheBrvm"></div>
+  <div id="actionsBrvm"></div>
   <div class="grille g4" id="ecoKpi" style="margin-bottom:10px"></div>
   <div class="rang" id="ecoTheme"></div>
   <div id="eco"></div>
@@ -486,7 +487,7 @@ html.vue-mobile nav button i{display:block!important;margin-bottom:2px!important
   </div>
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Alertes de marché (BRVM)</h3>
-    <p class="hint" style="margin-bottom:8px">Seuil de variation quotidienne d'un indice BRVM (Composite, BRVM 10, Prestige) déclenchant une alerte visible dans l'onglet Intelligence économique.</p>
+    <p class="hint" style="margin-bottom:8px">Seuil de variation quotidienne — d'un indice BRVM (Composite, BRVM 10, Prestige) ou d'une action cotée — déclenchant une alerte visible dans l'onglet Intelligence économique.</p>
     <div style="display:flex;align-items:center;gap:8px">
       <input type="number" id="cSeuilMarche" min="0.1" step="0.1" style="max-width:110px">
       <span style="font-size:12px;color:var(--sourd)">% de variation</span>
@@ -514,7 +515,7 @@ html.vue-mobile nav button i{display:block!important;margin-bottom:2px!important
     <p style="font-size:12px;color:var(--sourd);margin-top:8px">Deux médias qui rapportent le même fait ne comptent pas comme deux faits : un recoupement lexical par zone et fenêtre de temps regroupe les articles proches et distingue les faits confirmés par au moins deux sources indépendantes (✓) de ceux qui restent à recouper (?). Un fait confirmé pèse davantage dans le score de zone ; un fait isolé pèse moins — pour éviter qu'une source unique et non recoupée fasse basculer un niveau d'alerte.</p>
     <p style="font-size:12px;color:var(--sourd);margin-top:8px">Le Point de situation détecte aussi les corrélations régionales : un thème apparaissant le même jour dans au moins trois pays du périmètre est signalé, pour faire ressortir une dynamique transfrontalière qu'une lecture zone par zone ne révèle pas.</p>
     <p style="font-size:12px;color:var(--sourd);margin-top:8px">Le score de zone est une mesure de pression informationnelle, pas une mesure de risque absolue. Il dépend de la densité de couverture médiatique locale, qui est faible dans certaines régions. Recoupez toute décision opérationnelle avec vos propres canaux de terrain.</p>
-    <p style="font-size:12px;color:var(--sourd);margin-top:8px">Les indices de marché (BRVM Composite, BRVM 10, Prestige) affichés dans Intelligence économique proviennent d'une lecture <b style="color:var(--sourd)">best-effort</b> de brvm.org, réalisée à chaque collecte serveur : sans API documentée, l'extraction repose sur une reconnaissance de motifs dans la page publique, qui peut échouer si le site change de structure — la carte de marché indique alors « données indisponibles » plutôt qu'une valeur inventée. Le seuil d'alerte de fluctuation se règle ci-dessus, indépendamment de la fréquence de collecte serveur.</p>
+    <p style="font-size:12px;color:var(--sourd);margin-top:8px">Les indices et les cours par action (BRVM Composite, BRVM 10, Prestige, et les sociétés cotées) affichés dans Intelligence économique proviennent d'une lecture <b style="color:var(--sourd)">best-effort</b> de brvm.org, réalisée à chaque collecte serveur — soit toutes les 30 minutes, le maximum de fraîcheur qu'une application 100&nbsp;% statique peut offrir sans flux temps réel propriétaire. Sans API documentée côté BRVM, l'extraction repose sur une reconnaissance de motifs dans la page publique, qui peut échouer si le site change de structure — la carte de marché ou le tableau des actions indique alors « données indisponibles » plutôt qu'une valeur inventée. Le seuil d'alerte de fluctuation se règle ci-dessus, indépendamment de la fréquence de collecte serveur.</p>
     <p style="font-size:12px;color:var(--faible);margin-top:8px">Aucune donnée ne quitte cet appareil. Tout est conservé dans le stockage local du navigateur.</p>
   </div>
 </section>
@@ -1579,9 +1580,57 @@ function rMarche(){
     </div>`;
 }
 
+/* Sous-module : suivi des actions cotées à la BRVM, rafraîchi à chaque
+   collecte serveur (30 min) — cours et variation du jour par symbole,
+   filtrable, trié par mouvement le plus marqué en premier. */
+let ETAT_actions = { filtre:"" };
+function rActionsMarche(){
+  const el = $("#actionsBrvm"); if(!el) return;
+  const m = ETAT.marche;
+  if(!m || !m.actions_disponible || !m.actions || !m.actions.length){
+    el.innerHTML = `<div class="carte" style="margin-bottom:10px">
+      <h3 style="font-size:14px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Actions BRVM — cours du jour</h3>
+      <p class="hint">Cours par action momentanément indisponibles${m&&m.actions_erreur?" — "+esc(m.actions_erreur):""}. Actualisés à chaque collecte serveur.</p>
+    </div>`;
+    return;
+  }
+  const seuil = CFG.seuilMarche || 2;
+  const liste = m.actions;
+  const q = norm(ETAT_actions.filtre);
+  const filtrees = (q ? liste.filter(a=>norm(a.ticker).includes(q)) : liste)
+    .slice().sort((a,b)=>Math.abs(b.variation)-Math.abs(a.variation));
+  const hausses = liste.filter(a=>a.variation>0).length;
+  const baisses = liste.filter(a=>a.variation<0).length;
+  const enAlerte = liste.filter(a=>Math.abs(a.variation)>=seuil).length;
+  el.innerHTML = `<div class="carte" style="margin-bottom:10px">
+    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:6px">
+      <h3 style="font-size:14px;text-transform:uppercase;letter-spacing:.05em;flex:1">Actions BRVM — cours du jour</h3>
+      <span style="font-size:10px;color:var(--faible)">${liste.length} suivie(s)</span>
+    </div>
+    <div class="grille g3" style="margin-bottom:8px">
+      <div class="kpi"><b class="n-VERT">${hausses}</b><span>En hausse</span></div>
+      <div class="kpi"><b class="n-ROUGE">${baisses}</b><span>En baisse</span></div>
+      <div class="kpi"><b${enAlerte?' style="color:var(--laterite)"':''}>${enAlerte}</b><span>≥ seuil ±${seuil}%</span></div>
+    </div>
+    <input type="text" id="filActions" placeholder="Filtrer par symbole…" value="${esc(ETAT_actions.filtre)}" style="margin-bottom:8px">
+    ${filtrees.length ? `<div style="max-height:320px;overflow:auto">
+    <table><tr><th>Symbole</th><th>Cours</th><th>Variation</th></tr>
+      ${filtrees.map(a=>`<tr${Math.abs(a.variation)>=seuil?' style="background:rgba(171,93,55,.08)"':''}>
+        <td class="mono">${esc(a.ticker)}</td>
+        <td class="mono">${a.valeur.toLocaleString("fr-FR")}</td>
+        <td class="mono n-${a.variation>=0?"VERT":"ROUGE"}">${a.variation>=0?"+":""}${a.variation}%</td>
+      </tr>`).join("")}
+    </table>
+    </div>` : `<p class="hint">Aucun symbole ne correspond à ce filtre.</p>`}
+    <p class="hint" style="margin-top:6px">Source : brvm.org · liste extraite automatiquement, à recouper avant toute décision d'investissement.</p>
+  </div>`;
+  $("#filActions").oninput = e => { ETAT_actions.filtre = e.target.value; rActionsMarche(); };
+}
+
 let ETAT_eco = { theme:"ALL" };
 function rEco(){
   rMarche();
+  rActionsMarche();
   const l = fenetre(CFG.fenetreH).filter(a=>a.cat==="economique");
   $("#ecoCount").textContent = l.length ? l.length+" fait(s) · maj "+(ETAT.maj?hDep(ETAT.maj):"—") : "—";
   const parTheme = {};
@@ -2038,6 +2087,7 @@ function seuilMarcheEnr(){
   cfgSauver();
   journal("Seuil d'alerte de marché réglé à ±" + CFG.seuilMarche + "%.");
   rMarche();
+  rActionsMarche();
 }
 rCollecteUI();
 $("#oFiab").checked = CFG.afficherFiab;
