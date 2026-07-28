@@ -329,6 +329,13 @@ html.vue-mobile nav button i{display:block!important;margin-bottom:2px!important
   <div id="direction"></div>
 </section>
 
+<!-- ============ SÛRETÉ ============ -->
+<section class="panneau" id="p-surete">
+  <div class="titre"><h2>Sûreté</h2><small id="sureteMaj">—</small></div>
+  <div class="aide">Poste de situation : tout ce qui exige une décision aujourd'hui, trié par sévérité, sans narration.</div>
+  <div id="surete"></div>
+</section>
+
 <!-- ============ FLUX ============ -->
 <section class="panneau on" id="p-flux">
   <div class="titre"><h2>Flux de proximité</h2><small id="fluxCount">—</small></div>
@@ -504,6 +511,7 @@ html.vue-mobile nav button i{display:block!important;margin-bottom:2px!important
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Règles d'affichage</h3>
     <label class="sw"><span>Faits hors périmètre<small>Afficher les faits sans rattachement à une zone du périmètre</small></span><input type="checkbox" id="oHors"></label>
+    <label class="sw"><span>Actualités à faible impact<small>Afficher aussi les actualités jugées peu susceptibles d'affecter la stabilité économique, politique, les corridors ou la sûreté du pays — les saisies manuelles restent toujours visibles</small></span><input type="checkbox" id="oPertinence"></label>
     <label class="sw"><span>Niveau de fiabilité<small>Afficher le score de fiabilité de chaque source sur les articles</small></span><input type="checkbox" id="oFiab" checked></label>
     <label class="sw"><span>Collecte automatique<small>Relancer une collecte à l'intervalle choisi ci-dessus</small></span><input type="checkbox" id="oAuto"></label>
   </div>
@@ -522,6 +530,7 @@ html.vue-mobile nav button i{display:block!important;margin-bottom:2px!important
     <p style="font-size:12px;color:var(--sourd);margin-top:8px">Deux médias qui rapportent le même fait ne comptent pas comme deux faits : un recoupement lexical par zone et fenêtre de temps regroupe les articles proches et distingue les faits confirmés par au moins deux sources indépendantes (✓) de ceux qui restent à recouper (?). Un fait confirmé pèse davantage dans le score de zone ; un fait isolé pèse moins — pour éviter qu'une source unique et non recoupée fasse basculer un niveau d'alerte.</p>
     <p style="font-size:12px;color:var(--sourd);margin-top:8px">Le Point de situation détecte aussi les corrélations régionales : un thème apparaissant le même jour dans au moins trois pays du périmètre est signalé, pour faire ressortir une dynamique transfrontalière qu'une lecture zone par zone ne révèle pas.</p>
     <p style="font-size:12px;color:var(--sourd);margin-top:8px">Le score de zone est une mesure de pression informationnelle, pas une mesure de risque absolue. Il dépend de la densité de couverture médiatique locale, qui est faible dans certaines régions. Recoupez toute décision opérationnelle avec vos propres canaux de terrain.</p>
+    <p style="font-size:12px;color:var(--sourd);margin-top:8px">Par défaut, le flux et l'onglet Intelligence économique masquent les actualités jugées peu susceptibles d'affecter la stabilité économique ou politique, la circulation des biens et des personnes sur les corridors, ou la sûreté du pays — un fait critique ou élevé, porteur d'un facteur aggravant, ou modéré dans les catégories Sécurité, Politique ou Économie reste toujours affiché ; une cérémonie, une compétition sportive ou une coopération de routine ne le sont pas. Ce filtrage n'affecte que l'affichage : rien n'est retiré des scores, de l'historique ni des exports, et il se désactive dans « Règles d'affichage » ci-dessous. Les saisies manuelles échappent toujours à ce filtre.</p>
     <p style="font-size:12px;color:var(--sourd);margin-top:8px">Les indices et les cours par action (BRVM Composite, BRVM 10, Prestige, et les sociétés cotées) affichés dans Intelligence économique proviennent d'une lecture <b style="color:var(--sourd)">best-effort</b> de brvm.org, réalisée à chaque collecte serveur — soit toutes les 30 minutes, le maximum de fraîcheur qu'une application 100&nbsp;% statique peut offrir sans flux temps réel propriétaire. Sans API documentée côté BRVM, l'extraction repose sur une reconnaissance de motifs dans la page publique, qui peut échouer si le site change de structure — la carte de marché ou le tableau des actions indique alors « données indisponibles » plutôt qu'une valeur inventée. Le seuil d'alerte de fluctuation se règle ci-dessus, indépendamment de la fréquence de collecte serveur.</p>
     <p style="font-size:12px;color:var(--faible);margin-top:8px">Aucune donnée ne quitte cet appareil. Tout est conservé dans le stockage local du navigateur.</p>
   </div>
@@ -616,6 +625,7 @@ html.vue-mobile nav button i{display:block!important;margin-bottom:2px!important
 
 <nav>
   <button data-p="direction"><i>◉</i>Direction</button>
+  <button data-p="surete"><i>▣</i>Sûreté</button>
   <button class="on" data-p="flux"><i>▤</i>Flux</button>
   <button data-p="zones"><i>◈</i>Zones</button>
   <button data-p="corr"><i>⇄</i>Corridors</button>
@@ -823,7 +833,7 @@ const LEX = {
  CRITIQUE:["attaque","attentat","embuscade","assaut","terroriste","djihadiste","jihadiste","engin explosif","ied","mine artisanale","tue","tues","tuees","morts","tuerie","massacre","enlevement","enleve","kidnapping","rapt","otage","coup d etat","putsch","mutinerie","affrontements","incursion","fusillade","emeute","emeutes","assassinat","abattu","abattus","intrusion armee","intrusion terroriste","infiltration armee","poste militaire attaque","detachement attaque","position militaire attaquee","attaque transfrontaliere","attack","attacked","killed","gunmen","gunfire","ambush","kidnapped","abducted","hostage","explosion","bomb","massacre","coup","mutiny","clashes","shooting","riot","assassination","insurgents","militants","armed intrusion","cross-border attack","military post attacked","army post attacked"],
  ELEVE:["braquage","attaque a main armee","vol a main armee","coupeurs de route","coupeur de route","attaque de vehicule","car attaque","car braque","vehicule mitraille","barrage arme","faux barrage","hold-up","braqueurs","agression","violences","heurts","manifestation reprimee","gaz lacrymogene","couvre-feu","etat d urgence","arrestations","fermeture de la frontiere","frontiere fermee","expulsion","refugies","deplaces","milice","groupe arme","orpaillage clandestin","orpailleurs clandestins","creuseurs clandestins","site d orpaillage","mine artisanale illegale","site aurifere illegal","exploitation aurifere illegale","incendie criminel","cambriolage","sequestration","conflit foncier","conflit intercommunautaire","evacuation","alerte","menace","curfew","state of emergency","armed robbery","robbery","banditry","road ambush","highway robbery","illegal miners","illegal gold mining","violence","unrest","crackdown","tear gas","border closed","border closure","displaced","refugees","militia","armed group","arson","land dispute","evacuated"],
  MODERE:["greve","manifestation","marche de protestation","sit-in","tension","litige","proces","interpellation","saisie","contrebande","trafic","stupefiants","drogue","corruption","penurie","hausse des prix","inondation","epidemie","cholera","meningite","accident","panne","coupure","delestage","fermeture","perturbation","travaux","deviation","strike","protest","demonstration","sit-in","tension","arrest","seizure","smuggling","trafficking","drugs","corruption","shortage","price hike","flood","flooding","epidemic","cholera","accident","outage","blackout","galamsey","illegal mining"],
- FAIBLE:["reunion","seminaire","atelier","ceremonie","inauguration","visite","cooperation","signature","don","formation","sensibilisation","recensement","nomination","election","campagne","sommet","conference","festival","match","tournoi","meeting","workshop","ceremony","inauguration","visit","cooperation","training","summit"]
+ FAIBLE:["reunion","seminaire","atelier","ceremonie","inauguration","visite","cooperation","signature","don","formation","sensibilisation","recensement","nomination","election","campagne","sommet","conference","festival","match","tournoi","meeting","workshop","ceremony","inauguration","visit","cooperation","training","summit","championnat","medaille","podium","olympique","competition sportive","medal","championship","olympics"]
 };
 const CAT = {
  securite:["attaque","attentat","braquage","vol","arme","police","gendarmerie","militaire","armee","terroriste","djihadiste","jihadiste","embuscade","fusillade","enlevement","otage","criminalite","bandit","coupeurs de route","coupeur de route","braqueurs","barrage arme","car attaque","orpaillage clandestin","orpailleurs clandestins","creuseurs clandestins","site d orpaillage","milice","groupe arme","securite","surete","incursion","patrouille","couvre-feu","massacre","tuerie","police","army","military","security","gunmen","armed","robbery","curfew","attack","tue","tuee","tues","tuees","morts","abattu","abattus","balle","assassine","killed","shot"],
@@ -1022,13 +1032,29 @@ function criticite(texte){
 }
 function categorie(texte){
   const t = norm(texte);
-  let best="politique", sc=0;
+  let best="autre", sc=0;
   for(const c in CAT_REGEX){ const n = (t.match(CAT_REGEX[c])||[]).length; if(n>sc){ sc=n; best=c; } }
-  return sc ? best : "politique";
+  return sc ? best : "autre";
 }
 function aggravants(texte){
   const t = norm(texte);
   return AGGRAV_REGEX.filter(a=>a.re.test(t)).map(a=>({l:a.l, v:a.v}));
+}
+/* Pertinence d'affichage : un fait est jugé susceptible d'affecter la
+   stabilité économique ou politique, la circulation des biens et des
+   personnes sur les corridors, ou la sûreté du pays si — critique ou
+   élevé (toujours retenu, quelle que soit la catégorie) — ou porteur
+   d'un aggravant (les aggravants sont déjà, par construction, des
+   signaux de rupture logistique, frontalière ou d'exception) — ou
+   modéré dans un domaine sécurité/politique/économie. Un fait FAIBLE,
+   ou modéré hors de ces trois domaines (cérémonie, sport, coopération
+   de routine…), n'est pas masqué des exports ni des scores — seulement
+   du flux affiché par défaut. */
+function estPertinent(a){
+  if(a.c==="CRITIQUE" || a.c==="ELEVE") return true;
+  if(a.ag && a.ag.length) return true;
+  if(a.c==="MODERE" && ["securite","politique","economique"].includes(a.cat)) return true;
+  return false;
 }
 function estAgenda(texte){
   const t = norm(texte);
@@ -1355,7 +1381,7 @@ function correlationsRegionales(){
    ================================================================== */
 function rendre(){
   $("#flash").style.display = (!enCours && ETAT.arts.length===0) ? "flex" : "none";
-  rafraichirCorroboration(); rDirection(); rCorridor(); rFiltres(); rFlux(); rZones(); rCorrs(); rEco(); rSynth(); rAgenda(); rAlertes(); rBord();
+  rafraichirCorroboration(); rDirection(); rSurete(); rCorridor(); rFiltres(); rFlux(); rZones(); rCorrs(); rEco(); rSynth(); rAgenda(); rAlertes(); rBord();
 }
 
 function rCorridor(){
@@ -1385,6 +1411,7 @@ function rFiltres(){
 function filtres(){
   let l = fenetre(CFG.fenetreH);
   if(!$("#oHors").checked) l = l.filter(a=>a.z);
+  if(!$("#oPertinence").checked) l = l.filter(a=>a.manuel || estPertinent(a));
   if(ETAT.fPays!=="ALL") l = l.filter(a=>a.p===ETAT.fPays);
   if(ETAT.fCat!=="ALL") l = ["CRITIQUE","ELEVE"].includes(ETAT.fCat) ? l.filter(a=>a.c===ETAT.fCat) : l.filter(a=>a.cat===ETAT.fCat);
   const q = norm($("#fRech").value);
@@ -1395,13 +1422,8 @@ function filtres(){
 /* Liste de triage : faits critiques/élevés des 12 dernières heures, pas
    encore marqués comme traités. Une coche retire le fait de cette liste
    sans le supprimer du flux — c'est un pense-bête d'équipe, pas un filtre. */
-function rATraiter(){
-  const carte = $("#carteATraiter"); if(!carte) return;
-  const l = fenetre(12).filter(a=>["CRITIQUE","ELEVE"].includes(a.c) && !a.traite).sort((a,b)=>b.ts-a.ts);
-  if(!l.length){ carte.style.display = "none"; return; }
-  carte.style.display = "block";
-  $("#compteurATraiter").textContent = l.length;
-  $("#aTraiter").innerHTML = l.slice(0,25).map(a=>`
+function htmlTriage(l){
+  return l.slice(0,25).map(a=>`
     <div class="zone-l" style="align-items:flex-start">
       <button class="btn s" style="padding:6px 9px;flex-shrink:0" onclick="marquerTraite('${a.h}')" title="Marquer comme traité">✓</button>
       <div class="nm">
@@ -1409,6 +1431,16 @@ function rATraiter(){
         <span>${esc(a.t)}</span>
       </div>
     </div>`).join("");
+}
+function rATraiter(){
+  const l = fenetre(12).filter(a=>["CRITIQUE","ELEVE"].includes(a.c) && !a.traite).sort((a,b)=>b.ts-a.ts);
+  const carte = $("#carteATraiter");
+  if(carte){
+    if(!l.length){ carte.style.display = "none"; }
+    else { carte.style.display = "block"; $("#compteurATraiter").textContent = l.length; $("#aTraiter").innerHTML = htmlTriage(l); }
+  }
+  const surete = $("#aTraiterSurete");
+  if(surete) surete.innerHTML = l.length ? htmlTriage(l) : `<p class="hint">Aucun fait critique ou élevé en attente de traitement.</p>`;
 }
 function marquerTraite(h){
   const a = ETAT.arts.find(x=>x.h===h);
@@ -1604,6 +1636,79 @@ function rDirection(){
     </div>`;
 }
 
+/* ==================================================================
+   Sûreté — poste de situation : densité opérationnelle, trié par
+   sévérité, sans narration. Réutilise les mêmes fonctions de score
+   que Direction et Corridors ; rien n'est recalculé de zéro.
+   ================================================================== */
+function rSurete(){
+  $("#sureteMaj").textContent = ETAT.maj ? "au "+new Date(ETAT.maj).toLocaleString("fr-FR") : "—";
+  const el = $("#surete"); if(!el) return;
+  if(!ETAT.arts.length){
+    el.innerHTML = `<div class="vide"><b>Poste de situation indisponible</b>Cette vue se construit à partir des faits collectés. Lancez une collecte.</div>`;
+    return;
+  }
+
+  const f24 = fenetre(24);
+  const aTraiter = fenetre(12).filter(a=>["CRITIQUE","ELEVE"].includes(a.c) && !a.traite);
+  const zs = ZONES.map(z=>({...z, s:scoreZone(z.z)})).sort((a,b)=>b.s.score-a.s.score);
+  const zonesTension = zs.filter(z=>["ROUGE","MARRON"].includes(z.s.niveau)).length;
+  const recoupes = f24.filter(a=>CORRO.get(a.h)?.verifie).length;
+  const corridorsScored = CORRIDORS.map(c=>({...c, s:scoreCorridor(c)})).sort((a,b)=>b.s.score-a.s.score);
+
+  const evAgenda = evenementsAgenda()
+    .filter(a=>["EN COURS","À VENIR"].includes(a.ag_statut) && a.ts > now()-72*3600000)
+    .sort((a,b)=>a.ts-b.ts).slice(0,4);
+  const styleStatut = {"EN COURS":"ELEVE","À VENIR":"MODERE","ACHEVÉ":"FAIBLE"};
+
+  el.innerHTML = `
+    <div class="grille g4" style="margin-bottom:12px">
+      <div class="kpi"><b class="${aTraiter.length?'n-ORANGE':''}">${aTraiter.length}</b><span>À traiter (12h)</span></div>
+      <div class="kpi"><b class="n-ROUGE">${f24.filter(a=>a.c==="CRITIQUE").length}</b><span>Critiques /24h</span></div>
+      <div class="kpi"><b class="${zonesTension?'n-ROUGE':''}">${zonesTension}</b><span>Zones ROUGE/MARRON</span></div>
+      <div class="kpi"><b class="n-VERT">${recoupes}</b><span>Faits recoupés ✓</span></div>
+    </div>
+
+    <div class="grille g2" style="align-items:start;margin-bottom:12px">
+      <div class="carte">
+        <h3 style="font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faible);font-weight:700;margin-bottom:2px">Zones — classées par score</h3>
+        <table>
+          <tr><th>Zone</th><th>Score</th><th>Faits</th><th>Aggravants</th></tr>
+          ${zs.slice(0,10).map(z=>`<tr>
+            <td><b>${esc(z.z)}</b> <span style="color:var(--faible)">${z.p}</span></td>
+            <td class="mono n-${z.s.niveau}" style="font-weight:600">${z.s.score}</td>
+            <td>${z.s.n}</td>
+            <td style="color:var(--or)">${z.s.ag.length?esc(z.s.ag[0]):"—"}</td>
+          </tr>`).join("")}
+        </table>
+      </div>
+      <div class="carte">
+        <h3 style="font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faible);font-weight:700;margin-bottom:8px">File à traiter — critiques &amp; élevés non marqués</h3>
+        <div id="aTraiterSurete"></div>
+      </div>
+    </div>
+
+    <div class="grille g2" style="align-items:start">
+      <div class="carte">
+        <h3 style="font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faible);font-weight:700;margin-bottom:8px">Corridors — tous les axes</h3>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          ${corridorsScored.map(c=>`<div>
+            <div style="display:flex;justify-content:space-between;font-size:12px"><b>${esc(c.n)}</b><span class="mono">${c.s.score}</span></div>
+            <div class="jauge"><i class="b-${c.s.niveau}" style="width:${c.s.score}%"></i></div>
+          </div>`).join("")}
+        </div>
+      </div>
+      <div class="carte">
+        <h3 style="font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faible);font-weight:700;margin-bottom:8px">Agenda — 72 heures</h3>
+        ${evAgenda.length ? evAgenda.map(a=>`<div class="zone-l" style="align-items:flex-start">
+          <span class="tag ${styleStatut[a.ag_statut]}" style="flex-shrink:0;margin-top:1px">${a.ag_statut}</span>
+          <div class="nm"><b style="font-size:12.5px">${esc(a.t)}</b><span>${a.z?PAYS[a.p].f+" "+esc(a.z)+" · ":""}${hDep(a.ts)}</span></div>
+        </div>`).join("") : `<p class="hint">Aucune échéance détectée sur les 72 prochaines heures.</p>`}
+      </div>
+    </div>`;
+  rATraiter();   // (re)peuple #aTraiterSurete juste ajouté au DOM
+}
+
 function rSynth(){
   $("#synthDate").textContent = ETAT.maj ? "au "+new Date(ETAT.maj).toLocaleString("fr-FR") : "—";
   const f = fenetre(24);
@@ -1776,7 +1881,8 @@ let ETAT_eco = { theme:"ALL" };
 function rEco(){
   rMarche();
   rActionsMarche();
-  const l = fenetre(CFG.fenetreH).filter(a=>a.cat==="economique");
+  let l = fenetre(CFG.fenetreH).filter(a=>a.cat==="economique");
+  if(!$("#oPertinence").checked) l = l.filter(a=>a.manuel || estPertinent(a));
   $("#ecoCount").textContent = l.length ? l.length+" fait(s) · maj "+(ETAT.maj?hDep(ETAT.maj):"—") : "—";
   const parTheme = {};
   l.forEach(a=>{ const k=themeEco(a); (parTheme[k]=parTheme[k]||[]).push(a); });
@@ -2072,14 +2178,14 @@ $("#btnManuel").onclick = ouvrirManuel;
    9. Administration — accès, rôles et droits (local à l'appareil)
    ================================================================== */
 const MODULES = [
-  ["direction","Direction"],["flux","Flux"],["zones","Zones"],["corr","Corridors"],["eco","Intelligence économique"],["agenda","Agenda"],
+  ["direction","Direction"],["surete","Sûreté"],["flux","Flux"],["zones","Zones"],["corr","Corridors"],["eco","Intelligence économique"],["agenda","Agenda"],
   ["alertes","Alertes"],["bord","Tableau de bord"],["synth","Point de situation"],
   ["rapports","Rapports"],["admin","Administration"],["par","Réglages"]
 ];
 const DROITS_DEFAUT = {
   admin:       Object.fromEntries(MODULES.map(([m])=>[m,true])),
   utilisateur: Object.fromEntries(MODULES.map(([m])=>[m, !["admin","par"].includes(m)])),
-  lecteur:     Object.fromEntries(MODULES.map(([m])=>[m, ["direction","flux","zones","corr","eco","agenda","alertes","bord","synth"].includes(m)]))
+  lecteur:     Object.fromEntries(MODULES.map(([m])=>[m, ["direction","surete","flux","zones","corr","eco","agenda","alertes","bord","synth"].includes(m)]))
 };
 function genererCode(){
   const c = "PS"+Math.random().toString(36).slice(2,8).toUpperCase();
@@ -2187,7 +2293,7 @@ function onglet(p){
 $$("nav button").forEach(b=>b.onclick=()=>onglet(b.dataset.p));
 $("#btnMaj").onclick = () => collecter(false);
 $("#fRech").oninput = rFlux;
-["oHors","oFiab"].forEach(id=>$("#"+id).onchange=()=>{ if(id==="oFiab") CFG.afficherFiab=$("#oFiab").checked, cfgSauver(); rFlux(); });
+["oHors","oFiab","oPertinence"].forEach(id=>$("#"+id).onchange=()=>{ if(id==="oFiab") CFG.afficherFiab=$("#oFiab").checked, cfgSauver(); rFlux(); rEco(); });
 
 function demarrerAuto(){
   clearInterval(window._auto);
