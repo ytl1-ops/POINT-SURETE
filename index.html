@@ -509,6 +509,23 @@ html.vue-mobile nav button i{display:block!important;margin-bottom:2px!important
     </div>
   </div>
   <div class="carte">
+    <h3 style="font-size:15px;margin-bottom:2px;text-transform:uppercase;letter-spacing:.06em">Accès aux actualités par cible</h3>
+    <p class="hint" style="margin-bottom:8px">Toutes les cibles n'ont pas accès aux mêmes actualités selon leur abonnement. Ce réglage détermine quelles catégories alimentent les recommandations de chaque cible dans l'onglet Sûreté — décochez une case pour retirer une catégorie à une cible, en un clic.</p>
+    <div id="accesCibles" style="overflow-x:auto"></div>
+    <button class="btn s" onclick="accesCiblesDefaut()" style="margin-top:8px">Rétablir les valeurs par défaut</button>
+  </div>
+  <div class="carte">
+    <h3 style="font-size:15px;margin-bottom:2px;text-transform:uppercase;letter-spacing:.06em">Modules par cible</h3>
+    <p class="hint" style="margin-bottom:8px">Les modules qui ne font pas partie de l'abonnement d'une cible sont masqués de la navigation pour cette cible — Administration et Réglages restent toujours réservés aux rôles internes de l'appareil.</p>
+    <div id="modulesCibles" style="overflow-x:auto"></div>
+    <button class="btn s" onclick="modulesCiblesDefaut()" style="margin-top:8px">Rétablir les valeurs par défaut</button>
+  </div>
+  <div class="carte">
+    <h3 style="font-size:15px;margin-bottom:2px;text-transform:uppercase;letter-spacing:.06em">Cible active (aperçu)</h3>
+    <p class="hint" style="margin-bottom:8px">Prévisualisez l'appareil tel qu'une cible le verrait : seuls ses modules et ses catégories d'actualité restent visibles. N'affecte que cet appareil, pas les autres réglages.</p>
+    <select id="cibleActive" style="margin-bottom:4px"></select>
+  </div>
+  <div class="carte">
     <h3 style="font-size:15px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Règles d'affichage</h3>
     <label class="sw"><span>Faits hors périmètre<small>Afficher les faits sans rattachement à une zone du périmètre</small></span><input type="checkbox" id="oHors"></label>
     <label class="sw"><span>Actualités à faible impact<small>Afficher aussi les actualités jugées peu susceptibles d'affecter la stabilité économique, politique, les corridors ou la sûreté du pays — les saisies manuelles restent toujours visibles</small></span><input type="checkbox" id="oPertinence"></label>
@@ -1085,10 +1102,41 @@ function dater(d){
    L'origine 2 est la plus économe en usage mobile : un seul appel réseau,
    les 138 flux ayant déjà été interrogés côté serveur.
    ================================================================== */
+const MODULES = [
+  ["direction","Direction"],["surete","Sûreté"],["flux","Flux"],["zones","Zones"],["corr","Corridors"],["eco","Intelligence économique"],["agenda","Agenda"],
+  ["alertes","Alertes"],["bord","Tableau de bord"],["synth","Point de situation"],
+  ["rapports","Rapports"],["admin","Administration"],["par","Réglages"]
+];
+const DROITS_DEFAUT = {
+  admin:       Object.fromEntries(MODULES.map(([m])=>[m,true])),
+  utilisateur: Object.fromEntries(MODULES.map(([m])=>[m, !["admin","par"].includes(m)])),
+  lecteur:     Object.fromEntries(MODULES.map(([m])=>[m, ["direction","surete","flux","zones","corr","eco","agenda","alertes","bord","synth"].includes(m)]))
+};
+
+// Accès aux actualités par cible : toutes les cibles ne reçoivent pas les
+// mêmes catégories selon leur abonnement — réglable dans Paramètres.
+const CATEGORIES_ACTU = [["securite","Sécurité"],["politique","Politique"],["economique","Économique"],["humanitaire","Humanitaire"]];
+const ACCES_CIBLES_DEFAUT = {
+  ceo:         {securite:true,  politique:true,  economique:true,  humanitaire:true},
+  financier:   {securite:true,  politique:true,  economique:true,  humanitaire:false},
+  surete:      {securite:true,  politique:true,  economique:false, humanitaire:true},
+  particulier: {securite:true,  politique:false, economique:false, humanitaire:true}
+};
+// Modules visibles par cible (aperçu d'abonnement) — Administration et
+// Réglages restent hors abonnement, réservés aux rôles internes.
+const MODULES_CIBLES = MODULES.filter(([m])=>!["admin","par"].includes(m));
+const CIBLES_MODULES_DEFAUT = {
+  ceo:         {direction:true, surete:false,flux:false,zones:false,corr:true, eco:true, agenda:true, alertes:true, bord:true, synth:true, rapports:true},
+  financier:   {direction:false,surete:false,flux:false,zones:false,corr:true, eco:true, agenda:false,alertes:true, bord:false,synth:false,rapports:true},
+  surete:      {direction:false,surete:true, flux:true, zones:true, corr:true, eco:false,agenda:true, alertes:true, bord:true, synth:true, rapports:true},
+  particulier: {direction:true, surete:false,flux:false,zones:false,corr:false,eco:false,agenda:true, alertes:true, bord:false,synth:false,rapports:false}
+};
 const CFG = Object.assign(
   { sbUrl:"", sbKey:"", dataUrl:"data/latest.json", origine:"auto",
     paysActifs:["CI","BF","ML","GN","LR","GH"], zonePriorite:"", fenetreH:12,
-    intervalleMin:15, afficherFiab:true, inclureRadios:true, seuilMarche:2 },
+    intervalleMin:15, afficherFiab:true, inclureRadios:true, seuilMarche:2,
+    accesCibles: JSON.parse(JSON.stringify(ACCES_CIBLES_DEFAUT)),
+    modulesCibles: JSON.parse(JSON.stringify(CIBLES_MODULES_DEFAUT)), cibleActive:"" },
   JSON.parse(localStorage.getItem("PS_cfg") || "{}")
 );
 const cfgSauver = () => localStorage.setItem("PS_cfg", JSON.stringify(CFG));
@@ -1716,39 +1764,56 @@ const RECOS_NIVEAU = {
     particulier:"Restez attentif à l'actualité locale avant de vous déplacer dans cette zone."
   }
 };
-function recommandationZone(z){
+// Catégorie dominante d'un ensemble de faits — détermine quelle catégorie
+// d'abonnement une recommandation relève, pour la confronter à la table
+// d'accès par cible réglée dans Paramètres.
+function categorieDominante(faits){
+  const tally = {};
+  faits.forEach(a=>{ if(a.cat && a.cat!=="autre") tally[a.cat] = (tally[a.cat]||0)+1; });
+  let best = null, max = 0;
+  for(const c in tally) if(tally[c] > max){ max = tally[c]; best = c; }
+  return best || "securite";
+}
+function recommandationZone(z, f24){
   const aggravant = z.s.ag && z.s.ag.length ? z.s.ag[0] : null;
   const set = (aggravant && RECOS_AGGRAVANT[aggravant]) || RECOS_NIVEAU[z.s.niveau];
   if(!set) return null;
-  return { titre:z.z, sousTitre:(z.p&&PAYS[z.p]?PAYS[z.p].f+" "+PAYS[z.p].n:"")+(aggravant?" · "+aggravant:""), niveau:z.s.niveau, set };
+  const categorie = categorieDominante(f24.filter(a=>a.z===z.z));
+  return { titre:z.z, sousTitre:(z.p&&PAYS[z.p]?PAYS[z.p].f+" "+PAYS[z.p].n:"")+(aggravant?" · "+aggravant:""), niveau:z.s.niveau, categorie, set };
 }
-function recommandationCorridor(c){
+function recommandationCorridor(c, f24){
   const aggravants = [...new Set(c.s.zones.flatMap(s=>s.ag))];
   const aggravant = aggravants.length ? aggravants[0] : null;
   const set = (aggravant && RECOS_AGGRAVANT[aggravant]) || RECOS_NIVEAU[c.s.niveau];
   if(!set) return null;
-  return { titre:c.n, sousTitre:"Corridor"+(aggravant?" · "+aggravant:""), niveau:c.s.niveau, set };
+  const categorie = categorieDominante(f24.filter(a=>c.z.includes(a.z)));
+  return { titre:c.n, sousTitre:"Corridor"+(aggravant?" · "+aggravant:""), niveau:c.s.niveau, categorie, set };
 }
 function htmlRecommandation(r){
+  const libCat = (CATEGORIES_ACTU.find(x=>x[0]===r.categorie)||[,r.categorie])[1];
   return `<div class="carte" style="margin-bottom:10px;border-left:3px solid var(--${r.niveau==="ROUGE"?"rouge":r.niveau==="MARRON"?"marron":"orange"})">
-    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px">
+    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px;flex-wrap:wrap">
       <b style="font-size:14px">${esc(r.titre)}</b>
       <span class="b-${r.niveau}" style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:99px;color:#fff">${LIB[r.niveau]}</span>
+      <span class="tag" style="margin-left:auto">${esc(libCat)}</span>
     </div>
     ${r.sousTitre?`<div style="font-size:11px;color:var(--faible);margin-bottom:8px">${esc(r.sousTitre)}</div>`:""}
-    <div class="grille g2">
-      ${AUDIENCES.map(([k,nom])=>`<div>
-        <div style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--laterite);font-weight:700;margin-bottom:3px">${esc(nom)}</div>
-        <div style="font-size:12px;color:var(--sourd)">${esc(r.set[k])}</div>
-      </div>`).join("")}
+    <div class="grille g4">
+      ${AUDIENCES.map(([k,nom])=>{
+        const accede = !!(CFG.accesCibles[k] && CFG.accesCibles[k][r.categorie]);
+        return `<div${accede?"":' style="opacity:.4"'}>
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--laterite);font-weight:700;margin-bottom:3px">${esc(nom)}</div>
+          <div style="font-size:12px;color:var(--sourd)${accede?"":";font-style:italic"}">${accede?esc(r.set[k]):"Non inclus dans cet abonnement ("+esc(libCat)+")"}</div>
+        </div>`;
+      }).join("")}
     </div>
   </div>`;
 }
-function htmlRecommandations(zs, corridorsScored){
+function htmlRecommandations(zs, corridorsScored, f24){
   const zonesRisque = zs.filter(z=>z.s.score>=40).slice(0,3);
   const pireCorridor = corridorsScored[0];
   const corridorRisque = pireCorridor && pireCorridor.s.score>=40 ? pireCorridor : null;
-  const items = [...zonesRisque.map(recommandationZone), corridorRisque?recommandationCorridor(corridorRisque):null].filter(Boolean);
+  const items = [...zonesRisque.map(z=>recommandationZone(z, f24)), corridorRisque?recommandationCorridor(corridorRisque, f24):null].filter(Boolean);
   const titre = `<h3 style="font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faible);font-weight:700;margin-bottom:8px">Recommandations — par public</h3>`;
   if(!items.length){
     return `<div class="carte" style="margin-bottom:12px">${titre}<p class="hint">Aucune zone ni corridor ne dépasse le seuil de vigilance actuellement — pas de recommandation spécifique à formuler.</p></div>`;
@@ -1783,7 +1848,7 @@ function rSurete(){
       <div class="kpi"><b class="n-VERT">${recoupes}</b><span>Faits recoupés ✓</span></div>
     </div>
 
-    ${htmlRecommandations(zs, corridorsScored)}
+    ${htmlRecommandations(zs, corridorsScored, f24)}
 
     <div class="grille g2" style="align-items:start;margin-bottom:12px">
       <div class="carte">
@@ -2292,16 +2357,6 @@ $("#btnManuel").onclick = ouvrirManuel;
 /* ==================================================================
    9. Administration — accès, rôles et droits (local à l'appareil)
    ================================================================== */
-const MODULES = [
-  ["direction","Direction"],["surete","Sûreté"],["flux","Flux"],["zones","Zones"],["corr","Corridors"],["eco","Intelligence économique"],["agenda","Agenda"],
-  ["alertes","Alertes"],["bord","Tableau de bord"],["synth","Point de situation"],
-  ["rapports","Rapports"],["admin","Administration"],["par","Réglages"]
-];
-const DROITS_DEFAUT = {
-  admin:       Object.fromEntries(MODULES.map(([m])=>[m,true])),
-  utilisateur: Object.fromEntries(MODULES.map(([m])=>[m, !["admin","par"].includes(m)])),
-  lecteur:     Object.fromEntries(MODULES.map(([m])=>[m, ["direction","surete","flux","zones","corr","eco","agenda","alertes","bord","synth"].includes(m)]))
-};
 function genererCode(){
   const c = "PS"+Math.random().toString(36).slice(2,8).toUpperCase();
   return c;
@@ -2359,18 +2414,29 @@ function droitsDefaut(){
   ADM.droits = JSON.parse(JSON.stringify(DROITS_DEFAUT)); admSauver(); rDroits(); appliquerDroits();
   journal("Droits d'accès réinitialisés.");
 }
+function estVisiblePourCible(m){
+  // Administration et Réglages ne font partie d'aucun abonnement : seul le
+  // rôle interne (admin/utilisateur/lecteur) les régit, jamais la cible.
+  if(!CFG.cibleActive || m==="admin" || m==="par") return true;
+  const c = CFG.modulesCibles[CFG.cibleActive];
+  return !c || c[m] !== false;
+}
 function appliquerDroits(){
   const d = ADM.droits[ADM.roleActif] || DROITS_DEFAUT.utilisateur;
   $$("nav button[data-p]").forEach(b=>{
-    const ok = d[b.dataset.p] !== false;
+    const m = b.dataset.p;
+    const ok = d[m] !== false && estVisiblePourCible(m);
     b.style.display = ok ? "" : "none";
   });
   const panneauActif = $(".panneau.on");
-  if(panneauActif && d[panneauActif.id.replace("p-","")] === false) onglet("flux");
+  if(panneauActif){
+    const m = panneauActif.id.replace("p-","");
+    if(d[m] === false || !estVisiblePourCible(m)) onglet("flux");
+  }
   const LIB_ROLE = {admin:"Admin", utilisateur:"Utilisateur", lecteur:"Lecteur"};
   const badge = $("#badgeRole");
   badge.className = "badge-role r-"+ADM.roleActif;
-  badge.innerHTML = "<i></i>"+LIB_ROLE[ADM.roleActif];
+  badge.innerHTML = "<i></i>"+LIB_ROLE[ADM.roleActif] + (CFG.cibleActive ? " · Aperçu "+esc(AUDIENCES.find(a=>a[0]===CFG.cibleActive)[1]) : "");
 }
 function fermerPub(){
   $("#pub").style.display = "none";
@@ -2455,7 +2521,48 @@ function seuilMarcheEnr(){
   rMarche();
   rActionsMarche();
 }
+/* Table d'accès : cibles en colonnes (horizontal), catégories d'actualité
+   en lignes (vertical) — même schéma que la table des droits par rôle en
+   Administration, appliqué ici aux abonnements plutôt qu'aux modules. */
+function rAccesCibles(){
+  const el = $("#accesCibles"); if(!el) return;
+  el.innerHTML = `<table><tr><th>Catégorie</th>${AUDIENCES.map(([,nom])=>`<th>${esc(nom)}</th>`).join("")}</tr>` +
+    CATEGORIES_ACTU.map(([c,l])=>`<tr><td>${esc(l)}</td>` +
+      AUDIENCES.map(([k])=>`<td style="text-align:center"><input type="checkbox" ${CFG.accesCibles[k][c]?"checked":""} onchange="CFG.accesCibles['${k}']['${c}']=this.checked;cfgSauver();rSurete();"></td>`).join("") +
+    `</tr>`).join("") + `</table>`;
+}
+function accesCiblesDefaut(){
+  if(!confirm("Rétablir l'accès par défaut pour les quatre cibles ?")) return;
+  CFG.accesCibles = JSON.parse(JSON.stringify(ACCES_CIBLES_DEFAUT));
+  cfgSauver(); rAccesCibles(); rSurete();
+  journal("Accès aux actualités par cible réinitialisé.");
+}
+function rModulesCibles(){
+  const el = $("#modulesCibles"); if(!el) return;
+  el.innerHTML = `<table><tr><th>Module</th>${AUDIENCES.map(([,nom])=>`<th>${esc(nom)}</th>`).join("")}</tr>` +
+    MODULES_CIBLES.map(([m,l])=>`<tr><td>${esc(l)}</td>` +
+      AUDIENCES.map(([k])=>`<td style="text-align:center"><input type="checkbox" ${CFG.modulesCibles[k][m]?"checked":""} onchange="CFG.modulesCibles['${k}']['${m}']=this.checked;cfgSauver();appliquerDroits();"></td>`).join("") +
+    `</tr>`).join("") + `</table>`;
+}
+function modulesCiblesDefaut(){
+  if(!confirm("Rétablir les modules par défaut pour les quatre cibles ?")) return;
+  CFG.modulesCibles = JSON.parse(JSON.stringify(CIBLES_MODULES_DEFAUT));
+  cfgSauver(); rModulesCibles(); appliquerDroits();
+  journal("Modules par cible réinitialisés.");
+}
+function rCibleActive(){
+  const sel = $("#cibleActive"); if(!sel) return;
+  sel.innerHTML = `<option value="">Aucune — aperçu désactivé</option>` +
+    AUDIENCES.map(([k,nom])=>`<option value="${k}" ${CFG.cibleActive===k?"selected":""}>${esc(nom)}</option>`).join("");
+  sel.onchange = () => {
+    CFG.cibleActive = sel.value; cfgSauver(); appliquerDroits();
+    journal(CFG.cibleActive ? "Aperçu activé — cible : " + AUDIENCES.find(a=>a[0]===CFG.cibleActive)[1] + "." : "Aperçu par cible désactivé.");
+  };
+}
 rCollecteUI();
+rAccesCibles();
+rModulesCibles();
+rCibleActive();
 $("#oFiab").checked = CFG.afficherFiab;
 $("#cSeuilMarche").value = CFG.seuilMarche;
 collecteEnr();
