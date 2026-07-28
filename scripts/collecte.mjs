@@ -133,41 +133,39 @@ const BRVM_INDICES = [
 // sont pas — à exclure des résultats de la regex générique ci-dessous.
 const BRVM_EXCLUS = new Set(["BRVM","UEMOA","CFA","FCFA","XOF","SGI","IPO","OPA","OPE","RSE","PDF","RSS"]);
 
-function aplatirHTML(html){
-  return html.replace(/<script[\s\S]*?<\/script>/gi," ").replace(/<style[\s\S]*?<\/style>/gi," ")
-    .replace(/<[^>]+>/g," ").replace(/&nbsp;/gi," ").replace(/\s+/g," ");
+function lignesCandidates(html, sep){
+  return html.split(sep)
+    .map(l => l.replace(/<[^>]+>/g," ").replace(/&nbsp;/gi," ").replace(/\s+/g," ").trim())
+    .filter(Boolean);
 }
-function extraireIndicesBRVM(html){
-  const texte = aplatirHTML(html);
-  const out = [];
-  for(const {n,re} of BRVM_INDICES){
-    const m = re.exec(texte);
-    if(!m) continue;
-    const suite = texte.slice(m.index, m.index+200);
-    const valeur = suite.match(/\b\d{2,3}[\s.,]\d{3}[.,]\d{1,2}\b|\b\d{3,5}[.,]\d{1,2}\b/);
-    const variation = suite.match(/[+-]\s?\d{1,2}[.,]\d{1,2}\s?%/);
-    if(!valeur && !variation) continue;
-    out.push({
-      indice: n,
-      valeur: valeur ? Number(valeur[0].replace(/\s/g,"").replace(",",".")) : null,
-      variation: variation ? Number(variation[0].replace(/[\s%]/g,"").replace(",",".")) : null
-    });
-  }
-  return out;
-}
-// Extraction générique « symbole (3-6 lettres majuscules) + un nom de
-// société + un cours + une variation en % », ligne par ligne — une regex
-// unique sur le texte aplati mélangerait deux lignes de cotation entre
-// elles, faute de frontière ; on ne cherche donc jamais au-delà d'UNE
-// ligne candidate (une ligne = un </tr>, un <br>, ou un </li> selon la
-// mise en page réellement rencontrée — les quatre stratégies sont
-// essayées dans l'ordre, la première à produire au moins 3 lignes
-// exploitables l'emporte).
 function extraireNombre(s){
-  const sansMilliers = s.replace(/(\d)[  ](?=\d{3}(?:\D|$))/g, "$1");   // espace séparateur de milliers
+  const sansMilliers = s.replace(/(\d)[  ](?=\d{3}(?:\D|$))/g, "$1");   // espace séparateur de milliers
   const m = sansMilliers.match(/\d+(?:[.,]\d{1,2})?/);
   return m ? Number(m[0].replace(",",".")) : null;
 }
+function extraireIndicesBRVM(html){
+  const sansScripts = html.replace(/<script[\s\S]*?<\/script>/gi," ").replace(/<style[\s\S]*?<\/style>/gi," ");
+  const decoupes = [/<\/tr>/i, /<br\s*\/?>/i, /<\/li>/i, /<\/div>/i];
+  for(const sep of decoupes){
+    const lignes = lignesCandidates(sansScripts, sep);
+    const out = [];
+    for(const {n,re} of BRVM_INDICES){
+      const ligne = lignes.find(l=>re.test(l));
+      if(!ligne) continue;
+      const m = re.exec(ligne);
+      const reste = ligne.slice(m.index+m[0].length);
+      const variationM = reste.match(/([+-]?\d{1,2}[.,]\d{1,2})\s?%/);
+      const valeur = extraireNombre(variationM ? reste.slice(0, variationM.index) : reste);
+      if(valeur===null && !variationM) continue;
+      out.push({ indice:n, valeur, variation: variationM ? Number(variationM[1].replace(",",".")) : null });
+    }
+    if(out.length) return out;
+  }
+  return [];
+}
+// Extraction générique « symbole (3-6 lettres majuscules) + un nom de
+// société + un cours + une variation en % », ligne par ligne — même
+// principe et mêmes stratégies de découpage que les indices ci-dessus.
 function parseLigneAction(ligne){
   const tickerM = ligne.match(/\b([A-Z]{3,6})\b/);
   if(!tickerM || BRVM_EXCLUS.has(tickerM[1])) return null;
@@ -184,9 +182,7 @@ function extraireActionsBRVM(html){
   const sansScripts = html.replace(/<script[\s\S]*?<\/script>/gi," ").replace(/<style[\s\S]*?<\/style>/gi," ");
   const decoupes = [/<\/tr>/i, /<br\s*\/?>/i, /<\/li>/i, /<\/div>/i];
   for(const sep of decoupes){
-    const lignes = sansScripts.split(sep)
-      .map(l => l.replace(/<[^>]+>/g," ").replace(/&nbsp;/gi," ").replace(/\s+/g," ").trim())
-      .filter(Boolean);
+    const lignes = lignesCandidates(sansScripts, sep);
     const vues = new Map();
     for(const ligne of lignes){
       const r = parseLigneAction(ligne);
@@ -210,24 +206,35 @@ async function recupererPageBRVM(url){
 }
 async function recupererMarcheBRVM(){
   const collecte_le = new Date().toISOString();
-  let indices = [], indices_erreur = null;
-  try{
-    const html = await recupererPageBRVM(BRVM_URL);
-    indices = extraireIndicesBRVM(html);
-    if(!indices.length) throw new Error("aucun indice reconnu dans la page");
-  } catch(e){ indices_erreur = e.message; log("Indices BRVM indisponibles —", e.message); }
+
+  const [accueil, cotations] = await Promise.all([
+    recupererPageBRVM(BRVM_URL).catch(e=>{ log("Page d'accueil BRVM injoignable —", e.message); return null; }),
+    recupererPageBRVM(BRVM_ACTIONS_URL).catch(e=>{ log("Page de cotations BRVM injoignable —", e.message); return null; })
+  ]);
+
+  // Les indices peuvent apparaître sur l'une ou l'autre page selon la mise
+  // en page réelle du site — on essaie l'accueil d'abord, puis la page de
+  // cotations (déjà interrogée pour les actions) avant d'abandonner.
+  let indices = [], indices_erreur = null, indices_source = BRVM_URL;
+  for(const [html, src] of [[accueil, BRVM_URL], [cotations, BRVM_ACTIONS_URL]]){
+    if(!html) continue;
+    const trouve = extraireIndicesBRVM(html);
+    if(trouve.length){ indices = trouve; indices_source = src; break; }
+  }
+  if(!indices.length){ indices_erreur = "aucun indice reconnu"; log("Indices BRVM indisponibles —", indices_erreur); }
 
   let actions = [], actions_erreur = null;
-  try{
-    const html = await recupererPageBRVM(BRVM_ACTIONS_URL);
-    actions = extraireActionsBRVM(html);
-    if(!actions.length) throw new Error("aucune action reconnue dans la page");
-  } catch(e){ actions_erreur = e.message; log("Actions BRVM indisponibles —", e.message); }
+  if(cotations){
+    actions = extraireActionsBRVM(cotations);
+    if(!actions.length){ actions_erreur = "aucune action reconnue dans la page"; log("Actions BRVM indisponibles —", actions_erreur); }
+  } else {
+    actions_erreur = "page de cotations injoignable";
+  }
 
   return {
     collecte_le,
     disponible: indices.length>0,
-    source: BRVM_URL, indices, erreur: indices_erreur,
+    source: indices_source, indices, erreur: indices_erreur,
     actions_disponible: actions.length>0,
     actions_source: BRVM_ACTIONS_URL, actions, actions_erreur
   };
