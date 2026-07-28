@@ -55,13 +55,19 @@ async function lire(url){
 
 function qualifier(it, src){
   if(!it?.t) return null;
-  const titre = String(it.t).replace(/\s+-\s+[^-]{2,40}$/,"").trim();   // Google News suffixe le média
+  const media = String(it.t).match(/\s+-\s+([^-]{2,40})$/);            // Google News suffixe le média réel
+  const titre = String(it.t).replace(/\s+-\s+[^-]{2,40}$/,"").trim();
   if(titre.length < 12) return null;
   const brut = String(it.r||"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim();
   const texte = titre + " " + brut;
   const ts = Date.parse(it.d);
   if(isNaN(ts) || ts > Date.now() + 3600e3) return null;                 // date absente ou future → écarté
   const geo = detecter(texte) || (src.zone ? {pays:src.p, zone:src.zone, localite:src.zone} : null);
+  // Sur les flux agrégateurs (Google News), le libellé du flux ("Zone X",
+  // "Veille thématique — Y"…) décrit la requête, pas l'éditeur réel de
+  // l'article : on préfère le média extrait du titre quand disponible,
+  // pour que les citations affichées à l'usager pointent vers un vrai titre de presse.
+  const source = (src.agrege && media) ? media[1].trim() : src.n;
   return {
     h: norm(titre).slice(0,90),
     titre,
@@ -72,7 +78,7 @@ function qualifier(it, src){
     localite: geo?.localite ?? null,
     criticite: criticite(texte),
     categorie: categorie(texte),
-    source: src.n,
+    source,
     fiabilite: src.f,
     aggravants: aggravants(texte),
     resume: brut.slice(0,320) || null

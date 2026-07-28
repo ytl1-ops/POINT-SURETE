@@ -11,9 +11,13 @@
 <style>
 :root{
   --fond:#F5F7F4; --carte:#FFFFFF; --carte2:#EEF1EC; --ligne:#DCE3DD;
-  --texte:#16211C; --sourd:#55655B; --faible:#8B978F;
+  --texte:#16211C; --sourd:#55655B; --faible:#7E8B83;
   --laterite:#AB5D37; --kola:#2B835F; --or:#8F702A;
-  --rouge:#B5453F; --marron:#8C5A3C; --orange:#C97A3F; --jaune:#A6842E; --vert:#2B835F;
+  /* Ramp de sévérité — hues volontairement espacées (rouge ~5°, marron ~18°
+     et assombri, orange ~28°, jaune ~45°, vert ~154°) : les anciennes valeurs
+     tenaient toutes dans une bande brun-orangé étroite, peu discernables en
+     un coup d'œil sur les pastilles, jauges et cartes de chaleur. */
+  --rouge:#C1352E; --marron:#7A4430; --orange:#D9772A; --jaune:#C79A1E; --vert:#2B835F;
   --r:6px;
   --ombre:0 1px 2px rgba(22,33,28,.05), 0 1px 1px rgba(22,33,28,.04);
   --ombre-lev:0 4px 16px rgba(22,33,28,.08), 0 1px 2px rgba(22,33,28,.05);
@@ -67,12 +71,18 @@ header{position:sticky;top:0;z-index:40;background:rgba(245,247,244,.90);backdro
 /* ---------- Signature : ruban corridor ---------- */
 .corridor{border-bottom:1px solid var(--ligne);background:var(--carte2);padding:9px 12px 11px;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .corridor-t{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--faible);margin-bottom:7px}
-.corridor-l{display:flex;align-items:flex-start;min-width:640px;position:relative}
+.corridor-l{display:flex;align-items:flex-start;position:relative}
 .corridor-l:before{content:'';position:absolute;top:5px;left:0;right:0;height:2px;background:var(--ligne)}
-.noeud{flex:1;position:relative;text-align:left;padding-right:6px}
+/* Largeur fixe par nœud (plutôt que flex:1) : un nom de zone plus long
+   que sa part égale du ruban débordait sur le nœud suivant — pastille et
+   libellé désalignés, texte qui se chevauche. Largeur fixe + ellipsis
+   garantissent que chaque nœud reste dans sa propre colonne, quel que
+   soit le nombre de nœuds ; le ruban défile horizontalement au besoin. */
+.noeud{flex:0 0 96px;position:relative;text-align:left;padding-right:10px;overflow:hidden}
 .noeud i{display:block;width:12px;height:12px;border-radius:50%;border:2px solid var(--fond);position:relative;z-index:1;background:var(--faible)}
-.noeud b{display:block;font-family:'Barlow Condensed';font-size:12px;font-weight:600;margin-top:5px;letter-spacing:.03em;white-space:nowrap}
-.noeud u{display:block;text-decoration:none;font-size:9px;color:var(--faible);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.noeud-sc{display:block;font-family:'Roboto Mono';font-size:14px;font-weight:600;margin-top:5px;line-height:1.1}
+.noeud b{display:block;font-family:'Barlow Condensed';font-size:12px;font-weight:600;margin-top:1px;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.noeud u{display:block;text-decoration:none;font-size:9px;color:var(--faible);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ---------- Onglets ---------- */
 nav{position:fixed;bottom:0;left:0;right:0;z-index:45;display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-top:1px solid var(--ligne);padding-bottom:env(safe-area-inset-bottom);scrollbar-width:none;box-shadow:0 -2px 12px rgba(22,33,28,.05)}
@@ -83,6 +93,13 @@ nav button i{display:block;font-style:normal;font-size:16px;margin-bottom:2px}
 /* Onglets courts sur mobile (largeur restreinte), désignation complète sur
    le ruban vertical desktop — mêmes boutons, seul le texte affiché change. */
 nav button .nav-long{display:none}
+/* Groupes de navigation — regroupent les 12 modules en 5 sections lisibles
+   sur le ruban vertical desktop. Sur la barre d'onglets mobile (rangée
+   horizontale), les libellés de section n'ont pas leur place : le wrapper
+   devient transparent (display:contents) pour laisser les boutons
+   participer directement à la rangée, et le libellé reste masqué. */
+nav .nav-sec{display:contents}
+nav .nav-groupe{display:none}
 .compteur{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;border-radius:99px;background:var(--rouge);color:#fff;font-size:9.5px;font-weight:700;margin-left:4px;vertical-align:2px}
 
 main{padding:12px}
@@ -95,6 +112,12 @@ main{padding:12px}
 .titre h2{font-size:19px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
 .titre small{color:var(--faible);font-size:11px}
 .aide{color:var(--sourd);font-size:12px;border-left:2px solid var(--ligne);padding-left:9px;margin-bottom:12px}
+.section-h{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--laterite);margin:18px 0 8px}
+.section-h:first-of-type{margin-top:2px}
+.exp-l{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--ligne)}
+.exp-l div{flex:1;min-width:0}
+.exp-l b{display:block;font-size:13px}
+.exp-l span{display:block;font-size:11px;color:var(--faible);margin-top:1px}
 .carte{background:var(--carte);border:1px solid var(--ligne);border-radius:8px;padding:12px;margin-bottom:10px;box-shadow:var(--ombre)}
 .grille{display:grid;gap:8px}
 .g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g6{grid-template-columns:repeat(6,1fr)}
@@ -133,7 +156,7 @@ select,input[type=text]{background:var(--carte2);border:1px solid var(--ligne);c
 .zone-l .nm span{font-size:10px;color:var(--faible)}
 .jauge{height:4px;background:var(--ligne);border-radius:2px;overflow:hidden;margin-top:4px}
 .jauge i{display:block;height:100%}
-.n-ROUGE{color:var(--rouge)}.n-MARRON{color:#C97A55}.n-ORANGE{color:var(--orange)}.n-JAUNE{color:var(--jaune)}.n-VERT{color:var(--vert)}
+.n-ROUGE{color:var(--rouge)}.n-MARRON{color:var(--marron)}.n-ORANGE{color:var(--orange)}.n-JAUNE{color:var(--jaune)}.n-VERT{color:var(--vert)}
 .b-ROUGE{background:var(--rouge)}.b-MARRON{background:var(--marron)}.b-ORANGE{background:var(--orange)}.b-JAUNE{background:var(--jaune)}.b-VERT{background:var(--vert)}
 
 .vide{text-align:center;color:var(--faible);padding:34px 14px;border:1px dashed var(--ligne);border-radius:var(--r)}
@@ -188,6 +211,9 @@ label.sw small{display:block;color:var(--faible);font-size:11px}
   nav button i{margin-bottom:0;font-size:16px;width:17px;text-align:center;flex-shrink:0}
   nav button .nav-court{display:none}
   nav button .nav-long{display:inline}
+  nav .nav-sec{display:flex;flex-direction:column}
+  nav .nav-groupe{display:block;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--faible);padding:16px 14px 6px}
+  nav .nav-sec:first-child .nav-groupe{padding-top:4px}
   .grille.g4{grid-template-columns:repeat(4,1fr)}
   .grille.g3{grid-template-columns:repeat(3,1fr)}
 }
@@ -212,6 +238,9 @@ html.vue-web nav button.on{border-left-color:var(--laterite);background:rgba(171
 html.vue-web nav button i{margin-bottom:0;font-size:16px;width:17px;text-align:center;flex-shrink:0}
 html.vue-web nav button .nav-court{display:none}
 html.vue-web nav button .nav-long{display:inline}
+html.vue-web nav .nav-sec{display:flex;flex-direction:column}
+html.vue-web nav .nav-groupe{display:block;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--faible);padding:16px 14px 6px}
+html.vue-web nav .nav-sec:first-child .nav-groupe{padding-top:4px}
 html.vue-web .grille.g4{grid-template-columns:repeat(4,1fr)}
 html.vue-web .grille.g3{grid-template-columns:repeat(3,1fr)}
 
@@ -229,6 +258,8 @@ html.vue-mobile nav button.on{border-top-color:var(--laterite)!important;border-
 html.vue-mobile nav button i{display:block!important;margin-bottom:2px!important;font-size:16px!important;width:auto!important}
 html.vue-mobile nav button .nav-court{display:inline!important}
 html.vue-mobile nav button .nav-long{display:none!important}
+html.vue-mobile nav .nav-sec{display:contents!important}
+html.vue-mobile nav .nav-groupe{display:none!important}
 </style>
 </head>
 <body>
@@ -386,21 +417,9 @@ html.vue-mobile nav button .nav-long{display:none!important}
   <div id="marcheBrvm"></div>
   <div id="actionsBrvm"></div>
   <div class="grille g4" id="ecoKpi" style="margin-bottom:10px"></div>
+  <div id="expertEco"></div>
   <div class="rang" id="ecoTheme"></div>
   <div id="eco"></div>
-</section>
-
-<!-- ============ SYNTHÈSE ============ -->
-<section class="panneau" id="p-synth">
-  <div class="titre"><h2>Point de situation</h2><small id="synthDate">—</small></div>
-  <div class="aide">Note de situation générée à partir des seuls faits collectés. Aucun contenu n'est inventé : ce qui n'a pas été collecté n'apparaît pas.</div>
-  <div class="rang">
-    <button class="puce" onclick="exportWord()">Exporter Word</button>
-    <button class="puce" onclick="window.print()">Imprimer / PDF</button>
-    <button class="puce" onclick="exportCSV()">Exporter CSV</button>
-    <button class="puce" onclick="exportJSON()">Sauvegarde JSON</button>
-  </div>
-  <div id="synth"></div>
 </section>
 
 <!-- ============ ADMINISTRATION ============ -->
@@ -454,6 +473,7 @@ html.vue-mobile nav button .nav-long{display:none!important}
 <!-- ============ PARAMÈTRES ============ -->
 <section class="panneau" id="p-par">
   <div class="titre"><h2>Paramètres</h2><small>Local à cet appareil</small></div>
+  <h3 class="section-h">Collecte</h3>
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Origine des données</h3>
     <select id="orig" style="margin-bottom:8px">
@@ -508,6 +528,7 @@ html.vue-mobile nav button .nav-long{display:none!important}
     </div>
     <button class="btn p" onclick="collecteEnr()" style="margin-top:6px">Appliquer</button>
   </div>
+  <h3 class="section-h">Marché</h3>
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Alertes de marché (BRVM)</h3>
     <p class="hint" style="margin-bottom:8px">Seuil de variation quotidienne — d'un indice BRVM (Composite, BRVM 10, Prestige) ou d'une action cotée — déclenchant une alerte visible dans l'onglet Intelligence économique.</p>
@@ -517,6 +538,7 @@ html.vue-mobile nav button .nav-long{display:none!important}
       <button class="btn p" onclick="seuilMarcheEnr()">Appliquer</button>
     </div>
   </div>
+  <h3 class="section-h">Abonnements par cible</h3>
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:2px;text-transform:uppercase;letter-spacing:.06em">Accès aux actualités par cible</h3>
     <p class="hint" style="margin-bottom:8px">Toutes les cibles n'ont pas accès aux mêmes actualités selon leur abonnement. Ce réglage détermine quelles catégories alimentent les recommandations de chaque cible dans l'onglet Sûreté — décochez une case pour retirer une catégorie à une cible, en un clic.</p>
@@ -534,6 +556,7 @@ html.vue-mobile nav button .nav-long{display:none!important}
     <p class="hint" style="margin-bottom:8px">Prévisualisez l'appareil tel qu'une cible le verrait : seuls ses modules et ses catégories d'actualité restent visibles. N'affecte que cet appareil, pas les autres réglages.</p>
     <select id="cibleActive" style="margin-bottom:4px"></select>
   </div>
+  <h3 class="section-h">Affichage &amp; diagnostic</h3>
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Règles d'affichage</h3>
     <label class="sw"><span>Faits hors périmètre<small>Afficher les faits sans rattachement à une zone du périmètre</small></span><input type="checkbox" id="oHors"></label>
@@ -549,6 +572,7 @@ html.vue-mobile nav button .nav-long{display:none!important}
       <button class="btn s" onclick="reset()">Vider le cache</button>
     </div>
   </div>
+  <h3 class="section-h">À propos</h3>
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Méthode et limites</h3>
     <p style="font-size:12px;color:var(--sourd)">POINT SÛRETÉ agrège des flux RSS publics : agences et médias nationaux des six pays (35 sources fixes), presse régionale, radios locales, une couche panafricaine et analytique (Africanews, International Crisis Group, ReliefWeb) qui recoupe les six pays à la fois, et des requêtes d'actualité ciblées sur chaque zone administrative. Le rattachement géographique se fait par détection de localité dans le texte, avec correspondance de mots entiers et normalisation des accents ; un fait dont aucune localité du périmètre n'est reconnue est classé hors périmètre plutôt que rattaché par défaut au pays du média.</p>
@@ -606,38 +630,36 @@ html.vue-mobile nav button .nav-long{display:none!important}
 
 <!-- ============ RAPPORTS ============ -->
 <section class="panneau" id="p-rapports">
-  <div class="titre"><h2>Rapports</h2><small>Word · CSV · JSON</small></div>
-  <div class="aide">Documents générés directement depuis les données collectées, filtrés par périmètre. Aucune donnée n'est envoyée à un tiers : les fichiers se construisent sur l'appareil.</div>
+  <div class="titre"><h2>Rapports</h2><small id="synthDate">—</small></div>
+  <div class="aide">Note de situation et documents générés directement depuis les seuls faits collectés — aucun contenu n'est inventé, rien n'est envoyé à un tiers : tout se construit sur l'appareil.</div>
+  <div id="synth"></div>
+  <h3 class="section-h">Exports</h3>
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Rapport complet</h3>
     <p style="font-size:12px;color:var(--sourd);margin-bottom:10px">Zones, corridors, alertes pays et faits retenus, en un seul document Word.</p>
     <button class="btn p" onclick="exportWord()">Exporter Word</button>
     <button class="btn s" onclick="window.print()">Imprimer / PDF</button>
   </div>
-  <div class="grille g2">
-    <div class="carte">
-      <h3 style="font-size:14px;margin-bottom:5px">Flux opérationnel</h3>
-      <p style="font-size:11.5px;color:var(--faible);margin-bottom:8px">Faits des dernières 24 h.</p>
+  <div class="carte">
+    <h3 style="font-size:14px;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em">Exports ciblés</h3>
+    <div class="exp-l">
+      <div><b>Flux opérationnel</b><span>Faits des dernières 24 h</span></div>
       <button class="btn s" onclick="exportCSV()">CSV</button>
     </div>
-    <div class="carte">
-      <h3 style="font-size:14px;margin-bottom:5px">Agenda sûreté</h3>
-      <p style="font-size:11.5px;color:var(--faible);margin-bottom:8px">Événements en cours et à venir.</p>
+    <div class="exp-l">
+      <div><b>Agenda sûreté</b><span>Événements en cours et à venir</span></div>
       <button class="btn s" onclick="exportAgenda()">Word</button>
     </div>
-    <div class="carte">
-      <h3 style="font-size:14px;margin-bottom:5px">Alertes pays</h3>
-      <p style="font-size:11.5px;color:var(--faible);margin-bottom:8px">Niveaux, mesures, zones critiques.</p>
+    <div class="exp-l">
+      <div><b>Alertes pays</b><span>Niveaux, mesures, zones critiques</span></div>
       <button class="btn s" onclick="exportAlertes()">Word</button>
     </div>
-    <div class="carte">
-      <h3 style="font-size:14px;margin-bottom:5px">Intelligence économique</h3>
-      <p style="font-size:11.5px;color:var(--faible);margin-bottom:8px">Faits économiques des dernières 24 h, par thème.</p>
+    <div class="exp-l">
+      <div><b>Intelligence économique</b><span>Faits économiques des dernières 24 h, par thème</span></div>
       <button class="btn s" onclick="exportEco()">Word</button>
     </div>
-    <div class="carte">
-      <h3 style="font-size:14px;margin-bottom:5px">Matrice des sources</h3>
-      <p style="font-size:11.5px;color:var(--faible);margin-bottom:8px">Sources suivies et fiabilité.</p>
+    <div class="exp-l" style="border-bottom:none">
+      <div><b>Matrice des sources</b><span>Sources suivies et fiabilité</span></div>
       <button class="btn s" onclick="exportSources()">CSV</button>
     </div>
   </div>
@@ -650,19 +672,33 @@ html.vue-mobile nav button .nav-long{display:none!important}
 </main>
 
 <nav>
-  <button data-p="direction"><i>◉</i>Direction</button>
-  <button data-p="surete"><i>▣</i>Sûreté</button>
-  <button class="on" data-p="flux"><i>▤</i>Flux</button>
-  <button data-p="zones"><i>◈</i>Zones</button>
-  <button data-p="corr"><i>⇄</i>Corridors</button>
-  <button data-p="eco"><i>€</i><span class="nav-court">Éco</span><span class="nav-long">Intelligence économique</span></button>
-  <button data-p="agenda"><i>◷</i>Agenda</button>
-  <button data-p="alertes"><i>⚑</i>Alertes</button>
-  <button data-p="bord"><i>▦</i><span class="nav-court">Bord</span><span class="nav-long">Tableau de bord</span></button>
-  <button data-p="synth"><i>▤</i><span class="nav-court">Point</span><span class="nav-long">Point de situation</span></button>
-  <button data-p="rapports"><i>⇩</i>Rapports</button>
-  <button data-p="admin"><i>◆</i><span class="nav-court">Admin</span><span class="nav-long">Administration</span></button>
-  <button data-p="par"><i>⚙</i>Réglages</button>
+  <div class="nav-sec">
+    <div class="nav-groupe">Vue d'ensemble</div>
+    <button data-p="direction"><i>◉</i>Direction</button>
+    <button data-p="surete"><i>▣</i>Sûreté</button>
+    <button data-p="bord"><i>▦</i><span class="nav-court">Bord</span><span class="nav-long">Tableau de bord</span></button>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-groupe">Surveillance</div>
+    <button class="on" data-p="flux"><i>▤</i>Flux</button>
+    <button data-p="zones"><i>◈</i>Zones</button>
+    <button data-p="corr"><i>⇄</i>Corridors</button>
+    <button data-p="agenda"><i>◷</i>Agenda</button>
+    <button data-p="alertes"><i>⚑</i>Alertes</button>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-groupe">Intelligence économique</div>
+    <button data-p="eco"><i>▥</i><span class="nav-court">Éco</span><span class="nav-long">Intelligence économique</span></button>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-groupe">Rapports</div>
+    <button data-p="rapports"><i>⇩</i>Rapports</button>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-groupe">Système</div>
+    <button data-p="admin"><i>◆</i><span class="nav-court">Admin</span><span class="nav-long">Administration</span></button>
+    <button data-p="par"><i>⚙</i>Réglages</button>
+  </div>
 </nav>
 
 <script>
@@ -1113,7 +1149,7 @@ function dater(d){
    ================================================================== */
 const MODULES = [
   ["direction","Direction"],["surete","Sûreté"],["flux","Flux"],["zones","Zones"],["corr","Corridors"],["eco","Intelligence économique"],["agenda","Agenda"],
-  ["alertes","Alertes"],["bord","Tableau de bord"],["synth","Point de situation"],
+  ["alertes","Alertes"],["bord","Tableau de bord"],
   ["rapports","Rapports"],["admin","Administration"],["par","Réglages"]
 ];
 const DROITS_DEFAUT = {
@@ -1135,10 +1171,10 @@ const ACCES_CIBLES_DEFAUT = {
 // Réglages restent hors abonnement, réservés aux rôles internes.
 const MODULES_CIBLES = MODULES.filter(([m])=>!["admin","par"].includes(m));
 const CIBLES_MODULES_DEFAUT = {
-  ceo:         {direction:true, surete:false,flux:false,zones:false,corr:true, eco:true, agenda:true, alertes:true, bord:true, synth:true, rapports:true},
-  financier:   {direction:false,surete:false,flux:false,zones:false,corr:true, eco:true, agenda:false,alertes:true, bord:false,synth:false,rapports:true},
-  surete:      {direction:false,surete:true, flux:true, zones:true, corr:true, eco:false,agenda:true, alertes:true, bord:true, synth:true, rapports:true},
-  particulier: {direction:true, surete:false,flux:false,zones:false,corr:false,eco:false,agenda:true, alertes:true, bord:false,synth:false,rapports:false}
+  ceo:         {direction:true, surete:false,flux:false,zones:false,corr:true, eco:true, agenda:true, alertes:true, bord:true, rapports:true},
+  financier:   {direction:false,surete:false,flux:false,zones:false,corr:true, eco:true, agenda:false,alertes:true, bord:false,rapports:true},
+  surete:      {direction:false,surete:true, flux:true, zones:true, corr:true, eco:false,agenda:true, alertes:true, bord:true, rapports:true},
+  particulier: {direction:true, surete:false,flux:false,zones:false,corr:false,eco:false,agenda:true, alertes:true, bord:false,rapports:false}
 };
 const CFG = Object.assign(
   { sbUrl:"", sbKey:"", dataUrl:"data/latest.json", origine:"auto",
@@ -1447,7 +1483,7 @@ function rCorridor(){
   $("#corridor").innerHTML = c.z.map(zn=>{
     const s = scoreZone(zn);
     const z = ZONES.find(x=>x.z===zn);
-    return `<div class="noeud"><i class="b-${s.niveau}"></i><b>${esc(z? z.loc[0] : zn)}</b><u>${zn} · ${s.score}</u></div>`;
+    return `<div class="noeud"><i class="b-${s.niveau}"></i><span class="noeud-sc mono n-${s.niveau}">${s.score}</span><b>${esc(z? z.loc[0] : zn)}</b><u>${esc(zn)}</u></div>`;
   }).join("");
 }
 
@@ -1783,30 +1819,78 @@ function categorieDominante(faits){
   for(const c in tally) if(tally[c] > max){ max = tally[c]; best = c; }
   return best || "securite";
 }
-function recommandationZone(z, f24){
+// Localité (ville/village) la plus citée dans un ensemble de faits — plus
+// précis que le seul nom de la zone administrative pour dire où agir.
+function localiteDominante(faits){
+  const tally = {};
+  faits.forEach(a=>{ if(a.loc) tally[a.loc] = (tally[a.loc]||0)+1; });
+  let best = null, max = 0;
+  for(const l in tally) if(tally[l] > max){ max = tally[l]; best = l; }
+  return best;
+}
+// Vocabulaire propre aux recommandations, volontairement distinct de LIB
+// (réservé aux niveaux pays des Alertes) : un point chaud local ne doit
+// jamais se lire comme une alerte nationale.
+const LIB_SECTEUR = {ROUGE:"Secteur à risque élevé", MARRON:"Secteur sous tension marquée", ORANGE:"Secteur en vigilance"};
+// Arbitrage — comme le ferait un analyste sûreté pays : borne explicitement
+// un point chaud local à sa réalité, pour qu'il ne "déteigne" pas sur la
+// perception ou le niveau de sûreté du pays entier tant que ce n'est pas
+// justifié par le nombre de zones réellement concernées.
+function cadragePays(pays, zs){
+  const zonesPays = zs.filter(z=>z.p===pays);
+  const total = zonesPays.length;
+  const critiques = zonesPays.filter(z=>["ROUGE","MARRON"].includes(z.s.niveau)).length;
+  if(!total) return "";
+  const nomPays = PAYS[pays] ? PAYS[pays].n : pays;
+  return critiques<=1
+    ? `Situation localisée à ce secteur — ${critiques} zone sur ${total} en tension en ${nomPays} ; ne reflète pas le niveau de sûreté général du pays.`
+    : `${critiques} zones sur ${total} en tension en ${nomPays} — vigilance à élargir au-delà de ce seul secteur.`;
+}
+function cadrageCorridor(c){
+  const total = c.s.zones.length;
+  const critiques = c.s.zones.filter(s=>["ROUGE","MARRON"].includes(s.niveau)).length;
+  return critiques<=1
+    ? `Situation localisée à un tronçon — ${critiques} zone sur ${total} de l'axe en tension ; le reste du corridor demeure fluide.`
+    : `${critiques} zones sur ${total} de l'axe en tension — vigilance recommandée sur l'ensemble du corridor.`;
+}
+// Faits réels à l'appui d'une recommandation — pour que l'usager puisse
+// vérifier la source plutôt que de s'en remettre à une synthèse seule.
+function sourcesRecommandation(faits){
+  return [...faits].sort((a,b)=>(POIDS[b.c]||0)-(POIDS[a.c]||0) || b.ts-a.ts).slice(0,2);
+}
+function recommandationZone(z, f24, zs){
   const aggravant = z.s.ag && z.s.ag.length ? z.s.ag[0] : null;
   const set = (aggravant && RECOS_AGGRAVANT[aggravant]) || RECOS_NIVEAU[z.s.niveau];
   if(!set) return null;
-  const categorie = categorieDominante(f24.filter(a=>a.z===z.z));
-  return { titre:z.z, sousTitre:(z.p&&PAYS[z.p]?PAYS[z.p].f+" "+PAYS[z.p].n:"")+(aggravant?" · "+aggravant:""), niveau:z.s.niveau, categorie, set };
+  const faitsZone = f24.filter(a=>a.z===z.z);
+  const categorie = categorieDominante(faitsZone);
+  const loc = localiteDominante(faitsZone);
+  const lieu = loc && loc!==z.z ? `${z.z} — ${loc}` : z.z;
+  const sousTitre = [z.p&&PAYS[z.p]?PAYS[z.p].f+" "+PAYS[z.p].n:"", aggravant].filter(Boolean).join(" · ");
+  return { titre:lieu, sousTitre, niveau:z.s.niveau, categorie, set, cadrage: z.p?cadragePays(z.p, zs):"", sources: sourcesRecommandation(faitsZone) };
 }
 function recommandationCorridor(c, f24){
   const aggravants = [...new Set(c.s.zones.flatMap(s=>s.ag))];
   const aggravant = aggravants.length ? aggravants[0] : null;
   const set = (aggravant && RECOS_AGGRAVANT[aggravant]) || RECOS_NIVEAU[c.s.niveau];
   if(!set) return null;
-  const categorie = categorieDominante(f24.filter(a=>c.z.includes(a.z)));
-  return { titre:c.n, sousTitre:"Corridor"+(aggravant?" · "+aggravant:""), niveau:c.s.niveau, categorie, set };
+  const faitsCorridor = f24.filter(a=>c.z.includes(a.z));
+  const categorie = categorieDominante(faitsCorridor);
+  return { titre:c.n, sousTitre:"Corridor"+(aggravant?" · "+aggravant:""), niveau:c.s.niveau, categorie, set, cadrage: cadrageCorridor(c), sources: sourcesRecommandation(faitsCorridor) };
 }
 function htmlRecommandation(r){
   const libCat = (CATEGORIES_ACTU.find(x=>x[0]===r.categorie)||[,r.categorie])[1];
   return `<div class="carte" style="margin-bottom:10px;border-left:3px solid var(--${r.niveau==="ROUGE"?"rouge":r.niveau==="MARRON"?"marron":"orange"})">
     <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px;flex-wrap:wrap">
       <b style="font-size:14px">${esc(r.titre)}</b>
-      <span class="b-${r.niveau}" style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:99px;color:#fff">${LIB[r.niveau]}</span>
+      <span class="b-${r.niveau}" style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:99px;color:#fff">${LIB_SECTEUR[r.niveau]}</span>
       <span class="tag" style="margin-left:auto">${esc(libCat)}</span>
     </div>
-    ${r.sousTitre?`<div style="font-size:11px;color:var(--faible);margin-bottom:8px">${esc(r.sousTitre)}</div>`:""}
+    ${r.sousTitre?`<div style="font-size:11px;color:var(--faible);margin-bottom:4px">${esc(r.sousTitre)}</div>`:""}
+    ${r.cadrage?`<div style="font-size:11px;color:var(--sourd);border-left:2px solid var(--ligne);padding-left:9px;margin-bottom:8px">${esc(r.cadrage)}</div>`:""}
+    ${r.sources && r.sources.length?`<div style="margin-bottom:8px">${r.sources.map(a=>
+      `<a href="${esc(a.l||"#")}" target="_blank" rel="noopener" style="display:block;font-size:11px;color:var(--sourd);text-decoration:none;margin-bottom:2px">↳ ${esc(a.t)}${a.src?` <span style="color:var(--faible)">(${esc(a.src)})</span>`:""}</a>`
+    ).join("")}</div>`:""}
     <div class="grille g4">
       ${AUDIENCES.map(([k,nom])=>{
         const accede = !!(CFG.accesCibles[k] && CFG.accesCibles[k][r.categorie]);
@@ -1822,7 +1906,7 @@ function htmlRecommandations(zs, corridorsScored, f24){
   const zonesRisque = zs.filter(z=>z.s.score>=40).slice(0,3);
   const pireCorridor = corridorsScored[0];
   const corridorRisque = pireCorridor && pireCorridor.s.score>=40 ? pireCorridor : null;
-  const items = [...zonesRisque.map(z=>recommandationZone(z, f24)), corridorRisque?recommandationCorridor(corridorRisque, f24):null].filter(Boolean);
+  const items = [...zonesRisque.map(z=>recommandationZone(z, f24, zs)), corridorRisque?recommandationCorridor(corridorRisque, f24):null].filter(Boolean);
   const titre = `<h3 style="font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faible);font-weight:700;margin-bottom:8px">Recommandations — par public</h3>`;
   if(!items.length){
     return `<div class="carte" style="margin-bottom:12px">${titre}<p class="hint">Aucune zone ni corridor ne dépasse le seuil de vigilance actuellement — pas de recommandation spécifique à formuler.</p></div>`;
@@ -1830,6 +1914,83 @@ function htmlRecommandations(zs, corridorsScored, f24){
   return `<div style="margin-bottom:12px">${titre}${items.map(htmlRecommandation).join("")}</div>`;
 }
 
+/* ==================================================================
+   Agent expert — Sûreté pays
+   Ne se contente pas de compter les faits sécuritaires : il choisit
+   lesquels sont réellement significatifs (critique/élevé, et recoupé
+   par au moins deux sources ou porteur d'un aggravant identifié) avant
+   d'en tirer un avis court. Un fait isolé et non recoupé n'est jamais
+   présenté comme acquis — même logique de prudence que le reste de
+   l'app, formulée ici en une phrase de synthèse plutôt qu'un chiffre.
+   ================================================================== */
+function expertSurete(f24, zs, corridorsScored){
+  const faitsSecu = f24.filter(a=>a.cat==="securite" || ["CRITIQUE","ELEVE"].includes(a.c));
+  const retenus = faitsSecu.filter(a=>["CRITIQUE","ELEVE"].includes(a.c) && (CORRO.get(a.h)?.verifie || (a.ag&&a.ag.length>0)));
+  const topZone = zs[0];
+  const pireCorridor = corridorsScored[0];
+  const phrases = [`Sur ${faitsSecu.length} fait${faitsSecu.length>1?"s":""} de sécurité recensé${faitsSecu.length>1?"s":""} sur 24h, ${retenus.length} retenu${retenus.length>1?"s":""} comme significatif${retenus.length>1?"s":""} après recoupement ou présence d'un facteur aggravant — le reste reste à confirmer.`];
+  phrases.push(topZone && topZone.s.score>=40
+    ? `Le point le plus sensible reste ${esc(topZone.z)}${topZone.p&&PAYS[topZone.p]?" ("+PAYS[topZone.p].n+")":""}${topZone.s.ag.length?" — "+esc(topZone.s.ag[0]):""}.`
+    : `Aucune zone ne dépasse le seuil de vigilance actuellement.`);
+  if(pireCorridor && pireCorridor.s.score>=40) phrases.push(`Le corridor ${esc(pireCorridor.n)} montre des signes de tension logistique à surveiller.`);
+  return phrases.join(" ");
+}
+function htmlExpertSurete(f24, zs, corridorsScored){
+  return `<div class="carte" style="margin-bottom:12px;border-left:3px solid var(--kola)">
+    <h3 style="font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faible);font-weight:700;margin-bottom:6px">Avis de l'expert — Sûreté pays</h3>
+    <p style="font-size:13px;color:var(--sourd);margin:0">${expertSurete(f24, zs, corridorsScored)}</p>
+  </div>`;
+}
+
+// Repères officiels — liens directs vers les conseils aux voyageurs des
+// chancelleries qui publient un système de niveaux structuré et vérifiable
+// (France, Canada, États-Unis, Royaume-Uni). Volontairement de simples
+// liens vers la source première, jamais un résumé ou un niveau reconstitué
+// par l'app : la Russie et la Chine ne publient pas de système comparable
+// et ne sont pas incluses, pour ne pas risquer une représentation inexacte
+// d'une position diplomatique.
+const CHANCELLERIES = [["FR","France Diplomatie"],["CA","Voyage.gc.ca"],["US","US Travel Advisory"],["UK","UK FCDO"]];
+const CONSEILS_PAYS = {
+  CI:{FR:"https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/conseils-par-pays-destination/cote-d-ivoire/",
+      CA:"https://voyage.gc.ca/destinations/cote-d-ivoire",
+      US:"https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/cote-d-ivoire-travel-advisory.html",
+      UK:"https://www.gov.uk/foreign-travel-advice/ivory-coast"},
+  BF:{FR:"https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/conseils-par-pays-destination/burkina-faso/",
+      CA:"https://voyage.gc.ca/destinations/burkina-faso",
+      US:"https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/burkina-faso-travel-advisory.html",
+      UK:"https://www.gov.uk/foreign-travel-advice/burkina-faso"},
+  ML:{FR:"https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/conseils-par-pays-destination/mali/",
+      CA:"https://voyage.gc.ca/destinations/mali",
+      US:"https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/mali-travel-advisory.html",
+      UK:"https://www.gov.uk/foreign-travel-advice/mali"},
+  GN:{FR:"https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/conseils-par-pays-destination/guinee/",
+      CA:"https://voyage.gc.ca/destinations/guinee",
+      US:"https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/guinea-travel-advisory.html",
+      UK:"https://www.gov.uk/foreign-travel-advice/guinea"},
+  LR:{FR:"https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/conseils-par-pays-destination/liberia/",
+      CA:"https://voyage.gc.ca/destinations/liberia",
+      US:"https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/liberia-travel-advisory.html",
+      UK:"https://www.gov.uk/foreign-travel-advice/liberia"},
+  GH:{FR:"https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/conseils-par-pays-destination/ghana/",
+      CA:"https://voyage.gc.ca/destinations/ghana",
+      US:"https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/ghana-travel-advisory.html",
+      UK:"https://www.gov.uk/foreign-travel-advice/ghana"}
+};
+function htmlReperesOfficiels(){
+  const pays = Object.keys(PAYS).filter(p=>CFG.paysActifs.includes(p) && CONSEILS_PAYS[p]);
+  if(!pays.length) return "";
+  return `<div class="carte" style="margin-bottom:12px">
+    <h3 style="font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faible);font-weight:700;margin-bottom:2px">Repères officiels — conseils aux voyageurs</h3>
+    <p class="hint" style="margin-bottom:8px">Liens directs vers les pages officielles des chancelleries ; l'app ne reformule pas leur niveau de risque.</p>
+    <table>
+      <tr><th>Pays</th>${CHANCELLERIES.map(([,n])=>`<th>${esc(n)}</th>`).join("")}</tr>
+      ${pays.map(p=>`<tr>
+        <td>${PAYS[p].f} ${esc(PAYS[p].n)}</td>
+        ${CHANCELLERIES.map(([k])=>`<td><a href="${esc(CONSEILS_PAYS[p][k])}" target="_blank" rel="noopener">Consulter →</a></td>`).join("")}
+      </tr>`).join("")}
+    </table>
+  </div>`;
+}
 function rSurete(){
   $("#sureteMaj").textContent = ETAT.maj ? "au "+new Date(ETAT.maj).toLocaleString("fr-FR") : "—";
   const el = $("#surete"); if(!el) return;
@@ -1857,7 +2018,9 @@ function rSurete(){
       <div class="kpi"><b class="n-VERT">${recoupes}</b><span>Faits recoupés ✓</span></div>
     </div>
 
+    ${htmlExpertSurete(f24, zs, corridorsScored)}
     ${htmlRecommandations(zs, corridorsScored, f24)}
+    ${htmlReperesOfficiels()}
 
     <div class="grille g2" style="align-items:start;margin-bottom:12px">
       <div class="carte">
@@ -2066,6 +2229,34 @@ function rActionsMarche(){
   $("#filActions").oninput = e => { ETAT_actions.filtre = e.target.value; rActionsMarche(); };
 }
 
+/* ==================================================================
+   Agent expert — Intelligence économique
+   Ne se contente pas de lister les faits économiques filtrés : il
+   choisit un fait à suivre en priorité (le plus sévère, le plus
+   récent) et identifie le thème dominant de la fenêtre, pour en tirer
+   une synthèse courte plutôt qu'un simple comptage par thème.
+   ================================================================== */
+function expertEconomie(l, parTheme){
+  if(!l.length) return "Aucun signal économique significatif sur la fenêtre choisie.";
+  const themePrincipal = Object.entries(parTheme).sort((a,b)=>b[1].length-a[1].length)[0];
+  const topFait = [...l].sort((a,b)=>(POIDS[b.c]||0)-(POIDS[a.c]||0) || b.ts-a.ts)[0];
+  const phrases = [];
+  const compo = ETAT.marche && ETAT.marche.disponible ? ETAT.marche.indices.find(i=>i.indice==="BRVM Composite") : null;
+  if(compo && compo.variation!==null) phrases.push(`Le marché régional (BRVM Composite) ${compo.variation>=0?"progresse de":"recule de"} ${Math.abs(compo.variation)}% sur la séance.`);
+  if(themePrincipal){
+    const lib = ECO_THEMES.find(t=>t.k===themePrincipal[0])?.l || themePrincipal[0];
+    phrases.push(`Le thème dominant de la fenêtre est « ${lib} » (${themePrincipal[1].length} fait${themePrincipal[1].length>1?"s":""}).`);
+  }
+  if(topFait) phrases.push(`À suivre en priorité : ${esc(topFait.t)}${topFait.z?" ("+esc(topFait.z)+")":""}.`);
+  return phrases.join(" ");
+}
+function htmlExpertEconomie(l, parTheme){
+  return `<div class="carte" style="margin-bottom:10px;border-left:3px solid var(--kola)">
+    <h3 style="font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faible);font-weight:700;margin-bottom:6px">Avis de l'expert — Intelligence économique</h3>
+    <p style="font-size:13px;color:var(--sourd);margin:0">${expertEconomie(l, parTheme)}</p>
+  </div>`;
+}
+
 let ETAT_eco = { theme:"ALL" };
 function rEco(){
   rMarche();
@@ -2075,6 +2266,7 @@ function rEco(){
   $("#ecoCount").textContent = l.length ? l.length+" fait(s) · maj "+(ETAT.maj?hDep(ETAT.maj):"—") : "—";
   const parTheme = {};
   l.forEach(a=>{ const k=themeEco(a); (parTheme[k]=parTheme[k]||[]).push(a); });
+  $("#expertEco").innerHTML = htmlExpertEconomie(l, parTheme);
   $("#ecoKpi").innerHTML = [
     [l.length, "Faits économiques"],
     [l.filter(a=>["CRITIQUE","ELEVE"].includes(a.c)).length, "Sensibles"],
@@ -2206,7 +2398,7 @@ function exportWord(){
   <style>@page{size:A4;margin:2cm}body{font-family:Calibri,Arial,sans-serif;font-size:10.5pt;color:#1a1a1a}
   h1{color:#B5623A;font-size:19pt;margin:0 0 2pt}h2{color:#12201B;font-size:13pt;border-bottom:1.5pt solid #B5623A;padding-bottom:3pt;margin-top:16pt}
   table{width:100%;border-collapse:collapse;font-size:9.5pt}th{background:#0A1014;color:#fff;padding:5pt;text-align:left}td{border-bottom:.5pt solid #ccc;padding:5pt}
-  .r{color:#B5453F;font-weight:bold}.m{color:#8C5A3C;font-weight:bold}.o{color:#C97A3F;font-weight:bold}.j{color:#9C8A2E}.v{color:#2F8F68}
+  .r{color:#C1352E;font-weight:bold}.m{color:#7A4430;font-weight:bold}.o{color:#D9772A;font-weight:bold}.j{color:#C79A1E}.v{color:#2B835F}
   .pied{font-size:8pt;color:#777;border-top:.5pt solid #ccc;padding-top:5pt;margin-top:18pt}</style></head><body>
   <h1>POINT SÛRETÉ</h1>
   <p style="color:#666;font-size:9pt;margin:0 0 12pt">Côte d'Ivoire et pays limitrophes — ${new Date().toLocaleString("fr-FR")} — fenêtre 24 heures</p>
@@ -2243,7 +2435,7 @@ function docWord(titre, corps){
   <style>@page{size:A4;margin:2cm}body{font-family:Calibri,Arial,sans-serif;font-size:10.5pt;color:#1a1a1a}
   h1{color:#B5623A;font-size:19pt;margin:0 0 2pt}h2{color:#12201B;font-size:13pt;border-bottom:1.5pt solid #B5623A;padding-bottom:3pt;margin-top:16pt}
   table{width:100%;border-collapse:collapse;font-size:9.5pt}th{background:#0A1014;color:#fff;padding:5pt;text-align:left}td{border-bottom:.5pt solid #ccc;padding:5pt}
-  .r{color:#B5453F;font-weight:bold}.m{color:#8C5A3C;font-weight:bold}.o{color:#C97A3F;font-weight:bold}.j{color:#9C8A2E}.v{color:#2F8F68}
+  .r{color:#C1352E;font-weight:bold}.m{color:#7A4430;font-weight:bold}.o{color:#D9772A;font-weight:bold}.j{color:#C79A1E}.v{color:#2B835F}
   .pied{font-size:8pt;color:#777;border-top:.5pt solid #ccc;padding-top:5pt;margin-top:18pt}</style></head><body>
   <h1>${esc(titre)}</h1>
   <p style="color:#666;font-size:9pt;margin:0 0 12pt">POINT SÛRETÉ — Côte d'Ivoire et pays limitrophes — ${new Date().toLocaleString("fr-FR")}</p>
@@ -2436,6 +2628,13 @@ function appliquerDroits(){
     const m = b.dataset.p;
     const ok = d[m] !== false && estVisiblePourCible(m);
     b.style.display = ok ? "" : "none";
+  });
+  // Masque le libellé d'une section (desktop) si tous ses modules sont
+  // masqués pour le rôle/la cible active — un titre de section vide serait
+  // trompeur (ex. "Intelligence économique" pour une cible qui n'y a pas accès).
+  $$("nav .nav-sec").forEach(sec=>{
+    const visible = [...sec.querySelectorAll("button[data-p]")].some(b=>b.style.display !== "none");
+    sec.querySelectorAll(".nav-groupe").forEach(g=>g.style.display = visible ? "" : "none");
   });
   const panneauActif = $(".panneau.on");
   if(panneauActif){
