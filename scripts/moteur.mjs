@@ -283,12 +283,12 @@ export function listeFlux(prof, opts){
   Object.keys(PAYS).filter(p=>paysActifs.has(p)).forEach(p=>{
     const P=PAYS[p];
     THEMES.forEach(t=>{
-      L.push({u:gnews('"'+P.n+'" '+t, P.gl, P.lang), p, n:"Veille thématique — "+P.n, f:65, zone:null});
+      L.push({u:gnews('"'+P.n+'" '+t, P.gl, P.lang), p, n:"Veille thématique — "+P.n, f:65, zone:null, agrege:true});
     });
     // radios et presse locale : mêmes faits, souvent relayés avant la presse nationale
     if(inclureRadios){
-      L.push({u:gnews('"'+P.n+'" radio', P.gl, P.lang), p, n:"Radios locales — "+P.n, f:52, zone:null, type:"radio"});
-      L.push({u:gnews('"'+P.n+'" (site OR blog OR journal local)', P.gl, P.lang), p, n:"Presse et pages locales — "+P.n, f:48, zone:null, type:"local"});
+      L.push({u:gnews('"'+P.n+'" radio', P.gl, P.lang), p, n:"Radios locales — "+P.n, f:52, zone:null, type:"radio", agrege:true});
+      L.push({u:gnews('"'+P.n+'" (site OR blog OR journal local)', P.gl, P.lang), p, n:"Presse et pages locales — "+P.n, f:48, zone:null, type:"local", agrege:true});
     }
   });
   const dejaZone = new Set();
@@ -297,7 +297,7 @@ export function listeFlux(prof, opts){
     dejaZone.add(z.z);
     const P=PAYS[z.p];
     const q = z.loc.slice(0,3).map(l=>'"'+l+'"').join(" OR ");
-    L.push({u:gnews(q+(z.p==="CI"?" Côte d'Ivoire":" "+P.n), P.gl, P.lang), p:z.p, n:"Zone "+z.z+(z.p!=="CI"?" ("+P.n+")":""), f:z.p==="CI"?62:60, zone:z.z, prio:!!estPrioritaire});
+    L.push({u:gnews(q+(z.p==="CI"?" Côte d'Ivoire":" "+P.n), P.gl, P.lang), p:z.p, n:"Zone "+z.z+(z.p!=="CI"?" ("+P.n+")":""), f:z.p==="CI"?62:60, zone:z.z, prio:!!estPrioritaire, agrege:true});
   }
   // zone prioritaire : approfondie et placée en tête, quelle que soit la profondeur choisie
   if(priorite){

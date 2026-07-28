@@ -1824,6 +1824,11 @@ function cadrageCorridor(c){
     ? `Situation localisée à un tronçon — ${critiques} zone sur ${total} de l'axe en tension ; le reste du corridor demeure fluide.`
     : `${critiques} zones sur ${total} de l'axe en tension — vigilance recommandée sur l'ensemble du corridor.`;
 }
+// Faits réels à l'appui d'une recommandation — pour que l'usager puisse
+// vérifier la source plutôt que de s'en remettre à une synthèse seule.
+function sourcesRecommandation(faits){
+  return [...faits].sort((a,b)=>(POIDS[b.c]||0)-(POIDS[a.c]||0) || b.ts-a.ts).slice(0,2);
+}
 function recommandationZone(z, f24, zs){
   const aggravant = z.s.ag && z.s.ag.length ? z.s.ag[0] : null;
   const set = (aggravant && RECOS_AGGRAVANT[aggravant]) || RECOS_NIVEAU[z.s.niveau];
@@ -1833,15 +1838,16 @@ function recommandationZone(z, f24, zs){
   const loc = localiteDominante(faitsZone);
   const lieu = loc && loc!==z.z ? `${z.z} — ${loc}` : z.z;
   const sousTitre = [z.p&&PAYS[z.p]?PAYS[z.p].f+" "+PAYS[z.p].n:"", aggravant].filter(Boolean).join(" · ");
-  return { titre:lieu, sousTitre, niveau:z.s.niveau, categorie, set, cadrage: z.p?cadragePays(z.p, zs):"" };
+  return { titre:lieu, sousTitre, niveau:z.s.niveau, categorie, set, cadrage: z.p?cadragePays(z.p, zs):"", sources: sourcesRecommandation(faitsZone) };
 }
 function recommandationCorridor(c, f24){
   const aggravants = [...new Set(c.s.zones.flatMap(s=>s.ag))];
   const aggravant = aggravants.length ? aggravants[0] : null;
   const set = (aggravant && RECOS_AGGRAVANT[aggravant]) || RECOS_NIVEAU[c.s.niveau];
   if(!set) return null;
-  const categorie = categorieDominante(f24.filter(a=>c.z.includes(a.z)));
-  return { titre:c.n, sousTitre:"Corridor"+(aggravant?" · "+aggravant:""), niveau:c.s.niveau, categorie, set, cadrage: cadrageCorridor(c) };
+  const faitsCorridor = f24.filter(a=>c.z.includes(a.z));
+  const categorie = categorieDominante(faitsCorridor);
+  return { titre:c.n, sousTitre:"Corridor"+(aggravant?" · "+aggravant:""), niveau:c.s.niveau, categorie, set, cadrage: cadrageCorridor(c), sources: sourcesRecommandation(faitsCorridor) };
 }
 function htmlRecommandation(r){
   const libCat = (CATEGORIES_ACTU.find(x=>x[0]===r.categorie)||[,r.categorie])[1];
@@ -1853,6 +1859,9 @@ function htmlRecommandation(r){
     </div>
     ${r.sousTitre?`<div style="font-size:11px;color:var(--faible);margin-bottom:4px">${esc(r.sousTitre)}</div>`:""}
     ${r.cadrage?`<div style="font-size:11px;color:var(--sourd);border-left:2px solid var(--ligne);padding-left:9px;margin-bottom:8px">${esc(r.cadrage)}</div>`:""}
+    ${r.sources && r.sources.length?`<div style="margin-bottom:8px">${r.sources.map(a=>
+      `<a href="${esc(a.l||"#")}" target="_blank" rel="noopener" style="display:block;font-size:11px;color:var(--sourd);text-decoration:none;margin-bottom:2px">↳ ${esc(a.t)}${a.src?` <span style="color:var(--faible)">(${esc(a.src)})</span>`:""}</a>`
+    ).join("")}</div>`:""}
     <div class="grille g4">
       ${AUDIENCES.map(([k,nom])=>{
         const accede = !!(CFG.accesCibles[k] && CFG.accesCibles[k][r.categorie]);
