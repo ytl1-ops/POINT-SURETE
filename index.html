@@ -1913,6 +1913,55 @@ function htmlExpertSurete(f24, zs, corridorsScored){
   </div>`;
 }
 
+// Repères officiels — liens directs vers les conseils aux voyageurs des
+// chancelleries qui publient un système de niveaux structuré et vérifiable
+// (France, Canada, États-Unis, Royaume-Uni). Volontairement de simples
+// liens vers la source première, jamais un résumé ou un niveau reconstitué
+// par l'app : la Russie et la Chine ne publient pas de système comparable
+// et ne sont pas incluses, pour ne pas risquer une représentation inexacte
+// d'une position diplomatique.
+const CHANCELLERIES = [["FR","France Diplomatie"],["CA","Voyage.gc.ca"],["US","US Travel Advisory"],["UK","UK FCDO"]];
+const CONSEILS_PAYS = {
+  CI:{FR:"https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/conseils-par-pays-destination/cote-d-ivoire/",
+      CA:"https://voyage.gc.ca/destinations/cote-d-ivoire",
+      US:"https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/cote-d-ivoire-travel-advisory.html",
+      UK:"https://www.gov.uk/foreign-travel-advice/ivory-coast"},
+  BF:{FR:"https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/conseils-par-pays-destination/burkina-faso/",
+      CA:"https://voyage.gc.ca/destinations/burkina-faso",
+      US:"https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/burkina-faso-travel-advisory.html",
+      UK:"https://www.gov.uk/foreign-travel-advice/burkina-faso"},
+  ML:{FR:"https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/conseils-par-pays-destination/mali/",
+      CA:"https://voyage.gc.ca/destinations/mali",
+      US:"https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/mali-travel-advisory.html",
+      UK:"https://www.gov.uk/foreign-travel-advice/mali"},
+  GN:{FR:"https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/conseils-par-pays-destination/guinee/",
+      CA:"https://voyage.gc.ca/destinations/guinee",
+      US:"https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/guinea-travel-advisory.html",
+      UK:"https://www.gov.uk/foreign-travel-advice/guinea"},
+  LR:{FR:"https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/conseils-par-pays-destination/liberia/",
+      CA:"https://voyage.gc.ca/destinations/liberia",
+      US:"https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/liberia-travel-advisory.html",
+      UK:"https://www.gov.uk/foreign-travel-advice/liberia"},
+  GH:{FR:"https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/conseils-par-pays-destination/ghana/",
+      CA:"https://voyage.gc.ca/destinations/ghana",
+      US:"https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/ghana-travel-advisory.html",
+      UK:"https://www.gov.uk/foreign-travel-advice/ghana"}
+};
+function htmlReperesOfficiels(){
+  const pays = Object.keys(PAYS).filter(p=>CFG.paysActifs.includes(p) && CONSEILS_PAYS[p]);
+  if(!pays.length) return "";
+  return `<div class="carte" style="margin-bottom:12px">
+    <h3 style="font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faible);font-weight:700;margin-bottom:2px">Repères officiels — conseils aux voyageurs</h3>
+    <p class="hint" style="margin-bottom:8px">Liens directs vers les pages officielles des chancelleries ; l'app ne reformule pas leur niveau de risque.</p>
+    <table>
+      <tr><th>Pays</th>${CHANCELLERIES.map(([,n])=>`<th>${esc(n)}</th>`).join("")}</tr>
+      ${pays.map(p=>`<tr>
+        <td>${PAYS[p].f} ${esc(PAYS[p].n)}</td>
+        ${CHANCELLERIES.map(([k])=>`<td><a href="${esc(CONSEILS_PAYS[p][k])}" target="_blank" rel="noopener">Consulter →</a></td>`).join("")}
+      </tr>`).join("")}
+    </table>
+  </div>`;
+}
 function rSurete(){
   $("#sureteMaj").textContent = ETAT.maj ? "au "+new Date(ETAT.maj).toLocaleString("fr-FR") : "—";
   const el = $("#surete"); if(!el) return;
@@ -1942,6 +1991,7 @@ function rSurete(){
 
     ${htmlExpertSurete(f24, zs, corridorsScored)}
     ${htmlRecommandations(zs, corridorsScored, f24)}
+    ${htmlReperesOfficiels()}
 
     <div class="grille g2" style="align-items:start;margin-bottom:12px">
       <div class="carte">
