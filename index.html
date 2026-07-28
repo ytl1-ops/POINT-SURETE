@@ -80,6 +80,9 @@ nav::-webkit-scrollbar{display:none}
 nav button{flex:1 0 auto;min-width:64px;background:none;border:0;color:var(--faible);padding:9px 6px 8px;font-family:'Barlow Condensed';font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;border-top:2px solid transparent;margin-top:-1px;white-space:nowrap}
 nav button.on{color:var(--texte);border-top-color:var(--laterite)}
 nav button i{display:block;font-style:normal;font-size:16px;margin-bottom:2px}
+/* Onglets courts sur mobile (largeur restreinte), désignation complète sur
+   le ruban vertical desktop — mêmes boutons, seul le texte affiché change. */
+nav button .nav-long{display:none}
 .compteur{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;border-radius:99px;background:var(--rouge);color:#fff;font-size:9.5px;font-weight:700;margin-left:4px;vertical-align:2px}
 
 main{padding:12px}
@@ -166,23 +169,25 @@ label.sw small{display:block;color:var(--faible);font-size:11px}
    c'est la seule chose qui change entre les deux formats.
    ================================================================== */
 @media (min-width:900px){
-  body{padding-bottom:0;padding-left:236px}
+  body{padding-bottom:0;padding-left:177px}
   header .bar,header .corridor{padding-left:max(20px, calc((100% - 900px)/2));padding-right:max(20px, calc((100% - 900px)/2))}
   main{padding:22px max(20px, calc((100% - 900px)/2)) 48px}
   nav{
-    top:0;bottom:0;left:0;right:auto;width:236px;height:100vh;
+    top:0;bottom:0;left:0;right:auto;width:177px;height:100vh;
     flex-direction:column;align-items:stretch;justify-content:flex-start;
     padding:18px 0;overflow-y:auto;overflow-x:hidden;
     border-top:none;border-right:1px solid var(--ligne);
     box-shadow:2px 0 14px rgba(22,33,28,.04)
   }
   nav button{
-    flex:0 0 auto;flex-direction:row;justify-content:flex-start;align-items:center;gap:11px;
-    padding:11px 20px;margin-top:0;font-size:13px;letter-spacing:.03em;
+    flex:0 0 auto;flex-direction:row;justify-content:flex-start;align-items:center;gap:10px;
+    padding:10px 14px;margin-top:0;font-size:12px;letter-spacing:.02em;white-space:normal;line-height:1.25;text-align:left;
     border-top:none;border-left:3px solid transparent;min-width:0
   }
   nav button.on{border-left-color:var(--laterite);background:rgba(171,93,55,.07)}
-  nav button i{margin-bottom:0;font-size:17px;width:19px;text-align:center;flex-shrink:0}
+  nav button i{margin-bottom:0;font-size:16px;width:17px;text-align:center;flex-shrink:0}
+  nav button .nav-court{display:none}
+  nav button .nav-long{display:inline}
   .grille.g4{grid-template-columns:repeat(4,1fr)}
   .grille.g3{grid-template-columns:repeat(3,1fr)}
 }
@@ -192,19 +197,21 @@ label.sw small{display:block;color:var(--faible);font-size:11px}
    format indépendamment de la largeur réelle de l'écran (utile sur
    une tablette, un grand téléphone, ou pour vérifier l'autre format).
    ================================================================== */
-html.vue-web body{padding-bottom:0;padding-left:236px}
+html.vue-web body{padding-bottom:0;padding-left:177px}
 html.vue-web header .bar,html.vue-web header .corridor{padding-left:max(20px, calc((100% - 900px)/2));padding-right:max(20px, calc((100% - 900px)/2))}
 html.vue-web main{padding:22px max(20px, calc((100% - 900px)/2)) 48px}
 html.vue-web nav{
-  top:0;bottom:0;left:0;right:auto;width:236px;height:100vh;
+  top:0;bottom:0;left:0;right:auto;width:177px;height:100vh;
   flex-direction:column;align-items:stretch;justify-content:flex-start;
   padding:18px 0;overflow-y:auto;overflow-x:hidden;
   border-top:none;border-right:1px solid var(--ligne);
   box-shadow:2px 0 14px rgba(22,33,28,.04)
 }
-html.vue-web nav button{flex:0 0 auto;flex-direction:row;justify-content:flex-start;align-items:center;gap:11px;padding:11px 20px;margin-top:0;font-size:13px;letter-spacing:.03em;border-top:none;border-left:3px solid transparent;min-width:0}
+html.vue-web nav button{flex:0 0 auto;flex-direction:row;justify-content:flex-start;align-items:center;gap:10px;padding:10px 14px;margin-top:0;font-size:12px;letter-spacing:.02em;white-space:normal;line-height:1.25;text-align:left;border-top:none;border-left:3px solid transparent;min-width:0}
 html.vue-web nav button.on{border-left-color:var(--laterite);background:rgba(171,93,55,.07)}
-html.vue-web nav button i{margin-bottom:0;font-size:17px;width:19px;text-align:center;flex-shrink:0}
+html.vue-web nav button i{margin-bottom:0;font-size:16px;width:17px;text-align:center;flex-shrink:0}
+html.vue-web nav button .nav-court{display:none}
+html.vue-web nav button .nav-long{display:inline}
 html.vue-web .grille.g4{grid-template-columns:repeat(4,1fr)}
 html.vue-web .grille.g3{grid-template-columns:repeat(3,1fr)}
 
@@ -220,6 +227,8 @@ html.vue-mobile nav{
 html.vue-mobile nav button{flex:1 0 auto!important;flex-direction:column!important;justify-content:center!important;gap:0!important;padding:9px 6px 8px!important;font-size:10.5px!important;border-left:none!important;border-top:2px solid transparent!important}
 html.vue-mobile nav button.on{border-top-color:var(--laterite)!important;border-left-color:transparent!important;background:none!important}
 html.vue-mobile nav button i{display:block!important;margin-bottom:2px!important;font-size:16px!important;width:auto!important}
+html.vue-mobile nav button .nav-court{display:inline!important}
+html.vue-mobile nav button .nav-long{display:none!important}
 </style>
 </head>
 <body>
@@ -646,13 +655,13 @@ html.vue-mobile nav button i{display:block!important;margin-bottom:2px!important
   <button class="on" data-p="flux"><i>▤</i>Flux</button>
   <button data-p="zones"><i>◈</i>Zones</button>
   <button data-p="corr"><i>⇄</i>Corridors</button>
-  <button data-p="eco"><i>€</i>Éco</button>
+  <button data-p="eco"><i>€</i><span class="nav-court">Éco</span><span class="nav-long">Intelligence économique</span></button>
   <button data-p="agenda"><i>◷</i>Agenda</button>
   <button data-p="alertes"><i>⚑</i>Alertes</button>
-  <button data-p="bord"><i>▦</i>Bord</button>
-  <button data-p="synth"><i>▤</i>Point</button>
+  <button data-p="bord"><i>▦</i><span class="nav-court">Bord</span><span class="nav-long">Tableau de bord</span></button>
+  <button data-p="synth"><i>▤</i><span class="nav-court">Point</span><span class="nav-long">Point de situation</span></button>
   <button data-p="rapports"><i>⇩</i>Rapports</button>
-  <button data-p="admin"><i>◆</i>Admin</button>
+  <button data-p="admin"><i>◆</i><span class="nav-court">Admin</span><span class="nav-long">Administration</span></button>
   <button data-p="par"><i>⚙</i>Réglages</button>
 </nav>
 
