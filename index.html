@@ -392,6 +392,7 @@ html.vue-mobile nav button .nav-long{display:none!important}
   <div id="marcheBrvm"></div>
   <div id="actionsBrvm"></div>
   <div class="grille g4" id="ecoKpi" style="margin-bottom:10px"></div>
+  <div id="expertEco"></div>
   <div class="rang" id="ecoTheme"></div>
   <div id="eco"></div>
 </section>
@@ -1875,6 +1876,34 @@ function htmlRecommandations(zs, corridorsScored, f24){
   return `<div style="margin-bottom:12px">${titre}${items.map(htmlRecommandation).join("")}</div>`;
 }
 
+/* ==================================================================
+   Agent expert — Sûreté pays
+   Ne se contente pas de compter les faits sécuritaires : il choisit
+   lesquels sont réellement significatifs (critique/élevé, et recoupé
+   par au moins deux sources ou porteur d'un aggravant identifié) avant
+   d'en tirer un avis court. Un fait isolé et non recoupé n'est jamais
+   présenté comme acquis — même logique de prudence que le reste de
+   l'app, formulée ici en une phrase de synthèse plutôt qu'un chiffre.
+   ================================================================== */
+function expertSurete(f24, zs, corridorsScored){
+  const faitsSecu = f24.filter(a=>a.cat==="securite" || ["CRITIQUE","ELEVE"].includes(a.c));
+  const retenus = faitsSecu.filter(a=>["CRITIQUE","ELEVE"].includes(a.c) && (CORRO.get(a.h)?.verifie || (a.ag&&a.ag.length>0)));
+  const topZone = zs[0];
+  const pireCorridor = corridorsScored[0];
+  const phrases = [`Sur ${faitsSecu.length} fait${faitsSecu.length>1?"s":""} de sécurité recensé${faitsSecu.length>1?"s":""} sur 24h, ${retenus.length} retenu${retenus.length>1?"s":""} comme significatif${retenus.length>1?"s":""} après recoupement ou présence d'un facteur aggravant — le reste reste à confirmer.`];
+  phrases.push(topZone && topZone.s.score>=40
+    ? `Le point le plus sensible reste ${esc(topZone.z)}${topZone.p&&PAYS[topZone.p]?" ("+PAYS[topZone.p].n+")":""}${topZone.s.ag.length?" — "+esc(topZone.s.ag[0]):""}.`
+    : `Aucune zone ne dépasse le seuil de vigilance actuellement.`);
+  if(pireCorridor && pireCorridor.s.score>=40) phrases.push(`Le corridor ${esc(pireCorridor.n)} montre des signes de tension logistique à surveiller.`);
+  return phrases.join(" ");
+}
+function htmlExpertSurete(f24, zs, corridorsScored){
+  return `<div class="carte" style="margin-bottom:12px;border-left:3px solid var(--kola)">
+    <h3 style="font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faible);font-weight:700;margin-bottom:6px">Avis de l'expert — Sûreté pays</h3>
+    <p style="font-size:13px;color:var(--sourd);margin:0">${expertSurete(f24, zs, corridorsScored)}</p>
+  </div>`;
+}
+
 function rSurete(){
   $("#sureteMaj").textContent = ETAT.maj ? "au "+new Date(ETAT.maj).toLocaleString("fr-FR") : "—";
   const el = $("#surete"); if(!el) return;
@@ -1902,6 +1931,7 @@ function rSurete(){
       <div class="kpi"><b class="n-VERT">${recoupes}</b><span>Faits recoupés ✓</span></div>
     </div>
 
+    ${htmlExpertSurete(f24, zs, corridorsScored)}
     ${htmlRecommandations(zs, corridorsScored, f24)}
 
     <div class="grille g2" style="align-items:start;margin-bottom:12px">
@@ -2111,6 +2141,34 @@ function rActionsMarche(){
   $("#filActions").oninput = e => { ETAT_actions.filtre = e.target.value; rActionsMarche(); };
 }
 
+/* ==================================================================
+   Agent expert — Intelligence économique
+   Ne se contente pas de lister les faits économiques filtrés : il
+   choisit un fait à suivre en priorité (le plus sévère, le plus
+   récent) et identifie le thème dominant de la fenêtre, pour en tirer
+   une synthèse courte plutôt qu'un simple comptage par thème.
+   ================================================================== */
+function expertEconomie(l, parTheme){
+  if(!l.length) return "Aucun signal économique significatif sur la fenêtre choisie.";
+  const themePrincipal = Object.entries(parTheme).sort((a,b)=>b[1].length-a[1].length)[0];
+  const topFait = [...l].sort((a,b)=>(POIDS[b.c]||0)-(POIDS[a.c]||0) || b.ts-a.ts)[0];
+  const phrases = [];
+  const compo = ETAT.marche && ETAT.marche.disponible ? ETAT.marche.indices.find(i=>i.indice==="BRVM Composite") : null;
+  if(compo && compo.variation!==null) phrases.push(`Le marché régional (BRVM Composite) ${compo.variation>=0?"progresse de":"recule de"} ${Math.abs(compo.variation)}% sur la séance.`);
+  if(themePrincipal){
+    const lib = ECO_THEMES.find(t=>t.k===themePrincipal[0])?.l || themePrincipal[0];
+    phrases.push(`Le thème dominant de la fenêtre est « ${lib} » (${themePrincipal[1].length} fait${themePrincipal[1].length>1?"s":""}).`);
+  }
+  if(topFait) phrases.push(`À suivre en priorité : ${esc(topFait.t)}${topFait.z?" ("+esc(topFait.z)+")":""}.`);
+  return phrases.join(" ");
+}
+function htmlExpertEconomie(l, parTheme){
+  return `<div class="carte" style="margin-bottom:10px;border-left:3px solid var(--kola)">
+    <h3 style="font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faible);font-weight:700;margin-bottom:6px">Avis de l'expert — Intelligence économique</h3>
+    <p style="font-size:13px;color:var(--sourd);margin:0">${expertEconomie(l, parTheme)}</p>
+  </div>`;
+}
+
 let ETAT_eco = { theme:"ALL" };
 function rEco(){
   rMarche();
@@ -2120,6 +2178,7 @@ function rEco(){
   $("#ecoCount").textContent = l.length ? l.length+" fait(s) · maj "+(ETAT.maj?hDep(ETAT.maj):"—") : "—";
   const parTheme = {};
   l.forEach(a=>{ const k=themeEco(a); (parTheme[k]=parTheme[k]||[]).push(a); });
+  $("#expertEco").innerHTML = htmlExpertEconomie(l, parTheme);
   $("#ecoKpi").innerHTML = [
     [l.length, "Faits économiques"],
     [l.filter(a=>["CRITIQUE","ELEVE"].includes(a.c)).length, "Sensibles"],
