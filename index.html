@@ -1789,12 +1789,50 @@ function categorieDominante(faits){
   for(const c in tally) if(tally[c] > max){ max = tally[c]; best = c; }
   return best || "securite";
 }
-function recommandationZone(z, f24){
+// Localité (ville/village) la plus citée dans un ensemble de faits — plus
+// précis que le seul nom de la zone administrative pour dire où agir.
+function localiteDominante(faits){
+  const tally = {};
+  faits.forEach(a=>{ if(a.loc) tally[a.loc] = (tally[a.loc]||0)+1; });
+  let best = null, max = 0;
+  for(const l in tally) if(tally[l] > max){ max = tally[l]; best = l; }
+  return best;
+}
+// Vocabulaire propre aux recommandations, volontairement distinct de LIB
+// (réservé aux niveaux pays des Alertes) : un point chaud local ne doit
+// jamais se lire comme une alerte nationale.
+const LIB_SECTEUR = {ROUGE:"Secteur à risque élevé", MARRON:"Secteur sous tension marquée", ORANGE:"Secteur en vigilance"};
+// Arbitrage — comme le ferait un analyste sûreté pays : borne explicitement
+// un point chaud local à sa réalité, pour qu'il ne "déteigne" pas sur la
+// perception ou le niveau de sûreté du pays entier tant que ce n'est pas
+// justifié par le nombre de zones réellement concernées.
+function cadragePays(pays, zs){
+  const zonesPays = zs.filter(z=>z.p===pays);
+  const total = zonesPays.length;
+  const critiques = zonesPays.filter(z=>["ROUGE","MARRON"].includes(z.s.niveau)).length;
+  if(!total) return "";
+  const nomPays = PAYS[pays] ? PAYS[pays].n : pays;
+  return critiques<=1
+    ? `Situation localisée à ce secteur — ${critiques} zone sur ${total} en tension en ${nomPays} ; ne reflète pas le niveau de sûreté général du pays.`
+    : `${critiques} zones sur ${total} en tension en ${nomPays} — vigilance à élargir au-delà de ce seul secteur.`;
+}
+function cadrageCorridor(c){
+  const total = c.s.zones.length;
+  const critiques = c.s.zones.filter(s=>["ROUGE","MARRON"].includes(s.niveau)).length;
+  return critiques<=1
+    ? `Situation localisée à un tronçon — ${critiques} zone sur ${total} de l'axe en tension ; le reste du corridor demeure fluide.`
+    : `${critiques} zones sur ${total} de l'axe en tension — vigilance recommandée sur l'ensemble du corridor.`;
+}
+function recommandationZone(z, f24, zs){
   const aggravant = z.s.ag && z.s.ag.length ? z.s.ag[0] : null;
   const set = (aggravant && RECOS_AGGRAVANT[aggravant]) || RECOS_NIVEAU[z.s.niveau];
   if(!set) return null;
-  const categorie = categorieDominante(f24.filter(a=>a.z===z.z));
-  return { titre:z.z, sousTitre:(z.p&&PAYS[z.p]?PAYS[z.p].f+" "+PAYS[z.p].n:"")+(aggravant?" · "+aggravant:""), niveau:z.s.niveau, categorie, set };
+  const faitsZone = f24.filter(a=>a.z===z.z);
+  const categorie = categorieDominante(faitsZone);
+  const loc = localiteDominante(faitsZone);
+  const lieu = loc && loc!==z.z ? `${z.z} — ${loc}` : z.z;
+  const sousTitre = [z.p&&PAYS[z.p]?PAYS[z.p].f+" "+PAYS[z.p].n:"", aggravant].filter(Boolean).join(" · ");
+  return { titre:lieu, sousTitre, niveau:z.s.niveau, categorie, set, cadrage: z.p?cadragePays(z.p, zs):"" };
 }
 function recommandationCorridor(c, f24){
   const aggravants = [...new Set(c.s.zones.flatMap(s=>s.ag))];
@@ -1802,17 +1840,18 @@ function recommandationCorridor(c, f24){
   const set = (aggravant && RECOS_AGGRAVANT[aggravant]) || RECOS_NIVEAU[c.s.niveau];
   if(!set) return null;
   const categorie = categorieDominante(f24.filter(a=>c.z.includes(a.z)));
-  return { titre:c.n, sousTitre:"Corridor"+(aggravant?" · "+aggravant:""), niveau:c.s.niveau, categorie, set };
+  return { titre:c.n, sousTitre:"Corridor"+(aggravant?" · "+aggravant:""), niveau:c.s.niveau, categorie, set, cadrage: cadrageCorridor(c) };
 }
 function htmlRecommandation(r){
   const libCat = (CATEGORIES_ACTU.find(x=>x[0]===r.categorie)||[,r.categorie])[1];
   return `<div class="carte" style="margin-bottom:10px;border-left:3px solid var(--${r.niveau==="ROUGE"?"rouge":r.niveau==="MARRON"?"marron":"orange"})">
     <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px;flex-wrap:wrap">
       <b style="font-size:14px">${esc(r.titre)}</b>
-      <span class="b-${r.niveau}" style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:99px;color:#fff">${LIB[r.niveau]}</span>
+      <span class="b-${r.niveau}" style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:99px;color:#fff">${LIB_SECTEUR[r.niveau]}</span>
       <span class="tag" style="margin-left:auto">${esc(libCat)}</span>
     </div>
-    ${r.sousTitre?`<div style="font-size:11px;color:var(--faible);margin-bottom:8px">${esc(r.sousTitre)}</div>`:""}
+    ${r.sousTitre?`<div style="font-size:11px;color:var(--faible);margin-bottom:4px">${esc(r.sousTitre)}</div>`:""}
+    ${r.cadrage?`<div style="font-size:11px;color:var(--sourd);border-left:2px solid var(--ligne);padding-left:9px;margin-bottom:8px">${esc(r.cadrage)}</div>`:""}
     <div class="grille g4">
       ${AUDIENCES.map(([k,nom])=>{
         const accede = !!(CFG.accesCibles[k] && CFG.accesCibles[k][r.categorie]);
@@ -1828,7 +1867,7 @@ function htmlRecommandations(zs, corridorsScored, f24){
   const zonesRisque = zs.filter(z=>z.s.score>=40).slice(0,3);
   const pireCorridor = corridorsScored[0];
   const corridorRisque = pireCorridor && pireCorridor.s.score>=40 ? pireCorridor : null;
-  const items = [...zonesRisque.map(z=>recommandationZone(z, f24)), corridorRisque?recommandationCorridor(corridorRisque, f24):null].filter(Boolean);
+  const items = [...zonesRisque.map(z=>recommandationZone(z, f24, zs)), corridorRisque?recommandationCorridor(corridorRisque, f24):null].filter(Boolean);
   const titre = `<h3 style="font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faible);font-weight:700;margin-bottom:8px">Recommandations — par public</h3>`;
   if(!items.length){
     return `<div class="carte" style="margin-bottom:12px">${titre}<p class="hint">Aucune zone ni corridor ne dépasse le seuil de vigilance actuellement — pas de recommandation spécifique à formuler.</p></div>`;
