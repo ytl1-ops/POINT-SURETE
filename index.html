@@ -11,9 +11,13 @@
 <style>
 :root{
   --fond:#F5F7F4; --carte:#FFFFFF; --carte2:#EEF1EC; --ligne:#DCE3DD;
-  --texte:#16211C; --sourd:#55655B; --faible:#8B978F;
+  --texte:#16211C; --sourd:#55655B; --faible:#7E8B83;
   --laterite:#AB5D37; --kola:#2B835F; --or:#8F702A;
-  --rouge:#B5453F; --marron:#8C5A3C; --orange:#C97A3F; --jaune:#A6842E; --vert:#2B835F;
+  /* Ramp de sévérité — hues volontairement espacées (rouge ~5°, marron ~18°
+     et assombri, orange ~28°, jaune ~45°, vert ~154°) : les anciennes valeurs
+     tenaient toutes dans une bande brun-orangé étroite, peu discernables en
+     un coup d'œil sur les pastilles, jauges et cartes de chaleur. */
+  --rouge:#C1352E; --marron:#7A4430; --orange:#D9772A; --jaune:#C79A1E; --vert:#2B835F;
   --r:6px;
   --ombre:0 1px 2px rgba(22,33,28,.05), 0 1px 1px rgba(22,33,28,.04);
   --ombre-lev:0 4px 16px rgba(22,33,28,.08), 0 1px 2px rgba(22,33,28,.05);
@@ -89,6 +93,13 @@ nav button i{display:block;font-style:normal;font-size:16px;margin-bottom:2px}
 /* Onglets courts sur mobile (largeur restreinte), désignation complète sur
    le ruban vertical desktop — mêmes boutons, seul le texte affiché change. */
 nav button .nav-long{display:none}
+/* Groupes de navigation — regroupent les 12 modules en 5 sections lisibles
+   sur le ruban vertical desktop. Sur la barre d'onglets mobile (rangée
+   horizontale), les libellés de section n'ont pas leur place : le wrapper
+   devient transparent (display:contents) pour laisser les boutons
+   participer directement à la rangée, et le libellé reste masqué. */
+nav .nav-sec{display:contents}
+nav .nav-groupe{display:none}
 .compteur{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;border-radius:99px;background:var(--rouge);color:#fff;font-size:9.5px;font-weight:700;margin-left:4px;vertical-align:2px}
 
 main{padding:12px}
@@ -101,6 +112,12 @@ main{padding:12px}
 .titre h2{font-size:19px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
 .titre small{color:var(--faible);font-size:11px}
 .aide{color:var(--sourd);font-size:12px;border-left:2px solid var(--ligne);padding-left:9px;margin-bottom:12px}
+.section-h{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--laterite);margin:18px 0 8px}
+.section-h:first-of-type{margin-top:2px}
+.exp-l{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--ligne)}
+.exp-l div{flex:1;min-width:0}
+.exp-l b{display:block;font-size:13px}
+.exp-l span{display:block;font-size:11px;color:var(--faible);margin-top:1px}
 .carte{background:var(--carte);border:1px solid var(--ligne);border-radius:8px;padding:12px;margin-bottom:10px;box-shadow:var(--ombre)}
 .grille{display:grid;gap:8px}
 .g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g6{grid-template-columns:repeat(6,1fr)}
@@ -139,7 +156,7 @@ select,input[type=text]{background:var(--carte2);border:1px solid var(--ligne);c
 .zone-l .nm span{font-size:10px;color:var(--faible)}
 .jauge{height:4px;background:var(--ligne);border-radius:2px;overflow:hidden;margin-top:4px}
 .jauge i{display:block;height:100%}
-.n-ROUGE{color:var(--rouge)}.n-MARRON{color:#C97A55}.n-ORANGE{color:var(--orange)}.n-JAUNE{color:var(--jaune)}.n-VERT{color:var(--vert)}
+.n-ROUGE{color:var(--rouge)}.n-MARRON{color:var(--marron)}.n-ORANGE{color:var(--orange)}.n-JAUNE{color:var(--jaune)}.n-VERT{color:var(--vert)}
 .b-ROUGE{background:var(--rouge)}.b-MARRON{background:var(--marron)}.b-ORANGE{background:var(--orange)}.b-JAUNE{background:var(--jaune)}.b-VERT{background:var(--vert)}
 
 .vide{text-align:center;color:var(--faible);padding:34px 14px;border:1px dashed var(--ligne);border-radius:var(--r)}
@@ -194,6 +211,9 @@ label.sw small{display:block;color:var(--faible);font-size:11px}
   nav button i{margin-bottom:0;font-size:16px;width:17px;text-align:center;flex-shrink:0}
   nav button .nav-court{display:none}
   nav button .nav-long{display:inline}
+  nav .nav-sec{display:flex;flex-direction:column}
+  nav .nav-groupe{display:block;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--faible);padding:16px 14px 6px}
+  nav .nav-sec:first-child .nav-groupe{padding-top:4px}
   .grille.g4{grid-template-columns:repeat(4,1fr)}
   .grille.g3{grid-template-columns:repeat(3,1fr)}
 }
@@ -218,6 +238,9 @@ html.vue-web nav button.on{border-left-color:var(--laterite);background:rgba(171
 html.vue-web nav button i{margin-bottom:0;font-size:16px;width:17px;text-align:center;flex-shrink:0}
 html.vue-web nav button .nav-court{display:none}
 html.vue-web nav button .nav-long{display:inline}
+html.vue-web nav .nav-sec{display:flex;flex-direction:column}
+html.vue-web nav .nav-groupe{display:block;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--faible);padding:16px 14px 6px}
+html.vue-web nav .nav-sec:first-child .nav-groupe{padding-top:4px}
 html.vue-web .grille.g4{grid-template-columns:repeat(4,1fr)}
 html.vue-web .grille.g3{grid-template-columns:repeat(3,1fr)}
 
@@ -235,6 +258,8 @@ html.vue-mobile nav button.on{border-top-color:var(--laterite)!important;border-
 html.vue-mobile nav button i{display:block!important;margin-bottom:2px!important;font-size:16px!important;width:auto!important}
 html.vue-mobile nav button .nav-court{display:inline!important}
 html.vue-mobile nav button .nav-long{display:none!important}
+html.vue-mobile nav .nav-sec{display:contents!important}
+html.vue-mobile nav .nav-groupe{display:none!important}
 </style>
 </head>
 <body>
@@ -397,19 +422,6 @@ html.vue-mobile nav button .nav-long{display:none!important}
   <div id="eco"></div>
 </section>
 
-<!-- ============ SYNTHÈSE ============ -->
-<section class="panneau" id="p-synth">
-  <div class="titre"><h2>Point de situation</h2><small id="synthDate">—</small></div>
-  <div class="aide">Note de situation générée à partir des seuls faits collectés. Aucun contenu n'est inventé : ce qui n'a pas été collecté n'apparaît pas.</div>
-  <div class="rang">
-    <button class="puce" onclick="exportWord()">Exporter Word</button>
-    <button class="puce" onclick="window.print()">Imprimer / PDF</button>
-    <button class="puce" onclick="exportCSV()">Exporter CSV</button>
-    <button class="puce" onclick="exportJSON()">Sauvegarde JSON</button>
-  </div>
-  <div id="synth"></div>
-</section>
-
 <!-- ============ ADMINISTRATION ============ -->
 <section class="panneau" id="p-admin">
   <div class="titre"><h2>Administration</h2><small>Accès, rôles et droits — local à cet appareil</small></div>
@@ -461,6 +473,7 @@ html.vue-mobile nav button .nav-long{display:none!important}
 <!-- ============ PARAMÈTRES ============ -->
 <section class="panneau" id="p-par">
   <div class="titre"><h2>Paramètres</h2><small>Local à cet appareil</small></div>
+  <h3 class="section-h">Collecte</h3>
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Origine des données</h3>
     <select id="orig" style="margin-bottom:8px">
@@ -515,6 +528,7 @@ html.vue-mobile nav button .nav-long{display:none!important}
     </div>
     <button class="btn p" onclick="collecteEnr()" style="margin-top:6px">Appliquer</button>
   </div>
+  <h3 class="section-h">Marché</h3>
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Alertes de marché (BRVM)</h3>
     <p class="hint" style="margin-bottom:8px">Seuil de variation quotidienne — d'un indice BRVM (Composite, BRVM 10, Prestige) ou d'une action cotée — déclenchant une alerte visible dans l'onglet Intelligence économique.</p>
@@ -524,6 +538,7 @@ html.vue-mobile nav button .nav-long{display:none!important}
       <button class="btn p" onclick="seuilMarcheEnr()">Appliquer</button>
     </div>
   </div>
+  <h3 class="section-h">Abonnements par cible</h3>
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:2px;text-transform:uppercase;letter-spacing:.06em">Accès aux actualités par cible</h3>
     <p class="hint" style="margin-bottom:8px">Toutes les cibles n'ont pas accès aux mêmes actualités selon leur abonnement. Ce réglage détermine quelles catégories alimentent les recommandations de chaque cible dans l'onglet Sûreté — décochez une case pour retirer une catégorie à une cible, en un clic.</p>
@@ -541,6 +556,7 @@ html.vue-mobile nav button .nav-long{display:none!important}
     <p class="hint" style="margin-bottom:8px">Prévisualisez l'appareil tel qu'une cible le verrait : seuls ses modules et ses catégories d'actualité restent visibles. N'affecte que cet appareil, pas les autres réglages.</p>
     <select id="cibleActive" style="margin-bottom:4px"></select>
   </div>
+  <h3 class="section-h">Affichage &amp; diagnostic</h3>
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Règles d'affichage</h3>
     <label class="sw"><span>Faits hors périmètre<small>Afficher les faits sans rattachement à une zone du périmètre</small></span><input type="checkbox" id="oHors"></label>
@@ -556,6 +572,7 @@ html.vue-mobile nav button .nav-long{display:none!important}
       <button class="btn s" onclick="reset()">Vider le cache</button>
     </div>
   </div>
+  <h3 class="section-h">À propos</h3>
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Méthode et limites</h3>
     <p style="font-size:12px;color:var(--sourd)">POINT SÛRETÉ agrège des flux RSS publics : agences et médias nationaux des six pays (35 sources fixes), presse régionale, radios locales, une couche panafricaine et analytique (Africanews, International Crisis Group, ReliefWeb) qui recoupe les six pays à la fois, et des requêtes d'actualité ciblées sur chaque zone administrative. Le rattachement géographique se fait par détection de localité dans le texte, avec correspondance de mots entiers et normalisation des accents ; un fait dont aucune localité du périmètre n'est reconnue est classé hors périmètre plutôt que rattaché par défaut au pays du média.</p>
@@ -613,38 +630,36 @@ html.vue-mobile nav button .nav-long{display:none!important}
 
 <!-- ============ RAPPORTS ============ -->
 <section class="panneau" id="p-rapports">
-  <div class="titre"><h2>Rapports</h2><small>Word · CSV · JSON</small></div>
-  <div class="aide">Documents générés directement depuis les données collectées, filtrés par périmètre. Aucune donnée n'est envoyée à un tiers : les fichiers se construisent sur l'appareil.</div>
+  <div class="titre"><h2>Rapports</h2><small id="synthDate">—</small></div>
+  <div class="aide">Note de situation et documents générés directement depuis les seuls faits collectés — aucun contenu n'est inventé, rien n'est envoyé à un tiers : tout se construit sur l'appareil.</div>
+  <div id="synth"></div>
+  <h3 class="section-h">Exports</h3>
   <div class="carte">
     <h3 style="font-size:15px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Rapport complet</h3>
     <p style="font-size:12px;color:var(--sourd);margin-bottom:10px">Zones, corridors, alertes pays et faits retenus, en un seul document Word.</p>
     <button class="btn p" onclick="exportWord()">Exporter Word</button>
     <button class="btn s" onclick="window.print()">Imprimer / PDF</button>
   </div>
-  <div class="grille g2">
-    <div class="carte">
-      <h3 style="font-size:14px;margin-bottom:5px">Flux opérationnel</h3>
-      <p style="font-size:11.5px;color:var(--faible);margin-bottom:8px">Faits des dernières 24 h.</p>
+  <div class="carte">
+    <h3 style="font-size:14px;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em">Exports ciblés</h3>
+    <div class="exp-l">
+      <div><b>Flux opérationnel</b><span>Faits des dernières 24 h</span></div>
       <button class="btn s" onclick="exportCSV()">CSV</button>
     </div>
-    <div class="carte">
-      <h3 style="font-size:14px;margin-bottom:5px">Agenda sûreté</h3>
-      <p style="font-size:11.5px;color:var(--faible);margin-bottom:8px">Événements en cours et à venir.</p>
+    <div class="exp-l">
+      <div><b>Agenda sûreté</b><span>Événements en cours et à venir</span></div>
       <button class="btn s" onclick="exportAgenda()">Word</button>
     </div>
-    <div class="carte">
-      <h3 style="font-size:14px;margin-bottom:5px">Alertes pays</h3>
-      <p style="font-size:11.5px;color:var(--faible);margin-bottom:8px">Niveaux, mesures, zones critiques.</p>
+    <div class="exp-l">
+      <div><b>Alertes pays</b><span>Niveaux, mesures, zones critiques</span></div>
       <button class="btn s" onclick="exportAlertes()">Word</button>
     </div>
-    <div class="carte">
-      <h3 style="font-size:14px;margin-bottom:5px">Intelligence économique</h3>
-      <p style="font-size:11.5px;color:var(--faible);margin-bottom:8px">Faits économiques des dernières 24 h, par thème.</p>
+    <div class="exp-l">
+      <div><b>Intelligence économique</b><span>Faits économiques des dernières 24 h, par thème</span></div>
       <button class="btn s" onclick="exportEco()">Word</button>
     </div>
-    <div class="carte">
-      <h3 style="font-size:14px;margin-bottom:5px">Matrice des sources</h3>
-      <p style="font-size:11.5px;color:var(--faible);margin-bottom:8px">Sources suivies et fiabilité.</p>
+    <div class="exp-l" style="border-bottom:none">
+      <div><b>Matrice des sources</b><span>Sources suivies et fiabilité</span></div>
       <button class="btn s" onclick="exportSources()">CSV</button>
     </div>
   </div>
@@ -657,19 +672,33 @@ html.vue-mobile nav button .nav-long{display:none!important}
 </main>
 
 <nav>
-  <button data-p="direction"><i>◉</i>Direction</button>
-  <button data-p="surete"><i>▣</i>Sûreté</button>
-  <button class="on" data-p="flux"><i>▤</i>Flux</button>
-  <button data-p="zones"><i>◈</i>Zones</button>
-  <button data-p="corr"><i>⇄</i>Corridors</button>
-  <button data-p="eco"><i>▥</i><span class="nav-court">Éco</span><span class="nav-long">Intelligence économique</span></button>
-  <button data-p="agenda"><i>◷</i>Agenda</button>
-  <button data-p="alertes"><i>⚑</i>Alertes</button>
-  <button data-p="bord"><i>▦</i><span class="nav-court">Bord</span><span class="nav-long">Tableau de bord</span></button>
-  <button data-p="synth"><i>▤</i><span class="nav-court">Point</span><span class="nav-long">Point de situation</span></button>
-  <button data-p="rapports"><i>⇩</i>Rapports</button>
-  <button data-p="admin"><i>◆</i><span class="nav-court">Admin</span><span class="nav-long">Administration</span></button>
-  <button data-p="par"><i>⚙</i>Réglages</button>
+  <div class="nav-sec">
+    <div class="nav-groupe">Vue d'ensemble</div>
+    <button data-p="direction"><i>◉</i>Direction</button>
+    <button data-p="surete"><i>▣</i>Sûreté</button>
+    <button data-p="bord"><i>▦</i><span class="nav-court">Bord</span><span class="nav-long">Tableau de bord</span></button>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-groupe">Surveillance</div>
+    <button class="on" data-p="flux"><i>▤</i>Flux</button>
+    <button data-p="zones"><i>◈</i>Zones</button>
+    <button data-p="corr"><i>⇄</i>Corridors</button>
+    <button data-p="agenda"><i>◷</i>Agenda</button>
+    <button data-p="alertes"><i>⚑</i>Alertes</button>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-groupe">Intelligence économique</div>
+    <button data-p="eco"><i>▥</i><span class="nav-court">Éco</span><span class="nav-long">Intelligence économique</span></button>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-groupe">Rapports</div>
+    <button data-p="rapports"><i>⇩</i>Rapports</button>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-groupe">Système</div>
+    <button data-p="admin"><i>◆</i><span class="nav-court">Admin</span><span class="nav-long">Administration</span></button>
+    <button data-p="par"><i>⚙</i>Réglages</button>
+  </div>
 </nav>
 
 <script>
@@ -1120,7 +1149,7 @@ function dater(d){
    ================================================================== */
 const MODULES = [
   ["direction","Direction"],["surete","Sûreté"],["flux","Flux"],["zones","Zones"],["corr","Corridors"],["eco","Intelligence économique"],["agenda","Agenda"],
-  ["alertes","Alertes"],["bord","Tableau de bord"],["synth","Point de situation"],
+  ["alertes","Alertes"],["bord","Tableau de bord"],
   ["rapports","Rapports"],["admin","Administration"],["par","Réglages"]
 ];
 const DROITS_DEFAUT = {
@@ -1142,10 +1171,10 @@ const ACCES_CIBLES_DEFAUT = {
 // Réglages restent hors abonnement, réservés aux rôles internes.
 const MODULES_CIBLES = MODULES.filter(([m])=>!["admin","par"].includes(m));
 const CIBLES_MODULES_DEFAUT = {
-  ceo:         {direction:true, surete:false,flux:false,zones:false,corr:true, eco:true, agenda:true, alertes:true, bord:true, synth:true, rapports:true},
-  financier:   {direction:false,surete:false,flux:false,zones:false,corr:true, eco:true, agenda:false,alertes:true, bord:false,synth:false,rapports:true},
-  surete:      {direction:false,surete:true, flux:true, zones:true, corr:true, eco:false,agenda:true, alertes:true, bord:true, synth:true, rapports:true},
-  particulier: {direction:true, surete:false,flux:false,zones:false,corr:false,eco:false,agenda:true, alertes:true, bord:false,synth:false,rapports:false}
+  ceo:         {direction:true, surete:false,flux:false,zones:false,corr:true, eco:true, agenda:true, alertes:true, bord:true, rapports:true},
+  financier:   {direction:false,surete:false,flux:false,zones:false,corr:true, eco:true, agenda:false,alertes:true, bord:false,rapports:true},
+  surete:      {direction:false,surete:true, flux:true, zones:true, corr:true, eco:false,agenda:true, alertes:true, bord:true, rapports:true},
+  particulier: {direction:true, surete:false,flux:false,zones:false,corr:false,eco:false,agenda:true, alertes:true, bord:false,rapports:false}
 };
 const CFG = Object.assign(
   { sbUrl:"", sbKey:"", dataUrl:"data/latest.json", origine:"auto",
@@ -2369,7 +2398,7 @@ function exportWord(){
   <style>@page{size:A4;margin:2cm}body{font-family:Calibri,Arial,sans-serif;font-size:10.5pt;color:#1a1a1a}
   h1{color:#B5623A;font-size:19pt;margin:0 0 2pt}h2{color:#12201B;font-size:13pt;border-bottom:1.5pt solid #B5623A;padding-bottom:3pt;margin-top:16pt}
   table{width:100%;border-collapse:collapse;font-size:9.5pt}th{background:#0A1014;color:#fff;padding:5pt;text-align:left}td{border-bottom:.5pt solid #ccc;padding:5pt}
-  .r{color:#B5453F;font-weight:bold}.m{color:#8C5A3C;font-weight:bold}.o{color:#C97A3F;font-weight:bold}.j{color:#9C8A2E}.v{color:#2F8F68}
+  .r{color:#C1352E;font-weight:bold}.m{color:#7A4430;font-weight:bold}.o{color:#D9772A;font-weight:bold}.j{color:#C79A1E}.v{color:#2B835F}
   .pied{font-size:8pt;color:#777;border-top:.5pt solid #ccc;padding-top:5pt;margin-top:18pt}</style></head><body>
   <h1>POINT SÛRETÉ</h1>
   <p style="color:#666;font-size:9pt;margin:0 0 12pt">Côte d'Ivoire et pays limitrophes — ${new Date().toLocaleString("fr-FR")} — fenêtre 24 heures</p>
@@ -2406,7 +2435,7 @@ function docWord(titre, corps){
   <style>@page{size:A4;margin:2cm}body{font-family:Calibri,Arial,sans-serif;font-size:10.5pt;color:#1a1a1a}
   h1{color:#B5623A;font-size:19pt;margin:0 0 2pt}h2{color:#12201B;font-size:13pt;border-bottom:1.5pt solid #B5623A;padding-bottom:3pt;margin-top:16pt}
   table{width:100%;border-collapse:collapse;font-size:9.5pt}th{background:#0A1014;color:#fff;padding:5pt;text-align:left}td{border-bottom:.5pt solid #ccc;padding:5pt}
-  .r{color:#B5453F;font-weight:bold}.m{color:#8C5A3C;font-weight:bold}.o{color:#C97A3F;font-weight:bold}.j{color:#9C8A2E}.v{color:#2F8F68}
+  .r{color:#C1352E;font-weight:bold}.m{color:#7A4430;font-weight:bold}.o{color:#D9772A;font-weight:bold}.j{color:#C79A1E}.v{color:#2B835F}
   .pied{font-size:8pt;color:#777;border-top:.5pt solid #ccc;padding-top:5pt;margin-top:18pt}</style></head><body>
   <h1>${esc(titre)}</h1>
   <p style="color:#666;font-size:9pt;margin:0 0 12pt">POINT SÛRETÉ — Côte d'Ivoire et pays limitrophes — ${new Date().toLocaleString("fr-FR")}</p>
@@ -2599,6 +2628,13 @@ function appliquerDroits(){
     const m = b.dataset.p;
     const ok = d[m] !== false && estVisiblePourCible(m);
     b.style.display = ok ? "" : "none";
+  });
+  // Masque le libellé d'une section (desktop) si tous ses modules sont
+  // masqués pour le rôle/la cible active — un titre de section vide serait
+  // trompeur (ex. "Intelligence économique" pour une cible qui n'y a pas accès).
+  $$("nav .nav-sec").forEach(sec=>{
+    const visible = [...sec.querySelectorAll("button[data-p]")].some(b=>b.style.display !== "none");
+    sec.querySelectorAll(".nav-groupe").forEach(g=>g.style.display = visible ? "" : "none");
   });
   const panneauActif = $(".panneau.on");
   if(panneauActif){
