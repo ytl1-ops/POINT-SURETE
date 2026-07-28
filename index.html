@@ -67,12 +67,18 @@ header{position:sticky;top:0;z-index:40;background:rgba(245,247,244,.90);backdro
 /* ---------- Signature : ruban corridor ---------- */
 .corridor{border-bottom:1px solid var(--ligne);background:var(--carte2);padding:9px 12px 11px;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .corridor-t{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--faible);margin-bottom:7px}
-.corridor-l{display:flex;align-items:flex-start;min-width:640px;position:relative}
+.corridor-l{display:flex;align-items:flex-start;position:relative}
 .corridor-l:before{content:'';position:absolute;top:5px;left:0;right:0;height:2px;background:var(--ligne)}
-.noeud{flex:1;position:relative;text-align:left;padding-right:6px}
+/* Largeur fixe par nœud (plutôt que flex:1) : un nom de zone plus long
+   que sa part égale du ruban débordait sur le nœud suivant — pastille et
+   libellé désalignés, texte qui se chevauche. Largeur fixe + ellipsis
+   garantissent que chaque nœud reste dans sa propre colonne, quel que
+   soit le nombre de nœuds ; le ruban défile horizontalement au besoin. */
+.noeud{flex:0 0 96px;position:relative;text-align:left;padding-right:10px;overflow:hidden}
 .noeud i{display:block;width:12px;height:12px;border-radius:50%;border:2px solid var(--fond);position:relative;z-index:1;background:var(--faible)}
-.noeud b{display:block;font-family:'Barlow Condensed';font-size:12px;font-weight:600;margin-top:5px;letter-spacing:.03em;white-space:nowrap}
-.noeud u{display:block;text-decoration:none;font-size:9px;color:var(--faible);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.noeud-sc{display:block;font-family:'Roboto Mono';font-size:14px;font-weight:600;margin-top:5px;line-height:1.1}
+.noeud b{display:block;font-family:'Barlow Condensed';font-size:12px;font-weight:600;margin-top:1px;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.noeud u{display:block;text-decoration:none;font-size:9px;color:var(--faible);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ---------- Onglets ---------- */
 nav{position:fixed;bottom:0;left:0;right:0;z-index:45;display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-top:1px solid var(--ligne);padding-bottom:env(safe-area-inset-bottom);scrollbar-width:none;box-shadow:0 -2px 12px rgba(22,33,28,.05)}
@@ -655,7 +661,7 @@ html.vue-mobile nav button .nav-long{display:none!important}
   <button class="on" data-p="flux"><i>▤</i>Flux</button>
   <button data-p="zones"><i>◈</i>Zones</button>
   <button data-p="corr"><i>⇄</i>Corridors</button>
-  <button data-p="eco"><i>€</i><span class="nav-court">Éco</span><span class="nav-long">Intelligence économique</span></button>
+  <button data-p="eco"><i>▥</i><span class="nav-court">Éco</span><span class="nav-long">Intelligence économique</span></button>
   <button data-p="agenda"><i>◷</i>Agenda</button>
   <button data-p="alertes"><i>⚑</i>Alertes</button>
   <button data-p="bord"><i>▦</i><span class="nav-court">Bord</span><span class="nav-long">Tableau de bord</span></button>
@@ -1447,7 +1453,7 @@ function rCorridor(){
   $("#corridor").innerHTML = c.z.map(zn=>{
     const s = scoreZone(zn);
     const z = ZONES.find(x=>x.z===zn);
-    return `<div class="noeud"><i class="b-${s.niveau}"></i><b>${esc(z? z.loc[0] : zn)}</b><u>${zn} · ${s.score}</u></div>`;
+    return `<div class="noeud"><i class="b-${s.niveau}"></i><span class="noeud-sc mono n-${s.niveau}">${s.score}</span><b>${esc(z? z.loc[0] : zn)}</b><u>${esc(zn)}</u></div>`;
   }).join("");
 }
 
