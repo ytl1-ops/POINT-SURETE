@@ -21,7 +21,7 @@ concurrency:
 jobs:
   collecte:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35   # collecte mondiale (194 pays) : marge sur les ~20 min d'origine
     steps:
       - uses: actions/checkout@v4
 

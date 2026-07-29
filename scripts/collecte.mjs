@@ -18,7 +18,7 @@
 import { writeFile, mkdir } from "node:fs/promises";
 import { XMLParser } from "fast-xml-parser";
 import {
-  PAYS, ZONES, CORRIDORS, NAT, listeFlux, detecter, criticite,
+  PAYS, PAYS_MONDE, ZONES, CORRIDORS, NAT, listeFlux, detecter, criticite,
   categorie, aggravants, scoreZone, niveau, norm
 } from "./moteur.mjs";
 
@@ -62,7 +62,8 @@ function qualifier(it, src){
   const texte = titre + " " + brut;
   const ts = Date.parse(it.d);
   if(isNaN(ts) || ts > Date.now() + 3600e3) return null;                 // date absente ou future → écarté
-  const geo = detecter(texte) || (src.zone ? {pays:src.p, zone:src.zone, localite:src.zone} : null);
+  const geo = detecter(texte) || (src.zone ? {pays:src.p, zone:src.zone, localite:src.zone}
+    : (src.p ? {pays:src.p, zone:null, localite:null} : null));
   // Sur les flux agrégateurs (Google News), le libellé du flux ("Zone X",
   // "Veille thématique — Y"…) décrit la requête, pas l'éditeur réel de
   // l'article : on préfère le média extrait du titre quand disponible,
@@ -247,8 +248,14 @@ async function recupererMarcheBRVM(){
 }
 
 async function main(){
-  const flux = listeFlux(PROF, { paysActifs:Object.keys(PAYS), zonePriorite:process.env.ZONE_PRIORITAIRE || "", inclureRadios:true });
-  log(`Collecte ${PROF} — ${flux.length} flux, ${ZONES.length} zones, ${NAT.length} sources fixes.`);
+  // Périmètre curaté (6 pays, zones + flux dédiés) + reste du monde (édition
+  // nationale générique par pays, cf. gnewsPays) — collecté à chaque cycle,
+  // indépendamment de tout visiteur : le pays de référence est déterminé
+  // côté client (géolocalisation IP), la donnée doit déjà couvrir tous les
+  // pays possibles quand la page se charge.
+  const paysActifs = [...Object.keys(PAYS), ...Object.keys(PAYS_MONDE)];
+  const flux = listeFlux(PROF, { paysActifs, zonePriorite:process.env.ZONE_PRIORITAIRE || "", inclureRadios:true });
+  log(`Collecte ${PROF} — ${flux.length} flux, ${ZONES.length} zones, ${NAT.length} sources fixes, ${paysActifs.length} pays actifs.`);
   const vus = new Set();
   const faits = [];
   const echecs = [];
@@ -282,6 +289,11 @@ async function main(){
 
   faits.sort((a,b)=> Date.parse(b.survenu_le) - Date.parse(a.survenu_le));
   const h24 = faits.filter(f => Date.parse(f.survenu_le) > Date.now() - 24*3600e3);
+  // périmètre curaté (zones/scores) séparé du reste du monde (édition
+  // générique par pays, sans score de zone) pour que le volume mondial ne
+  // noie pas les faits CI + limitrophes dans un plafond global unique.
+  const faitsCures = h24.filter(f => PAYS[f.pays]);
+  const faitsMonde = h24.filter(f => f.pays && PAYS_MONDE[f.pays]);
 
   const zones = ZONES.map(z => {
     const s = scoreZone(h24.filter(f => f.zone === z.z));
@@ -304,13 +316,14 @@ async function main(){
     profondeur: PROF,
     flux_interroges: flux.length,
     flux_joignables: ok,
-    faits: h24.slice(0,600),
+    faits: faitsCures.slice(0,600),
+    faits_monde: faitsMonde.slice(0,1500),
     zones, corridors, marche
   }));
   await writeFile("data/zones.json", JSON.stringify({ genere_le:new Date().toISOString(), zones, corridors }));
 
   const n = await versSupabase(faits.slice(0,1500));
-  log(`Terminé — ${ok}/${flux.length} flux joignables · ${faits.length} faits (${h24.length} sur 24h) · ${n} envoyés à Supabase.`);
+  log(`Terminé — ${ok}/${flux.length} flux joignables · ${faits.length} faits (${h24.length} sur 24h, ${faitsCures.length} CI+limitrophes, ${faitsMonde.length} reste du monde) · ${n} envoyés à Supabase.`);
   log(`Zones en tension : ${zones.filter(z=>["ROUGE","MARRON"].includes(z.niveau)).map(z=>z.zone+" ("+z.score+")").join(", ") || "aucune"}`);
 
   if(ok === 0){ console.error("Aucun flux joignable — sortie en échec."); process.exit(1); }

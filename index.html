@@ -717,6 +717,26 @@ const PAYS = {
   GH:{n:"Ghana",         f:"🇬🇭", gl:"GH", lang:"en"}
 };
 
+/* ---------- Reste du monde ----------
+   Copie client de scripts/moteur.mjs (PAYS_MONDE/FRONTIERES) — sert à
+   déterminer le pays de connexion d'un visiteur et ses vrais voisins,
+   affichés dans un bloc dédié (pas de zones/scores pour ces pays-là,
+   cf. htmlPaysReference()). Toute évolution du périmètre se fait d'abord
+   dans moteur.mjs. */
+const PAYS_MONDE = {
+ AD:{n:"Andorre",lang:"en"},AE:{n:"Émirats arabes unis",lang:"en"},AF:{n:"Afghanistan",lang:"en"},AG:{n:"Antigua-et-Barbuda",lang:"en"},AL:{n:"Albanie",lang:"en"},AM:{n:"Arménie",lang:"en"},AO:{n:"Angola",lang:"en"},AR:{n:"Argentine",lang:"en"},AT:{n:"Autriche",lang:"en"},AU:{n:"Australie",lang:"en"},AZ:{n:"Azerbaïdjan",lang:"en"},BA:{n:"Bosnie-Herzégovine",lang:"en"},BB:{n:"Barbade",lang:"en"},BD:{n:"Bangladesh",lang:"en"},BE:{n:"Belgique",lang:"fr"},BG:{n:"Bulgarie",lang:"en"},BH:{n:"Bahreïn",lang:"en"},BI:{n:"Burundi",lang:"fr"},BJ:{n:"Bénin",lang:"fr"},BN:{n:"Brunei",lang:"en"},BO:{n:"Bolivie",lang:"en"},BR:{n:"Brésil",lang:"en"},BS:{n:"Bahamas",lang:"en"},BT:{n:"Bhoutan",lang:"en"},BW:{n:"Botswana",lang:"en"},BY:{n:"Biélorussie",lang:"en"},BZ:{n:"Belize",lang:"en"},CA:{n:"Canada",lang:"fr"},CD:{n:"Congo (Rép. dém.)",lang:"fr"},CF:{n:"République centrafricaine",lang:"fr"},CG:{n:"Congo",lang:"fr"},CH:{n:"Suisse",lang:"fr"},CL:{n:"Chili",lang:"en"},CM:{n:"Cameroun",lang:"fr"},CN:{n:"Chine",lang:"en"},CO:{n:"Colombie",lang:"en"},CR:{n:"Costa Rica",lang:"en"},CU:{n:"Cuba",lang:"en"},CV:{n:"Îles du Cap-Vert",lang:"en"},CY:{n:"Chypre",lang:"en"},CZ:{n:"Tchéquie",lang:"en"},DE:{n:"Allemagne",lang:"en"},DJ:{n:"Djibouti",lang:"fr"},DK:{n:"Danemark",lang:"en"},DM:{n:"Dominique",lang:"en"},DO:{n:"République dominicaine",lang:"en"},DZ:{n:"Algérie",lang:"en"},EC:{n:"Équateur",lang:"en"},EE:{n:"Estonie",lang:"en"},EG:{n:"Égypte",lang:"en"},ER:{n:"Érythrée",lang:"en"},ES:{n:"Espagne",lang:"en"},ET:{n:"Éthiopie",lang:"en"},FI:{n:"Finlande",lang:"en"},FJ:{n:"Fidji",lang:"en"},FM:{n:"Micronésie",lang:"en"},FR:{n:"France",lang:"fr"},GA:{n:"Gabon",lang:"fr"},GB:{n:"Royaume-Uni",lang:"en"},GD:{n:"Grenade",lang:"en"},GE:{n:"Géorgie",lang:"en"},GM:{n:"Gambie",lang:"en"},GQ:{n:"Guinée équatoriale",lang:"fr"},GR:{n:"Grèce",lang:"en"},GT:{n:"Guatemala",lang:"en"},GW:{n:"Guinée-Bissau",lang:"en"},GY:{n:"Guyana",lang:"en"},HN:{n:"Honduras",lang:"en"},HR:{n:"Croatie",lang:"en"},HT:{n:"Haïti",lang:"fr"},HU:{n:"Hongrie",lang:"en"},ID:{n:"Indonésie",lang:"en"},IE:{n:"Irlande",lang:"en"},IL:{n:"Israël",lang:"en"},IN:{n:"Inde",lang:"en"},IQ:{n:"Irak",lang:"en"},IR:{n:"Iran",lang:"en"},IS:{n:"Islande",lang:"en"},IT:{n:"Italie",lang:"en"},JM:{n:"Jamaïque",lang:"en"},JO:{n:"Jordanie",lang:"en"},JP:{n:"Japon",lang:"en"},KE:{n:"Kenya",lang:"en"},KG:{n:"Kirghizistan",lang:"en"},KH:{n:"Cambodge",lang:"en"},KI:{n:"Kiribati",lang:"en"},KM:{n:"Comores",lang:"fr"},KN:{n:"Saint-Christophe-et-Niévès",lang:"en"},KP:{n:"Corée du Nord",lang:"en"},KR:{n:"Corée du Sud",lang:"en"},KW:{n:"Koweït",lang:"en"},KZ:{n:"Kazakhstan",lang:"en"},LA:{n:"Laos",lang:"en"},LB:{n:"Liban",lang:"fr"},LC:{n:"Sainte-Lucie",lang:"en"},LI:{n:"Liechtenstein",lang:"en"},LK:{n:"Sri Lanka",lang:"en"},LS:{n:"Lesotho",lang:"en"},LT:{n:"Lituanie",lang:"en"},LU:{n:"Luxembourg",lang:"fr"},LV:{n:"Lettonie",lang:"en"},LY:{n:"Libye",lang:"en"},MA:{n:"Maroc",lang:"en"},MC:{n:"Monaco",lang:"fr"},MD:{n:"Moldavie",lang:"en"},ME:{n:"Monténégro",lang:"en"},MG:{n:"Madagascar",lang:"fr"},MH:{n:"Îles Marshall",lang:"en"},MK:{n:"Macédoine du Nord",lang:"en"},MM:{n:"Birmanie",lang:"en"},MN:{n:"Mongolie",lang:"en"},MR:{n:"Mauritanie",lang:"en"},MT:{n:"Malte",lang:"en"},MU:{n:"Île Maurice",lang:"fr"},MV:{n:"Maldives",lang:"en"},MW:{n:"Malawi",lang:"en"},MX:{n:"Mexique",lang:"en"},MY:{n:"Malaisie",lang:"en"},MZ:{n:"Mozambique",lang:"en"},NA:{n:"Namibie",lang:"en"},NE:{n:"Niger",lang:"fr"},NG:{n:"Nigéria",lang:"en"},NI:{n:"Nicaragua",lang:"en"},NL:{n:"Pays-Bas",lang:"en"},NO:{n:"Norvège",lang:"en"},NP:{n:"Népal",lang:"en"},NR:{n:"Nauru",lang:"en"},NZ:{n:"Nouvelle-Zélande",lang:"en"},OM:{n:"Oman",lang:"en"},PA:{n:"Panama",lang:"en"},PE:{n:"Pérou",lang:"en"},PG:{n:"Papouasie-Nouvelle-Guinée",lang:"en"},PH:{n:"Philippines",lang:"en"},PK:{n:"Pakistan",lang:"en"},PL:{n:"Pologne",lang:"en"},PT:{n:"Portugal",lang:"en"},PW:{n:"Palaos (Palau)",lang:"en"},PY:{n:"Paraguay",lang:"en"},QA:{n:"Qatar",lang:"en"},RO:{n:"Roumanie",lang:"en"},RS:{n:"Serbie",lang:"en"},RU:{n:"Russie",lang:"en"},RW:{n:"Rwanda",lang:"fr"},SA:{n:"Arabie Saoudite",lang:"en"},SB:{n:"Îles Salomon",lang:"en"},SC:{n:"Seychelles",lang:"fr"},SD:{n:"Soudan",lang:"en"},SE:{n:"Suède",lang:"en"},SG:{n:"Singapour",lang:"en"},SI:{n:"Slovénie",lang:"en"},SK:{n:"Slovaquie",lang:"en"},SL:{n:"Sierra Leone",lang:"en"},SM:{n:"Saint-Marin",lang:"en"},SN:{n:"Sénégal",lang:"fr"},SO:{n:"Somalie",lang:"en"},SR:{n:"Surinam",lang:"en"},SS:{n:"Soudan du Sud",lang:"en"},ST:{n:"São Tomé et Príncipe",lang:"en"},SV:{n:"Salvador",lang:"en"},SY:{n:"Syrie",lang:"en"},SZ:{n:"Eswatini",lang:"en"},TD:{n:"Tchad",lang:"fr"},TG:{n:"Togo",lang:"fr"},TH:{n:"Thaïlande",lang:"en"},TJ:{n:"Tadjikistan",lang:"en"},TL:{n:"Timor oriental",lang:"en"},TM:{n:"Turkménistan",lang:"en"},TN:{n:"Tunisie",lang:"en"},TO:{n:"Tonga",lang:"en"},TR:{n:"Turquie",lang:"en"},TT:{n:"Trinité-et-Tobago",lang:"en"},TV:{n:"Tuvalu",lang:"en"},TZ:{n:"Tanzanie",lang:"en"},UA:{n:"Ukraine",lang:"en"},UG:{n:"Ouganda",lang:"en"},US:{n:"États-Unis",lang:"en"},UY:{n:"Uruguay",lang:"en"},UZ:{n:"Ouzbékistan",lang:"en"},VA:{n:"Cité du Vatican",lang:"en"},VC:{n:"Saint-Vincent-et-les-Grenadines",lang:"en"},VE:{n:"Venezuela",lang:"en"},VN:{n:"Viêt Nam",lang:"en"},VU:{n:"Vanuatu",lang:"fr"},WS:{n:"Samoa",lang:"en"},YE:{n:"Yémen",lang:"en"},ZA:{n:"Afrique du Sud",lang:"en"},ZM:{n:"Zambie",lang:"en"},ZW:{n:"Zimbabwe",lang:"en"}
+};
+const FRONTIERES = {
+ AD:["ES","FR"],AE:["OM","SA"],AF:["CN","IR","PK","TJ","TM","UZ"],AG:[],AL:["GR","ME","MK","XK"],AM:["AZ","GE","IR","TR"],AO:["CD","CG","NA","ZM"],AR:["BO","BR","CL","PY","UY"],AT:["CH","CZ","DE","HU","IT","LI","SI","SK"],AU:[],AZ:["AM","GE","IR","RU","TR"],BA:["HR","ME","RS"],BB:[],BD:["IN","MM"],BE:["DE","FR","LU","NL"],BF:["BJ","CI","GH","ML","NE","TG"],BG:["GR","MK","RO","RS","TR"],BH:[],BI:["CD","RW","TZ"],BJ:["BF","NE","NG","TG"],BN:["MY"],BO:["AR","BR","CL","PE","PY"],BR:["AR","BO","CO","GF","GY","PE","PY","SR","UY","VE"],BS:[],BT:["CN","IN"],BW:["NA","ZA","ZM","ZW"],BY:["LT","LV","PL","RU","UA"],BZ:["GT","MX"],CA:["US"],CD:["AO","BI","CF","CG","RW","SS","TZ","UG","ZM"],CF:["CD","CG","CM","SD","SS","TD"],CG:["AO","CD","CF","CM","GA"],CH:["AT","DE","FR","IT","LI"],CI:["BF","GH","GN","LR","ML"],CL:["AR","BO","PE"],CM:["CF","CG","GA","GQ","NG","TD"],CN:["AF","BT","HK","IN","KG","KP","KZ","LA","MM","MN","MO","NP","PK","RU","TJ","VN"],CO:["BR","EC","PA","PE","VE"],CR:["NI","PA"],CU:[],CV:[],CY:[],CZ:["AT","DE","PL","SK"],DE:["AT","BE","CH","CZ","DK","FR","LU","NL","PL"],DJ:["ER","ET","SO"],DK:["DE"],DM:[],DO:["HT"],DZ:["EH","LY","MA","ML","MR","NE","TN"],EC:["CO","PE"],EE:["LV","RU"],EG:["IL","LY","PS","SD"],ER:["DJ","ET","SD"],ES:["AD","FR","GI","MA","PT"],ET:["DJ","ER","KE","SD","SO","SS"],FI:["NO","RU","SE"],FJ:[],FM:[],FR:["AD","BE","CH","DE","ES","IT","LU","MC"],GA:["CG","CM","GQ"],GB:["IE"],GD:[],GE:["AM","AZ","RU","TR"],GH:["BF","CI","TG"],GM:["SN"],GN:["CI","GW","LR","ML","SL","SN"],GQ:["CM","GA"],GR:["AL","BG","MK","TR"],GT:["BZ","HN","MX","SV"],GW:["GN","SN"],GY:["BR","SR","VE"],HN:["GT","NI","SV"],HR:["BA","HU","ME","RS","SI"],HT:["DO"],HU:["AT","HR","RO","RS","SI","SK","UA"],ID:["MY","PG","TL"],IE:["GB"],IL:["EG","JO","LB","PS","SY"],IN:["BD","BT","CN","MM","NP","PK"],IQ:["IR","JO","KW","SA","SY","TR"],IR:["AF","AM","AZ","IQ","PK","TM","TR"],IS:[],IT:["AT","CH","FR","SI","SM","VA"],JM:[],JO:["IL","IQ","PS","SA","SY"],JP:[],KE:["ET","SO","SS","TZ","UG"],KG:["CN","KZ","TJ","UZ"],KH:["LA","TH","VN"],KI:[],KM:[],KN:[],KP:["CN","KR","RU"],KR:["KP"],KW:["IQ","SA"],KZ:["CN","KG","RU","TM","UZ"],LA:["CN","KH","MM","TH","VN"],LB:["IL","SY"],LC:[],LI:["AT","CH"],LK:["IN"],LR:["CI","GN","SL"],LS:["ZA"],LT:["BY","LV","PL","RU"],LU:["BE","DE","FR"],LV:["BY","EE","LT","RU"],LY:["DZ","EG","NE","SD","TD","TN"],MA:["DZ","EH","ES"],MC:["FR"],MD:["RO","UA"],ME:["AL","BA","HR","RS","XK"],MG:[],MH:[],MK:["AL","BG","GR","RS","XK"],ML:["BF","CI","DZ","GN","MR","NE","SN"],MM:["BD","CN","IN","LA","TH"],MN:["CN","RU"],MR:["DZ","EH","ML","SN"],MT:[],MU:[],MV:[],MW:["MZ","TZ","ZM"],MX:["BZ","GT","US"],MY:["BN","ID","TH"],MZ:["MW","SZ","TZ","ZA","ZM","ZW"],NA:["AO","BW","ZA","ZM"],NE:["BF","BJ","DZ","LY","ML","NG","TD"],NG:["BJ","CM","NE","TD"],NI:["CR","HN"],NL:["BE","DE"],NO:["FI","RU","SE"],NP:["CN","IN"],NR:[],NZ:[],OM:["AE","SA","YE"],PA:["CO","CR"],PE:["BO","BR","CL","CO","EC"],PG:["ID"],PH:[],PK:["AF","CN","IN","IR"],PL:["BY","CZ","DE","LT","RU","SK","UA"],PT:["ES"],PW:[],PY:["AR","BO","BR"],QA:["SA"],RO:["BG","HU","MD","RS","UA"],RS:["BA","BG","HR","HU","ME","MK","RO","XK"],RU:["AZ","BY","CN","EE","FI","GE","KP","KZ","LT","LV","MN","NO","PL","UA"],RW:["BI","CD","TZ","UG"],SA:["AE","IQ","JO","KW","OM","QA","YE"],SB:[],SC:[],SD:["CF","EG","ER","ET","LY","SS","TD"],SE:["FI","NO"],SG:[],SI:["AT","HR","HU","IT"],SK:["AT","CZ","HU","PL","UA"],SL:["GN","LR"],SM:["IT"],SN:["GM","GN","GW","ML","MR"],SO:["DJ","ET","KE"],SR:["BR","GF","GY"],SS:["CD","CF","ET","KE","SD","UG"],ST:[],SV:["GT","HN"],SY:["IL","IQ","JO","LB","TR"],SZ:["MZ","ZA"],TD:["CF","CM","LY","NE","NG","SD"],TG:["BF","BJ","GH"],TH:["KH","LA","MM","MY"],TJ:["AF","CN","KG","UZ"],TL:["ID"],TM:["AF","IR","KZ","UZ"],TN:["DZ","LY"],TO:[],TR:["AM","AZ","BG","GE","GR","IQ","IR","SY"],TT:[],TV:[],TZ:["BI","CD","KE","MW","MZ","RW","UG","ZM"],UA:["BY","HU","MD","PL","RO","RU","SK"],UG:["CD","KE","RW","SS","TZ"],US:["CA","MX"],UY:["AR","BR"],UZ:["AF","KG","KZ","TJ","TM"],VA:["IT"],VC:[],VE:["BR","CO","GY"],VN:["CN","KH","LA"],VU:[],WS:[],YE:["OM","SA"],ZA:["BW","LS","MZ","NA","SZ","ZW"],ZM:["AO","BW","CD","MW","MZ","NA","TZ","ZW"],ZW:["BW","MZ","ZA","ZM"]
+};
+function nomPays(code){ return PAYS[code]?.n || PAYS_MONDE[code]?.n || code || ""; }
+function drapeauPays(code){
+  if(!code || code.length!==2) return "🏳";
+  const pts = [...code.toUpperCase()].map(c => 0x1F1E6 + c.charCodeAt(0) - 65);
+  return pts.every(p => p>=0x1F1E6 && p<=0x1F1FF) ? String.fromCodePoint(...pts) : "🏳";
+}
+function voisinsPays(code){ return (FRONTIERES[code]||[]).filter(v => PAYS[v] || PAYS_MONDE[v]); }
+
 /* ---------- Maillage territorial ----------
    CI : 31 régions + 2 districts autonomes = 33 zones
    Limitrophes : zones frontalières et pôles majeurs                */
@@ -961,11 +981,11 @@ const CAT_REGEX = Object.fromEntries(Object.entries(CAT).map(([c,mots]) => [c, c
 const AGGRAV_REGEX = AGGRAV.map(a => ({ ...a, re: compiler(a.k) }));
 
 /* ---------- État ---------- */
-let ETAT = { arts:[], maj:0, fPays:"ALL", fCat:"ALL", zPays:"CI", log:[], historique:[], marche:null, marcheHist:[] };
+let ETAT = { arts:[], artsMonde:[], maj:0, fPays:"ALL", fCat:"ALL", zPays:"CI", log:[], historique:[], marche:null, marcheHist:[], paysRef:"CI" };
 const CACHE = "PS_v1";
 
-function charger(){ try{ const d=JSON.parse(localStorage.getItem(CACHE)||"null"); if(d&&d.arts){ ETAT.arts=d.arts; ETAT.maj=d.maj||0; ETAT.historique=d.historique||[]; ETAT.marche=d.marche||null; ETAT.marcheHist=d.marcheHist||[]; } }catch(e){} }
-function sauver(){ try{ localStorage.setItem(CACHE, JSON.stringify({arts:ETAT.arts.slice(0,900), maj:ETAT.maj, historique:ETAT.historique.slice(0,30), marche:ETAT.marche, marcheHist:ETAT.marcheHist.slice(-20)})); }catch(e){ journal("Stockage local saturé — cache réduit."); ETAT.arts=ETAT.arts.slice(0,300); } }
+function charger(){ try{ const d=JSON.parse(localStorage.getItem(CACHE)||"null"); if(d&&d.arts){ ETAT.arts=d.arts; ETAT.artsMonde=d.artsMonde||[]; ETAT.maj=d.maj||0; ETAT.historique=d.historique||[]; ETAT.marche=d.marche||null; ETAT.marcheHist=d.marcheHist||[]; } }catch(e){} }
+function sauver(){ try{ localStorage.setItem(CACHE, JSON.stringify({arts:ETAT.arts.slice(0,900), artsMonde:ETAT.artsMonde.slice(0,600), maj:ETAT.maj, historique:ETAT.historique.slice(0,30), marche:ETAT.marche, marcheHist:ETAT.marcheHist.slice(-20)})); }catch(e){ journal("Stockage local saturé — cache réduit."); ETAT.arts=ETAT.arts.slice(0,300); } }
 /* Historique du niveau de l'indice BRVM Composite, un point par collecte —
    sert uniquement à tracer une sparkline dans la vue Direction ; rien n'est
    affiché tant qu'au moins deux points n'ont pas été réellement collectés. */
@@ -1198,8 +1218,13 @@ async function depuisGitHub(){
   const d = await r.json();
   if(!d.faits) throw new Error("format inattendu");
   if(d.marche){ ETAT.marche = d.marche; noterMarcheHist(); }
+  // Reste du monde (pays hors périmètre curaté, sans zone/score) — bloc à
+  // part, cf. htmlPaysReference() ; jamais mélangé à ETAT.arts pour ne pas
+  // faire planter le rendu des vues qui supposent PAYS[a.p] toujours défini.
+  if(d.faits_monde) ETAT.artsMonde = d.faits_monde.map(versArt);
   journal("Fichier publié du " + new Date(d.genere_le).toLocaleString("fr-FR") +
-          " — " + d.faits.length + " faits, " + d.flux_joignables + "/" + d.flux_interroges + " flux joignables.");
+          " — " + d.faits.length + " faits" + (d.faits_monde ? " + " + d.faits_monde.length + " (reste du monde)" : "") +
+          ", " + d.flux_joignables + "/" + d.flux_interroges + " flux joignables.");
   return d.faits.map(versArt);
 }
 
@@ -1225,6 +1250,38 @@ async function rechercheHistorique(q){
     body: JSON.stringify({ q, depuis:"90 days" })
   });
   return r.ok ? (await r.json()).map(versArt) : null;
+}
+
+/* ---------- Pays de référence (détection de connexion) ----------
+   Géolocalisation IP côté client, service public sans clé : le pays d'où
+   l'on se connecte devient le point de départ affiché (htmlPaysReference,
+   dans rSurete), et ses vrais voisins (FRONTIERES) sont mis en avant. Repli
+   sur Côte d'Ivoire si la détection échoue (réseau bloqué, bloqueur de
+   pub, service indisponible...) — comportement antérieur inchangé. Mise en
+   cache 6h pour ne pas solliciter le service à chaque rechargement. */
+const CLE_GEOLOC = "PS_geoloc";
+async function detecterPaysConnexion(){
+  try{
+    const c = JSON.parse(localStorage.getItem(CLE_GEOLOC) || "null");
+    if(c && c.cc && now() - c.ts < 6*3600000) return c.cc;
+  }catch(e){}
+  try{
+    const ctrl = new AbortController();
+    const t = setTimeout(()=>ctrl.abort(), 4000);
+    const r = await fetch("https://get.geojs.io/v1/ip/geo.json", {signal:ctrl.signal});
+    clearTimeout(t);
+    if(!r.ok) throw new Error("HTTP " + r.status);
+    const d = await r.json();
+    const cc = (d.country_code || "").toUpperCase();
+    if(cc && (PAYS[cc] || PAYS_MONDE[cc])){
+      try{ localStorage.setItem(CLE_GEOLOC, JSON.stringify({cc, ts:now()})); }catch(e){}
+      return cc;
+    }
+    throw new Error("pays non reconnu");
+  }catch(e){
+    journal("Détection du pays de connexion indisponible — repli sur Côte d'Ivoire.");
+    return "CI";
+  }
 }
 
 async function chargerCloud(){
@@ -1991,6 +2048,32 @@ function htmlReperesOfficiels(){
     </table>
   </div>`;
 }
+function htmlPaysReference(){
+  const ref = ETAT.paysRef || "CI";
+  const vsns = voisinsPays(ref);
+  const perimetre = [ref, ...vsns];
+  const monde = perimetre.filter(p => PAYS_MONDE[p] && !PAYS[p]);
+  const curates = perimetre.filter(p => PAYS[p]);
+  const puce = p => `<span class="tag" style="margin:2px 4px 2px 0">${drapeauPays(p)} ${esc(nomPays(p))}${p===ref?" — référence":""}</span>`;
+
+  const faitsMonde = monde.length
+    ? ETAT.artsMonde.filter(a=>monde.includes(a.p))
+        .sort((a,b)=>(POIDS[b.c]||0)-(POIDS[a.c]||0) || b.ts-a.ts)
+        .slice(0,8)
+    : [];
+
+  return `<div class="carte" style="margin-bottom:12px">
+    <h3 style="font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faible);font-weight:700;margin-bottom:2px">Pays de référence — depuis votre connexion</h3>
+    <p class="hint" style="margin-bottom:8px">${drapeauPays(ref)} <b>${esc(nomPays(ref))}</b>${curates.length>1?" — couvert en détail zonal ci-dessous ; ":" — "}pays limitrophes : ${vsns.length?vsns.map(puce).join(""):"aucun (pas de frontière terrestre)"}</p>
+    ${monde.length ? `
+    <p class="hint" style="margin-bottom:6px">Hors du périmètre zonal détaillé (Côte d'Ivoire + 5 limitrophes) — édition nationale générique, sans score de zone :</p>
+    ${faitsMonde.length ? faitsMonde.map(a=>`<a href="${esc(a.l||'#')}" target="_blank" rel="noopener" style="display:flex;gap:8px;align-items:baseline;font-size:11.5px;color:var(--sourd);text-decoration:none;margin-bottom:4px">
+      <span class="tag ${a.c}" style="flex-shrink:0">${a.c==="ELEVE"?"ÉLEVÉ":a.c==="MODERE"?"MODÉRÉ":a.c}</span>
+      <span>${drapeauPays(a.p)} ${esc(a.t)}${a.src?` <span style="color:var(--faible)">(${esc(a.src)})</span>`:""}</span>
+    </a>`).join("") : `<p class="hint">Aucun fait récent sur ces pays (24 h).</p>`}
+    ` : ""}
+  </div>`;
+}
 function rSurete(){
   $("#sureteMaj").textContent = ETAT.maj ? "au "+new Date(ETAT.maj).toLocaleString("fr-FR") : "—";
   const el = $("#surete"); if(!el) return;
@@ -2018,6 +2101,7 @@ function rSurete(){
       <div class="kpi"><b class="n-VERT">${recoupes}</b><span>Faits recoupés ✓</span></div>
     </div>
 
+    ${htmlPaysReference()}
     ${htmlExpertSurete(f24, zs, corridorsScored)}
     ${htmlRecommandations(zs, corridorsScored, f24)}
     ${htmlReperesOfficiels()}
@@ -2806,6 +2890,9 @@ rendre();
 initAdmin();
 if(ETAT.maj) journal("Cache chargé — "+ETAT.arts.length+" faits, dernière collecte "+hDep(ETAT.maj)+".");
 collecter(true);
+detecterPaysConnexion().then(cc => {
+  if(cc !== ETAT.paysRef){ ETAT.paysRef = cc; journal("Pays de référence — " + drapeauPays(cc) + " " + nomPays(cc) + "."); rendre(); }
+});
 </script>
 </body>
 </html>
